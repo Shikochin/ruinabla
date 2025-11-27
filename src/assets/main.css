@@ -1,0 +1,156 @@
+:root {
+  color-scheme: dark;
+  /*
+    字体栈策略：
+    - 标题/强调：Serif (Georgia, Times, Songti) -> 报纸质感
+    - 数据/技术：Monospace (Space Grotesk, Courier) -> 废墟记录感
+    - 正文：Sans-serif (Inter, system-ui) -> 易读性
+  */
+  --font-serif: 'Georgia', 'Times New Roman', 'Songti SC', 'SimSun', serif;
+  --font-mono: 'Space Grotesk', 'Courier New', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  font-family: var(--font-sans);
+
+  /* 默认深色模式变量 */
+  --ruins-bg: #050505;
+  --ruins-panel: #0a0a0a;
+  --ruins-border: rgba(255, 255, 255, 0.12);
+
+  --ruins-accent: #ffffff;
+  --ruins-accent-strong: #ffffff;
+
+  --ruins-text: #e0e0e0;
+  --ruins-muted: #888888;
+
+  /* 新增变量：用于背景网格和光效 */
+  --ruins-grid-color: rgba(255, 255, 255, 0.03);
+  --ruins-light-color: rgba(255, 255, 255, 0.05);
+  --ruins-panel-gradient-start: #0a0a0a;
+  --ruins-panel-gradient-end: #050505;
+  --ruins-panel-inner-shadow: rgba(255, 255, 255, 0.02);
+  --ruins-panel-outer-shadow: rgba(0, 0, 0, 0.5);
+
+  /* 功能色 */
+  --ruins-danger: #cf5555;
+  --ruins-warning: #d4b46a;
+  --ruins-success: #6ea87f;
+
+  --ruins-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+
+  background-color: var(--ruins-bg);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* 亮色模式 overrides */
+:root.light {
+  color-scheme: light;
+
+  --ruins-bg: #f5f5f0; /* 类似纸张的米白色 */
+  --ruins-panel: #ffffff;
+  --ruins-border: rgba(0, 0, 0, 0.08); /* 更加柔和的深色边框 */
+
+  --ruins-accent: #000000;
+  --ruins-accent-strong: #000000;
+
+  --ruins-text: #2c2c2c; /* 深灰而非纯黑，更像墨水 */
+  --ruins-muted: #666666;
+
+  /* 亮色模式下的网格和光效 */
+  --ruins-grid-color: rgba(0, 0, 0, 0.04);
+  --ruins-light-color: rgba(0, 0, 0, 0.03);
+  --ruins-panel-gradient-start: #ffffff;
+  --ruins-panel-gradient-end: #fcfcfc;
+  --ruins-panel-inner-shadow: rgba(0, 0, 0, 0.01);
+  --ruins-panel-outer-shadow: rgba(0, 0, 0, 0.05);
+
+  --ruins-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--ruins-bg);
+  color: var(--ruins-text);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ruins-accent-strong);
+}
+
+a {
+  color: var(--ruins-text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: var(--ruins-accent-strong);
+  border-bottom-color: var(--ruins-accent);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* 亮色模式下 hover 阴影颜色调整 */
+:root.light a:hover {
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  filter: grayscale(0.4) contrast(1.1);
+}
+
+/* 亮色模式下图片对比度调整 */
+:root.light img {
+  filter: grayscale(0.2) contrast(1.05);
+}
+
+/*
+  Paper Panel 重定义：
+  纯粹的线条与微弱的内部发光
+*/
+.paper-panel {
+  background: linear-gradient(
+    to bottom right,
+    var(--ruins-panel-gradient-start),
+    var(--ruins-panel-gradient-end)
+  );
+  border: 1px solid var(--ruins-border);
+  box-shadow:
+    0 0 0 1px var(--ruins-panel-outer-shadow),
+    inset 0 0 20px var(--ruins-panel-inner-shadow);
+  border-radius: 0;
+}
+
+@media (max-width: 768px) {
+  :root {
+    font-size: 15px;
+  }
+}
