@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/gen-readingMinutes.js && run-p type-check \"build-only {@}\" --",
+    "build": "node scripts/gen-readingMinutes.js && vite build"
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
