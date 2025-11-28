@@ -5,6 +5,10 @@ import { useThemeStore } from '@/stores/themeStore'
 
 const themeStore = useThemeStore()
 
+function backToTop() {
+  scroll({ top: 0, behavior: 'smooth' })
+}
+
 onMounted(() => {
   themeStore.initTheme()
 })
@@ -19,18 +23,15 @@ onMounted(() => {
         <div class="brand">
           <RouterLink to="/">
             <strong class="brand__logo">Rui<span id="nabla">∇</span>abla</strong>
-            <span class="brand__eyebrow">THE RUINS CHRONICLE</span>
+            <span class="brand__eyebrow">LOST ADDICTION.</span>
           </RouterLink>
         </div>
         <nav class="ruins-nav">
           <RouterLink to="/">信标</RouterLink>
           <RouterLink to="/chronicle">年轮</RouterLink>
           <RouterLink to="/about">余烬</RouterLink>
-          <button
-            class="theme-toggle"
-            @click="themeStore.toggleTheme"
-            :title="themeStore.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-          >
+          <button class="theme-toggle" @click="themeStore.toggleTheme"
+            :title="themeStore.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
             <span v-if="themeStore.isDark">☼</span>
             <span v-else>☾</span>
           </button>
@@ -40,6 +41,8 @@ onMounted(() => {
       <main class="ruins-main">
         <slot />
       </main>
+
+      <button id="delta" @click="backToTop"><a>Δ</a></button>
 
       <footer class="ruins-footer paper-panel">
         <p>Published in 2025 · Records of Light and Dust</p>
@@ -61,6 +64,25 @@ onMounted(() => {
   font-size: 3.7rem;
   vertical-align: middle;
 }
+
+#delta {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  width: 1.2em;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background-color: var(--ruins-grid-color);
+  border-width: 1px;
+
+  a {
+    border: 0;
+  }
+
+  cursor: pointer;
+}
+
+
 
 /* 纯线条网格背景 */
 .ruins-grid-bg {
@@ -114,6 +136,7 @@ onMounted(() => {
   box-shadow: none;
   border-radius: 0;
 }
+
 
 .brand a {
   display: flex;

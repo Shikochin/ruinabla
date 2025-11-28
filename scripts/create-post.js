@@ -17,7 +17,7 @@ function isValidFilename(name) {
     return false
   }
 
-  const illegalChars = /[/\:*?"<>|]/
+  const illegalChars = /[/:*?"<>|]/
   if (illegalChars.test(name)) {
     console.log('Filename cannot contain: / \\ : * ? " < > |')
     return false
