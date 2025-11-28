@@ -1,6 +1,6 @@
 ---
 title: 个人 macOS 软件仓库
-date: 2025-04-20T00:00:00.000Z
+date: 2025-04-20
 tags:
   - macOS
   - 工具

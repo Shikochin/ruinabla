@@ -1,6 +1,6 @@
 ---
 title: 关于 Arcaea 的改包和私服
-date: 2025-08-18T00:00:00.000Z
+date: 2025-08-18
 tags:
   - Arcaea
   - 改包

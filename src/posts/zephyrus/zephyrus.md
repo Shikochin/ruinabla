@@ -1,6 +1,6 @@
 ---
 title: 仄费罗斯
-date: 2025-11-19T00:00:00.000Z
+date: 2025-11-19
 tags:
   - 小说
 categories:

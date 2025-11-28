@@ -1,6 +1,6 @@
 ---
 title: Girls’ Talk
-date: 2025-06-04T00:00:00.000Z
+date: 2025-06-04
 tags:
   - 归尘
 category:

@@ -1,6 +1,6 @@
 ---
 title: 使用 SideStore + LiveContainer 在 iOS 上无限侧载 .ipa
-date: 2025-11-02T00:00:00.000Z
+date: 2025-11-02
 tags:
   - SideStore
   - LiveContainer
