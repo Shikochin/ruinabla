@@ -14,6 +14,7 @@ export default defineConfig({
     mdx({
       jsxImportSource: 'vue',
       providerImportSource: '@mdx-js/vue',
+      // @ts-expect-error no practical issues
       remarkPlugins: [remarkFrontmatter, [remarkMdxFrontmatter, { name: 'metadata' }]],
       extensions: ['.mdx', '.md'],
     }),
