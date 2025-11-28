@@ -3,6 +3,7 @@ import { computed, markRaw, onMounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 
 import { usePostStore } from '@/stores/postStore'
+import GiscusComment from '@/components/GiscusComment.vue'
 
 const route = useRoute()
 const store = usePostStore()
@@ -43,6 +44,8 @@ onMounted(() => {
       <span v-for="tag in entry.tags" :key="tag">#{{ tag }}</span>
     </div>
   </section>
+
+  <GiscusComment v-if="entry" />
 
   <section v-else class="entry paper-panel">
     <h1>未找到对应的信标</h1>
