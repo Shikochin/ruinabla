@@ -11,24 +11,26 @@ const router = createRouter({
       component: HomeView,
       meta: {
         title: 'Rui∇abla',
+        index: 0,
       },
     },
     {
       path: '/chronicle',
       name: 'chronicle',
       component: () => import('@/views/ChronicleView.vue'),
-      meta: { title: '年轮 - Rui∇abla' },
+      meta: { title: '年轮 - Rui∇abla', index: 1 },
     },
     {
       path: '/posts/:slug(.*)',
       name: 'posts',
       component: () => import('@/views/EntryView.vue'),
+      meta: { index: 99 },
     },
     {
       path: '/about',
       name: 'about',
       component: () => import('@/views/AboutView.vue'),
-      meta: { title: '余烬 - Rui∇abla' },
+      meta: { title: '余烬 - Rui∇abla', index: 2 },
     },
   ],
   scrollBehavior() {
