@@ -10,14 +10,14 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: {
-        title: 'Ruinabla',
+        title: 'Rui∇abla',
       },
     },
     {
       path: '/chronicle',
       name: 'chronicle',
       component: () => import('@/views/ChronicleView.vue'),
-      meta: { title: '年轮 - Ruinabla' },
+      meta: { title: '年轮 - Rui∇abla' },
     },
     {
       path: '/posts/:slug(.*)',
@@ -28,7 +28,7 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('@/views/AboutView.vue'),
-      meta: { title: '余烬 - Ruinabla' },
+      meta: { title: '余烬 - Rui∇abla' },
     },
   ],
   scrollBehavior() {
@@ -38,7 +38,7 @@ const router = createRouter({
 
 // fallback to Ruinabla or meta.title if the next page is not a post
 router.afterEach((to, _) => {
-  let title = 'Ruinabla'
+  let title = 'Rui∇abla'
   if (to.meta.title) {
     title = to.meta.title as string
   }

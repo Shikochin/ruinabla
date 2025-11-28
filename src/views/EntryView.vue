@@ -21,7 +21,7 @@ const entry = computed(() => {
 
 // change title
 onMounted(() => {
-  document.title = `${entry.value?.title} - Ruinabla`
+  document.title = `${entry.value?.title} - Rui∇abla`
 })
 </script>
 

@@ -30,22 +30,36 @@ const distinctTags = computed(
     <p class="eyebrow">年轮记录</p>
     <h1>废墟的时间坐标</h1>
     <p class="hero-copy">
-      这些时间节点标记的是一次次设计迭代：从 {{ firstDate }} 到 {{ lastDate }}，我把废墟感受拆
-      成可测试的版式、音景和组件，像给自己做一张可用的情绪地图。
+      从 {{ firstDate }} 到 {{ lastDate }}
     </p>
 
     <div class="metrics">
-      <article>
-        <span>文章篇数</span>
-        <strong>{{ totalPosts }}</strong>
+      <article class="metric-card">
+        <div class="metric-icon">📝</div>
+        <div class="metric-content">
+          <span class="metric-label">文章篇数</span>
+          <strong class="metric-value">{{ totalPosts }}</strong>
+
+        </div>
       </article>
-      <article>
-        <span>平均阅读(分)</span>
-        <strong>{{ averageReading }}</strong>
+      <article class="metric-card">
+        <div class="metric-icon">⏱️</div>
+        <div class="metric-content">
+          <span class="metric-label">平均阅读</span>
+          <div class="metric-with-unit">
+            <strong class="metric-value">{{ averageReading }}</strong>
+            <span class="metric-unit">分钟</span>
+          </div>
+
+        </div>
       </article>
-      <article>
-        <span>标签数</span>
-        <strong>{{ distinctTags }}</strong>
+      <article class="metric-card">
+        <div class="metric-icon">🏷️</div>
+        <div class="metric-content">
+          <span class="metric-label">标签数</span>
+          <strong class="metric-value">{{ distinctTags }}</strong>
+
+        </div>
       </article>
     </div>
   </section>
@@ -69,33 +83,93 @@ const distinctTags = computed(
 
 .hero-copy {
   margin: 0;
-  color: rgba(255, 255, 255, 0.85);
 }
 
 .metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
 }
 
-.metrics article {
-  padding: 18px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.04);
+.metric-card {
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.metric-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.metric-icon {
+  font-size: 2rem;
+  line-height: 1;
+  opacity: 0.8;
+  filter: grayscale(0.3);
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover .metric-icon {
+  opacity: 1;
+  filter: grayscale(0);
+  transform: scale(1.1);
+}
+
+.metric-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  color: var(--ruins-muted);
+  gap: 8px;
 }
 
-.metrics strong {
-  font-size: 2rem;
+.metric-label {
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--ruins-muted);
+  opacity: 0.8;
+}
+
+.metric-with-unit {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.metric-value {
+  font-size: 2.2rem;
+  font-weight: 700;
   color: var(--ruins-accent-strong);
-  letter-spacing: normal;
-  text-transform: none;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.metric-unit {
+  font-size: 0.9rem;
+  color: var(--ruins-muted);
+  opacity: 0.7;
+}
+
+
+
+.metric-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ruins-accent-strong), var(--ruins-accent));
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(var(--ruins-accent-rgb, 177, 98, 134), 0.5);
+}
+
+.metric-card:hover .metric-fill {
+  box-shadow: 0 0 12px rgba(var(--ruins-accent-rgb, 177, 98, 134), 0.8);
 }
 
 .eyebrow {
