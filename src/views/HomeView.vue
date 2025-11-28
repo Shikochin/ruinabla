@@ -21,12 +21,17 @@ const tagPairs = computed(() =>
 <template>
   <section class="hero paper-panel">
     <div class="hero__eyebrow">近日信标 · {{ featuredEntry.date }}</div>
-    <RouterLink :to="`/posts/${featuredEntry.slug}`">
+    <RouterLink :to="`/posts/${featuredEntry.slug}`" class="title">
       <h1>{{ featuredEntry.title }}</h1>
     </RouterLink>
     <p>{{ featuredEntry.summary }}</p>
     <div class="hero__meta">
-      <span>{{ featuredEntry.readingMinutes }} MIN{{ featuredEntry.readingMinutes > 1 ? 'S' : '' }} READ</span>
+      <span
+        >{{ featuredEntry.readingMinutes }} MIN{{
+          featuredEntry.readingMinutes > 1 ? 'S' : ''
+        }}
+        READ</span
+      >
       <span v-if="featuredEntry.tags.length">#{{ featuredEntry.tags[0] }}</span>
     </div>
     <RouterLink :to="`/posts/${featuredEntry.slug}`" class="hero__cta">
@@ -35,8 +40,12 @@ const tagPairs = computed(() =>
   </section>
 
   <section class="grid">
-    <PostCard v-for="entry in recentlyRecovered" :key="entry.id" :entry="entry"
-      :vol="recentlyRecovered.indexOf(entry) + 2" />
+    <PostCard
+      v-for="entry in recentlyRecovered"
+      :key="entry.id"
+      :entry="entry"
+      :vol="recentlyRecovered.indexOf(entry) + 2"
+    />
   </section>
 
   <section class="signals">
@@ -86,6 +95,10 @@ const tagPairs = computed(() =>
 </template>
 
 <style scoped>
+.title {
+  width: fit-content;
+}
+
 .hero {
   padding: 48px;
   display: flex;

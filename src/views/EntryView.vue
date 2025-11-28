@@ -32,7 +32,8 @@ onMounted(() => {
     <h1 class="entry__title">
       <span>{{ entry.title }}</span>
       <span class="eyebrow">
-        {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span>
+        {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span
+      >
     </h1>
     <div class="entry__summary-wrapper">
       <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>

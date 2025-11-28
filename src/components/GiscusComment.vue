@@ -1,17 +1,27 @@
 <script setup lang="ts">
 import Giscus from '@giscus/vue'
-import { useThemeStore } from '@/stores/themeStore';
+import { useThemeStore } from '@/stores/themeStore'
 
 const themeStore = useThemeStore()
 </script>
 
 <template>
-
   <section class="comments paper-panel">
     <p class="eyebrow">评论</p>
-    <Giscus repo="Shikochin/ruin" repo-id="R_kgDOL7BWOw" category="Comment" category-id="DIC_kwDOL7BWO84CfWhY"
-      mapping="pathname" strict="0" reactions-enabled="1" emit-metadata="0" input-position="top" lang="zh-CN"
-      loading="lazy" :theme="themeStore.isDark ? 'dark' : 'light'" />
+    <Giscus
+      repo="Shikochin/ruin"
+      repo-id="R_kgDOL7BWOw"
+      category="Comment"
+      category-id="DIC_kwDOL7BWO84CfWhY"
+      mapping="pathname"
+      strict="0"
+      reactions-enabled="1"
+      emit-metadata="0"
+      input-position="top"
+      lang="zh-CN"
+      loading="lazy"
+      :theme="themeStore.isDark ? 'dark' : 'light'"
+    />
   </section>
 </template>
 
@@ -30,7 +40,6 @@ const themeStore = useThemeStore()
   color: var(--ruins-muted);
   font-family: var(--font-mono);
 }
-
 
 .giscus-container :deep(.giscus) {
   /* Override giscus default styles to match ruins theme */

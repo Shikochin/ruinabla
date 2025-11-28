@@ -29,9 +29,7 @@ const distinctTags = computed(
   <section class="chronicle paper-panel">
     <p class="eyebrow">年轮记录</p>
     <h1>废墟的时间坐标</h1>
-    <p class="hero-copy">
-      从 {{ firstDate }} 到 {{ lastDate }}
-    </p>
+    <p class="hero-copy">从 {{ firstDate }} 到 {{ lastDate }}</p>
 
     <div class="metrics">
       <article class="metric-card">
@@ -39,7 +37,6 @@ const distinctTags = computed(
         <div class="metric-content">
           <span class="metric-label">文章篇数</span>
           <strong class="metric-value">{{ totalPosts }}</strong>
-
         </div>
       </article>
       <article class="metric-card">
@@ -50,7 +47,6 @@ const distinctTags = computed(
             <strong class="metric-value">{{ averageReading }}</strong>
             <span class="metric-unit">分钟</span>
           </div>
-
         </div>
       </article>
       <article class="metric-card">
@@ -58,7 +54,6 @@ const distinctTags = computed(
         <div class="metric-content">
           <span class="metric-label">标签数</span>
           <strong class="metric-value">{{ distinctTags }}</strong>
-
         </div>
       </article>
     </div>
@@ -157,8 +152,6 @@ const distinctTags = computed(
   color: var(--ruins-muted);
   opacity: 0.7;
 }
-
-
 
 .metric-fill {
   height: 100%;

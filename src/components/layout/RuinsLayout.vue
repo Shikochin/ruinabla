@@ -30,8 +30,11 @@ onMounted(() => {
           <RouterLink to="/">信标</RouterLink>
           <RouterLink to="/chronicle">年轮</RouterLink>
           <RouterLink to="/about">余烬</RouterLink>
-          <button class="theme-toggle" @click="themeStore.toggleTheme"
-            :title="themeStore.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+          <button
+            class="theme-toggle"
+            @click="themeStore.toggleTheme"
+            :title="themeStore.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+          >
             <span v-if="themeStore.isDark">☼</span>
             <span v-else>☾</span>
           </button>
@@ -45,9 +48,11 @@ onMounted(() => {
       <button id="delta" @click="backToTop"><a>Δ</a></button>
 
       <footer class="ruins-footer paper-panel">
-        <p>2021-present by <a href="https://github.com/Shikochin">Shikochin</a> · Records of Light and Dust</p>
-        <p>Constructed with <a href="https://vuejs.org">Vue 3</a> & Persistence
+        <p>
+          2021-present by <a href="https://github.com/Shikochin">Shikochin</a> · Records of Light
+          and Dust
         </p>
+        <p>Constructed with <a href="https://vuejs.org">Vue 3</a> & Persistence</p>
       </footer>
     </div>
   </div>
@@ -83,8 +88,6 @@ onMounted(() => {
 
   cursor: pointer;
 }
-
-
 
 /* 纯线条网格背景 */
 .ruins-grid-bg {
@@ -138,7 +141,6 @@ onMounted(() => {
   box-shadow: none;
   border-radius: 0;
 }
-
 
 .brand a {
   display: flex;
