@@ -2,6 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { Temporal } from '@js-temporal/polyfill'
 
 const POSTS_DIR = path.join(import.meta.dirname, '../src/posts')
 
@@ -45,6 +46,15 @@ function main() {
   for (const filePath of files) {
     const fileContent = fs.readFileSync(filePath, 'utf-8')
     const fileMatter = matter(fileContent)
+    if (fileMatter.data.date instanceof Date) {
+      const dateObj = fileMatter.data.date
+      const plainDate = Temporal.PlainDate.from({
+        year: dateObj.getFullYear(),
+        month: dateObj.getMonth() + 1, // getMonth() 0-based
+        day: dateObj.getDate(),
+      })
+      fileMatter.data.date = plainDate.toString()
+    }
     const readingMinutes = estimateReadingMinutes(fileMatter.content)
     fileMatter.data.readingMinutes = readingMinutes
     fs.writeFileSync(filePath, matter.stringify(fileMatter.content, fileMatter.data), 'utf-8')

@@ -1,4 +1,5 @@
 import type { Component } from 'vue'
+import { Temporal } from '@js-temporal/polyfill'
 
 export interface PostFrontMatter {
   id: number
@@ -6,15 +7,15 @@ export interface PostFrontMatter {
   date: string
   tags: string[]
   categories?: string[]
-  summary?: string
   readingMinutes: number
+  summary?: string
 }
 
 export interface PostEntry extends PostFrontMatter {
   slug: string // Slug is now generated from filename, not frontmatter
   component: Component
-  summary: string
   category: string
+  summary?: string
 }
 
 type MdxModule = {
@@ -32,8 +33,8 @@ function loadPostEntries(): PostEntry[] {
       throw new Error(`File ${path} missing metadata or default export`)
     }
 
-    // summary/readMinutes 统一直接取前端 frontmatter 字段
     const summary = mod.metadata.summary || ''
+    // summary/readMinutes takes from markdown frontmatter
     const readingMinutes =
       typeof mod.metadata.readingMinutes === 'number' ? mod.metadata.readingMinutes : 1
 
@@ -49,13 +50,15 @@ function loadPostEntries(): PostEntry[] {
       tags,
       categories,
       component: mod.default,
-      summary,
       readingMinutes,
       category,
+      summary,
     }
   })
 
-  return entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  return entries.sort((a, b) =>
+    Temporal.PlainDate.compare(Temporal.PlainDate.from(b.date), Temporal.PlainDate.from(a.date)),
+  ) as unknown as PostEntry[]
 }
 
 export const PostEntries = loadPostEntries()

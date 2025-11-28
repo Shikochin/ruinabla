@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { defineStore } from 'pinia'
-
+import { Temporal } from '@js-temporal/polyfill'
 import { getEntryBySlug, PostEntries } from '@/data/post'
 
 export const usePostStore = defineStore('Post', () => {
@@ -11,7 +11,9 @@ export const usePostStore = defineStore('Post', () => {
   const recentlyRecovered = computed(() => PostEntries.slice(1, 4))
 
   const timelineEntries = computed(() =>
-    [...PostEntries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    [...PostEntries].sort((a, b) =>
+      Temporal.PlainDate.compare(Temporal.PlainDate.from(b.date), Temporal.PlainDate.from(a.date)),
+    ),
   )
 
   const beaconSignals = computed(() => PostEntries.slice(0, 3))

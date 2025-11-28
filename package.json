@@ -16,9 +16,11 @@
     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
     "lint:eslint": "eslint . --fix --cache",
     "lint": "run-s lint:*",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "new": "node scripts/create-post.js"
   },
   "dependencies": {
+    "@js-temporal/polyfill": "^0.5.1",
     "@mdx-js/mdx": "^3.1.0",
     "@mdx-js/rollup": "^3.1.0",
     "@mdx-js/vue": "^3.1.0",
@@ -29,7 +31,6 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
-    "gray-matter": "^4.0.3",
     "@prettier/plugin-oxc": "^0.0.5",
     "@tsconfig/node24": "^24.0.3",
     "@types/jsdom": "^27.0.0",
@@ -40,9 +41,11 @@
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
+    "dotenv": "^17.2.3",
     "eslint": "^9.39.1",
     "eslint-plugin-oxlint": "~1.29.0",
     "eslint-plugin-vue": "~10.5.1",
+    "gray-matter": "^4.0.3",
     "jiti": "^2.6.1",
     "jsdom": "^27.2.0",
     "npm-run-all2": "^8.0.4",
