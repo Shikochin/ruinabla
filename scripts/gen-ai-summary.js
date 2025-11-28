@@ -1,8 +1,8 @@
-#!/usr/bin/env node
 import fs from 'fs'
 import matter from 'gray-matter'
 import OpenAI from 'openai'
 import { glob } from 'glob'
+import 'dotenv/config'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -19,18 +19,22 @@ async function generateSummary(content) {
 }
 
 async function main() {
-  const files = glob.sync('@/posts/**/*.md')
+  const files = glob.sync('src/posts/**/*.mdx')
 
   for (const filePath of files) {
-    if (!filePath.endsWith('.md')) continue
+    if (!filePath.endsWith('.mdx')) continue
     const raw = fs.readFileSync(filePath, 'utf-8')
     const parsed = matter(raw)
     if (parsed.data.summary) {
       console.log(`✅ ${filePath} 已有摘要，跳过`)
       continue
     }
-    if (parsed.data.summary === 'none') {
+    if (parsed.data.summary === 'disabled') {
       console.log(`🚫 ${filePath} 标记为不生成摘要，跳过`)
+      continue
+    }
+    if (parsed.data.category === '小说') {
+      console.log(`🚫 ${filePath} 分类为小说，跳过`)
       continue
     }
     const text = parsed.content
