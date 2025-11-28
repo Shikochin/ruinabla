@@ -26,33 +26,34 @@ onMounted(() => {
 </script>
 
 <template>
-  <section v-if="entry" class="entry paper-panel">
-    <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
-    <p class="eyebrow">{{ entry.date }}</p>
-    <h1 class="entry__title">
-      <span>{{ entry.title }}</span>
-      <span class="eyebrow">
-        {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span
-      >
-    </h1>
-    <div class="entry__summary-wrapper">
-      <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>
-      <div class="entry__excerpt">{{ entry.summary }}</div>
-    </div>
-    <component v-if="entry.component" class="entry__content" :is="entry.component" />
-    <hr class="entry__divider" />
-    <div v-if="entry.tags.length" class="entry__tags eyebrow">
-      <span v-for="tag in entry.tags" :key="tag">#{{ tag }}</span>
-    </div>
-  </section>
+  <div>
+    <section v-if="entry" class="entry paper-panel">
+      <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
+      <p class="eyebrow">{{ entry.date }}</p>
+      <h1 class="entry__title">
+        <span>{{ entry.title }}</span>
+        <span class="eyebrow">
+          {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span>
+      </h1>
+      <div class="entry__summary-wrapper">
+        <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>
+        <div class="entry__excerpt">{{ entry.summary }}</div>
+      </div>
+      <component v-if="entry.component" class="entry__content" :is="entry.component" />
+      <hr class="entry__divider" />
+      <div v-if="entry.tags.length" class="entry__tags eyebrow">
+        <span v-for="tag in entry.tags" :key="tag">#{{ tag }}</span>
+      </div>
+    </section>
 
-  <GiscusComment v-if="entry" />
+    <GiscusComment v-if="entry" />
 
-  <section v-else class="entry paper-panel">
-    <h1>未找到对应的信标</h1>
-    <p>可能被风沙掩埋了。返回信标重新定位吧。</p>
-    <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
-  </section>
+    <section v-else class="entry paper-panel">
+      <h1>未找到对应的信标</h1>
+      <p>可能被风沙掩埋了。返回信标重新定位吧。</p>
+      <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
+    </section>
+  </div>
 </template>
 
 <style scoped>
