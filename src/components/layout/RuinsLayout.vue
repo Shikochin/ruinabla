@@ -61,6 +61,7 @@ onMounted(() => {
 }
 
 #nabla {
+  font-family: var(--font-serif);
   font-size: 3.7rem;
   vertical-align: middle;
 }

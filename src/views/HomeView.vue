@@ -21,14 +21,16 @@ const tagPairs = computed(() =>
 <template>
   <section class="hero paper-panel">
     <div class="hero__eyebrow">近日信标 · {{ featuredEntry.date }}</div>
-    <h1>{{ featuredEntry.title }}</h1>
+    <RouterLink :to="`/posts/${featuredEntry.slug}`">
+      <h1>{{ featuredEntry.title }}</h1>
+    </RouterLink>
     <p>{{ featuredEntry.summary }}</p>
     <div class="hero__meta">
-      <span>{{ featuredEntry.readingMinutes }} 分钟读完</span>
+      <span>{{ featuredEntry.readingMinutes }} MIN{{ featuredEntry.readingMinutes > 1 ? 'S' : '' }} READ</span>
       <span v-if="featuredEntry.tags.length">#{{ featuredEntry.tags[0] }}</span>
     </div>
-    <RouterLink :to="`/post/${featuredEntry.slug}`" class="hero__cta">
-      前往阅读全文 <span>&rarr;</span>
+    <RouterLink :to="`/posts/${featuredEntry.slug}`" class="hero__cta">
+      前往阅读全文 &rarr;
     </RouterLink>
   </section>
 
@@ -50,7 +52,7 @@ const tagPairs = computed(() =>
         <li v-for="entry in beaconSignals" :key="entry.id">
           <div>
             <p class="eyebrow">{{ entry.date }}</p>
-            <RouterLink :to="`/post/${entry.slug}`">{{ entry.title }}</RouterLink>
+            <RouterLink :to="`/posts/${entry.slug}`">{{ entry.title }}</RouterLink>
             <p class="signals__summary">
               {{ entry.summary }}
             </p>

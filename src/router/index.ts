@@ -20,8 +20,8 @@ const router = createRouter({
       meta: { title: '年轮 - Ruinabla' },
     },
     {
-      path: '/post/:slug',
-      name: 'post',
+      path: '/posts/:slug(.*)',
+      name: 'posts',
       component: () => import('@/views/EntryView.vue'),
     },
     {

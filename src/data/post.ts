@@ -41,8 +41,16 @@ function loadPostEntries(): PostEntry[] {
     const tags = Array.isArray(mod.metadata.tags) ? mod.metadata.tags : []
     const categories = Array.isArray(mod.metadata.categories) ? mod.metadata.categories : []
     const category = categories.length > 0 ? categories[0] : tags.length > 0 ? tags[0] : ''
-    const fileName = path.split('/').pop() || ''
-    const slug = fileName.replace(/\.(mdx|md)$/, '')
+    // posts/example.mdx -> xxx.com/posts/example
+    // posts/2022/example.mdx -> xxx.com/posts/2022/example
+    // /src/posts/zephyrus/zephyrus.mdx -> zephyrus/zephyrus
+    const match = path.match(/\/posts\/(.+)\.(mdx|md)$/)
+    const slug = match
+      ? match[1]
+      : path
+          .split('/')
+          .pop()
+          ?.replace(/\.(mdx|md)$/, '') || ''
 
     return {
       ...mod.metadata,

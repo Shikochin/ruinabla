@@ -16,7 +16,7 @@ describe('App', () => {
         { path: '/', component: HomeView },
         { path: '/chronicle', component: Placeholder },
         { path: '/about', component: Placeholder },
-        { path: '/post/:slug', component: Placeholder },
+        { path: '/posts/:slug(.*)', component: Placeholder },
       ],
     })
 
@@ -29,6 +29,6 @@ describe('App', () => {
     await router.isReady()
 
     expect(wrapper.text()).toContain('Rui∇abla')
-    expect(wrapper.text()).toContain('今日信标')
+    expect(wrapper.text()).toContain('近日信标')
   })
 })
