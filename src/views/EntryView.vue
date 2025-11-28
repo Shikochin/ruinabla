@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, markRaw } from 'vue'
+import { computed, markRaw, onMounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 
 import { usePostStore } from '@/stores/postStore'
@@ -17,6 +17,11 @@ const entry = computed(() => {
     component: markRaw(result.component),
   }
 })
+
+// change title
+onMounted(() => {
+  document.title = `${entry.value?.title} - Ruinabla`
+})
 </script>
 
 <template>
@@ -26,8 +31,7 @@ const entry = computed(() => {
     <h1 class="entry__title">
       <span>{{ entry.title }}</span>
       <span class="eyebrow">
-        {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span
-      >
+        {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span>
     </h1>
     <blockquote class="entry__excerpt">{{ entry.summary }}</blockquote>
 

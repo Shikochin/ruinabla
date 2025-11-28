@@ -20,7 +20,7 @@ const tagPairs = computed(() =>
 
 <template>
   <section class="hero paper-panel">
-    <div class="hero__eyebrow">今日信标 · {{ featuredEntry.date }}</div>
+    <div class="hero__eyebrow">近日信标 · {{ featuredEntry.date }}</div>
     <h1>{{ featuredEntry.title }}</h1>
     <p>{{ featuredEntry.summary }}</p>
     <div class="hero__meta">
@@ -33,7 +33,8 @@ const tagPairs = computed(() =>
   </section>
 
   <section class="grid">
-    <PostCard v-for="entry in recentlyRecovered" :key="entry.id" :entry="entry" />
+    <PostCard v-for="entry in recentlyRecovered" :key="entry.id" :entry="entry"
+      :vol="recentlyRecovered.indexOf(entry) + 2" />
   </section>
 
   <section class="signals">

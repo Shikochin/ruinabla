@@ -3,7 +3,7 @@ import { toRef } from 'vue'
 import type { PostEntry } from '@/data/post'
 import { RouterLink } from 'vue-router'
 
-const props = defineProps<{ entry: PostEntry }>()
+const props = defineProps<{ entry: PostEntry, vol: number }>()
 const entry = toRef(props, 'entry')
 </script>
 
@@ -24,7 +24,7 @@ const entry = toRef(props, 'entry')
     </div>
 
     <div class="post-card__footer">
-      <span>Vol. {{ entry.id }}</span>
+      <span>Vol. {{ props.vol }}</span>
       <span>{{ entry.readingMinutes }} MIN{{ entry.readingMinutes > 1 ? 'S' : '' }} READ</span>
     </div>
   </article>
