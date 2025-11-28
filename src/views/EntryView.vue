@@ -33,8 +33,10 @@ onMounted(() => {
       <span class="eyebrow">
         {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span>
     </h1>
-    <!-- AI generated summary -->
-    <blockquote class="entry__excerpt">{{ entry.summary }}</blockquote>
+    <div class="entry__summary-wrapper">
+      <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>
+      <div class="entry__excerpt">{{ entry.summary }}</div>
+    </div>
     <component v-if="entry.component" class="entry__content" :is="entry.component" />
     <hr class="entry__divider" />
     <div v-if="entry.tags.length" class="entry__tags eyebrow">
@@ -79,8 +81,7 @@ onMounted(() => {
 
 .entry__excerpt {
   max-width: 720px;
-  border-left: 4px solid var(--ruins-border);
-  padding-left: 16px;
+
   font-style: italic;
   font-size: 1.1rem;
   line-height: 1.7;
@@ -160,6 +161,25 @@ onMounted(() => {
 @media (max-width: 640px) {
   .entry {
     padding: 26px;
+  }
+}
+
+.entry__summary-wrapper {
+  border: 1px solid var(--ruins-border);
+  padding: 16px;
+}
+
+.entry__ai-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ruins-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  gap: 8px;
+
+  span {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
   }
 }
 </style>

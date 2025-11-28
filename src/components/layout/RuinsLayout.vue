@@ -45,8 +45,9 @@ onMounted(() => {
       <button id="delta" @click="backToTop"><a>Δ</a></button>
 
       <footer class="ruins-footer paper-panel">
-        <p>Published in 2025 · Records of Light and Dust</p>
-        <p>Constructed with Vue 3 & Persistence</p>
+        <p>2021-present by <a href="https://github.com/Shikochin">Shikochin</a> · Records of Light and Dust</p>
+        <p>Constructed with <a href="https://vuejs.org">Vue 3</a> & Persistence
+        </p>
       </footer>
     </div>
   </div>
@@ -233,8 +234,14 @@ onMounted(() => {
 
 .ruins-footer {
   border-top: 1px solid var(--ruins-border);
-  padding-top: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   margin-top: 40px;
+
+  p {
+    margin: 0;
+  }
+
   background: transparent;
   box-shadow: none;
   text-align: center;
