@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, Suspense } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useThemeStore } from '@/stores/themeStore'
 
@@ -43,7 +43,9 @@ onMounted(() => {
       </header>
 
       <main class="ruins-main">
-        <slot />
+        <Suspense>
+          <slot />
+        </Suspense>
       </main>
 
       <button id="delta" @click="backToTop"><a>Δ</a></button>

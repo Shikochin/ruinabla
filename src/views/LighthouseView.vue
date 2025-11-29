@@ -2,6 +2,18 @@
 import FriendLink from '@/components/FriendLink.vue'
 import friendsData from '@/assets/friends.json'
 import GiscusComment from '@/components/GiscusComment.vue'
+import { codeToHtml } from 'shiki'
+
+const code = `{
+  "name": "Your Name",
+  "url": "https://your-site.com",
+  "avatar": "https://your-site.com/avatar.png",
+  "desc": "A short description of your site."
+}`
+const codeBlock = await codeToHtml(code, {
+  lang: 'json',
+  theme: 'gruvbox-dark-hard',
+})
 </script>
 
 <template>
@@ -21,12 +33,7 @@ import GiscusComment from '@/components/GiscusComment.vue'
     <section class="join paper-panel">
       <h3>加入光束网络</h3>
       <p>如果你也建立了自己的灯塔，欢迎交换光束。</p>
-      <div class="code-block">
-        <pre><code>name: Your Name
-url: https://your-site.com
-avatar: https://your-site.com/avatar.png
-desc: A short description of your site.</code></pre>
-      </div>
+      <div v-html="codeBlock"></div>
       <p>
         请通过 <a href="mailto:i@shikoch.in">Email</a>，评论区或
         <a href="https://github.com/Shikochin/ruinabla/issues" target="_blank">GitHub Issues</a>
