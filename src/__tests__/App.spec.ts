@@ -6,6 +6,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 
 import App from '../App.vue'
 import HomeView from '../views/HomeView.vue'
+import LighthouseView from '../views/LighthouseView.vue'
 
 describe('App', () => {
   it('render homepage properly', async () => {
@@ -17,6 +18,7 @@ describe('App', () => {
         { path: '/chronicle', component: Placeholder },
         { path: '/about', component: Placeholder },
         { path: '/posts/:slug(.*)', component: Placeholder },
+        { path: '/lighthouse', component: LighthouseView },
       ],
     })
 
@@ -30,5 +32,9 @@ describe('App', () => {
 
     expect(wrapper.text()).toContain('Rui∇abla')
     expect(wrapper.text()).toContain('近日信标')
+    router.push('/lighthouse')
+    await router.isReady()
+    expect(wrapper.text()).toContain('光束信号')
+    expect(wrapper.text()).toContain('Keritial')
   })
 })
