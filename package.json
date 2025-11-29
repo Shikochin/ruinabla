@@ -70,11 +70,11 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,vue}": [
-      "bun lint",
-      "bun format"
+      "oxlint . --fix -D correctness --ignore-path .gitignore",
+      "prettier --write --experimental-cli src/"
     ],
     "*.{json,css,scss}": [
-      "bun format"
+      "prettier --write --experimental-cli src/"
     ],
     "*.{md,mdx}": [
       "node scripts/gen-ai-summary.js",

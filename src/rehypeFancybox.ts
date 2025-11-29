@@ -16,6 +16,7 @@ export default function rehypeFancyImg() {
           const imgNode = node
           const src = imgNode.properties?.src as string | undefined
           const alt = (imgNode.properties?.alt as string) || ''
+          node.properties.style = 'max-width: 80%;'
 
           if (!src) return
 

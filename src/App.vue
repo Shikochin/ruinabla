@@ -23,6 +23,8 @@ watch(
 <template>
   <RuinsLayout>
     <RouterView v-slot="{ Component, route }">
+      <!-- make sure components have only one root element -->
+      <!-- otherwise transition will not work -->
       <Transition :name="transitionName" mode="out-in">
         <component :is="Component" :key="route.path" />
       </Transition>
