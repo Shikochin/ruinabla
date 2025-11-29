@@ -31,8 +31,11 @@ onMounted(() => {
           <RouterLink to="/chronicle">年轮</RouterLink>
           <RouterLink to="/lighthouse">灯塔</RouterLink>
           <RouterLink to="/about">余烬</RouterLink>
-          <button class="theme-toggle" @click="themeStore.toggleTheme"
-            :title="themeStore.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+          <button
+            class="theme-toggle"
+            @click="themeStore.toggleTheme"
+            :title="themeStore.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+          >
             <span v-if="themeStore.isDark">☼</span>
             <span v-else>☾</span>
           </button>

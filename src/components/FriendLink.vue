@@ -59,7 +59,6 @@ defineProps<{
   transition: filter 0.3s ease;
 }
 
-
 .signal-info {
   flex: 1;
   min-width: 0;

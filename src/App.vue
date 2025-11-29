@@ -7,14 +7,17 @@ const route = useRoute()
 const transitionName = ref('')
 
 // determine transition direction by meta.index
-watch(() => route.meta.index, (toIndex, fromIndex) => {
-  const to = toIndex as number || 0
-  const from = fromIndex as number || 0
+watch(
+  () => route.meta.index,
+  (toIndex, fromIndex) => {
+    const to = (toIndex as number) || 0
+    const from = (fromIndex as number) || 0
 
-  // if target index > source index (e.g. 0 -> 1), means going right -> page slides left (slide-left)
-  // if target index < source index (e.g. 1 -> 0), means going left -> page slides right (slide-right)
-  transitionName.value = to > from ? 'slide-left' : 'slide-right'
-})
+    // if target index > source index (e.g. 0 -> 1), means going right -> page slides left (slide-left)
+    // if target index < source index (e.g. 1 -> 0), means going left -> page slides right (slide-right)
+    transitionName.value = to > from ? 'slide-left' : 'slide-right'
+  },
+)
 </script>
 
 <template>
@@ -33,7 +36,9 @@ watch(() => route.meta.index, (toIndex, fromIndex) => {
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 /* --- 向右前进 (Slide Left) --- */
@@ -59,7 +64,6 @@ watch(() => route.meta.index, (toIndex, fromIndex) => {
   opacity: 1;
   transform: translateX(0);
 }
-
 
 /* --- 向左返回 (Slide Right) --- */
 /* 例如：年轮 -> 信标 */

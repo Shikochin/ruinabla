@@ -27,10 +27,12 @@ const tagPairs = computed(() =>
       </RouterLink>
       <p>{{ featuredEntry.summary }}</p>
       <div class="hero__meta">
-        <span>{{ featuredEntry.readingMinutes }} MIN{{
-          featuredEntry.readingMinutes > 1 ? 'S' : ''
+        <span
+          >{{ featuredEntry.readingMinutes }} MIN{{
+            featuredEntry.readingMinutes > 1 ? 'S' : ''
           }}
-          READ</span>
+          READ</span
+        >
         <span v-if="featuredEntry.tags.length">#{{ featuredEntry.tags[0] }}</span>
       </div>
       <RouterLink :to="`/posts/${featuredEntry.slug}`" class="hero__cta">
@@ -39,8 +41,12 @@ const tagPairs = computed(() =>
     </section>
 
     <section class="grid">
-      <PostCard v-for="entry in recentlyRecovered" :key="entry.id" :entry="entry"
-        :vol="recentlyRecovered.indexOf(entry) + 2" />
+      <PostCard
+        v-for="entry in recentlyRecovered"
+        :key="entry.id"
+        :entry="entry"
+        :vol="recentlyRecovered.indexOf(entry) + 2"
+      />
     </section>
 
     <section class="signals">
@@ -85,7 +91,7 @@ const tagPairs = computed(() =>
         </div>
         <RouterLink to="/chronicle">展开全部 &rarr;</RouterLink>
       </header>
-      <PostTimeline style="border: 0;" :entries="timelineEntries.slice(0, 4)" />
+      <PostTimeline style="border: 0" :entries="timelineEntries.slice(0, 4)" />
     </section>
   </div>
 </template>

@@ -17,7 +17,8 @@
     "lint:eslint": "eslint . --fix --cache",
     "lint": "run-s lint:*",
     "format": "prettier --write --experimental-cli src/",
-    "new": "node scripts/create-post.js"
+    "new": "node scripts/create-post.js",
+    "prepare": "husky"
   },
   "dependencies": {
     "@fancyapps/ui": "^6.1.6",
@@ -50,6 +51,7 @@
     "eslint-plugin-vue": "~10.5.1",
     "gray-matter": "^4.0.3",
     "hast": "^1.0.0",
+    "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "jsdom": "^27.2.0",
     "npm-run-all2": "^8.0.4",

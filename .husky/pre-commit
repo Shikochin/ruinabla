@@ -1,0 +1,4 @@
+echo "Run lint and format before commit..."
+
+bun lint
+bun format
