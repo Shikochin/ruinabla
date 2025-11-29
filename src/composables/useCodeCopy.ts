@@ -7,13 +7,10 @@ export function useCodeCopy(selector: string) {
     // Clean up previous buttons/listeners
     cleanup()
 
-    console.log('[useCodeCopy] init called with selector:', selector)
     const container = document.querySelector(selector)
-    console.log('[useCodeCopy] container found:', container)
     if (!container) return
 
     const preBlocks = container.querySelectorAll('pre')
-    console.log('[useCodeCopy] pre blocks found:', preBlocks.length)
     preBlocks.forEach((pre) => {
       // Check if button already exists (in case of re-renders without full unmount)
       if (pre.querySelector('.copy-btn')) return
@@ -30,7 +27,6 @@ export function useCodeCopy(selector: string) {
       btn.textContent = 'Copy'
       btn.type = 'button'
       btn.ariaLabel = 'Copy code'
-      console.log('[useCodeCopy] created button for pre block')
 
       const copyHandler = async () => {
         try {

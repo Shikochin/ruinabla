@@ -25,7 +25,7 @@ const router = createRouter({
       path: '/lighthouse',
       name: 'lighthouse',
       component: () => import('@/views/LighthouseView.vue'),
-      meta: { title: '灯塔 - Rui∇abla', index: 2 },
+      meta: { title: '灯塔 - Rui∇abla', index: 2, async: true },
     },
     {
       path: '/about',
