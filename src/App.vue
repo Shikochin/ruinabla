@@ -28,6 +28,14 @@ useHead({
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { name: 'description', content: 'Records of Light and Dust. A personal blog by Shikochin.' },
   ],
+  link: [
+    {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      title: 'Rui∇abla RSS Feed',
+      href: '/rss.xml',
+    },
+  ],
 })
 </script>
 

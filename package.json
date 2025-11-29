@@ -81,7 +81,8 @@
     ],
     "*.{md,mdx}": [
       "node scripts/gen-ai-summary.js",
-      "node scripts/gen-readingMinutes.js"
+      "node scripts/gen-readingMinutes.js",
+      "node scripts/gen-rss.js"
     ]
   }
 }

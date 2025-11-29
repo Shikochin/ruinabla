@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rui∇abla</title>
+    <link>https://ruinabla.shikoch.in</link>
+    <description>Records of Light and Dust. A personal blog by Shikochin.</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 29 Nov 2025 16:22:31 GMT</lastBuildDate>
+    <atom:link href="https://ruinabla.shikoch.in/rss.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>仄费罗斯</title>
+      <link>https://ruinabla.shikoch.in/posts/zephyrus/zephyrus</link>
+      <guid>https://ruinabla.shikoch.in/posts/zephyrus/zephyrus</guid>
+      <description>故事发生在一座与世隔绝的孤岛兰德瓦。岛上流传着古老传说，而少女伊露莎对周遭同学漠不关心，只是着迷地凝望着窗外那片无人打理、野性生长的花地。</description>
+      <pubDate>Wed, 19 Nov 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>使用 SideStore + LiveContainer 在 iOS 上无限侧载 .ipa</title>
+      <link>https://ruinabla.shikoch.in/posts/use-SideStore-LiveContainer-for-unlimited-sideloading-of-ipas-on-iOS</link>
+      <guid>https://ruinabla.shikoch.in/posts/use-SideStore-LiveContainer-for-unlimited-sideloading-of-ipas-on-iOS</guid>
+      <description>本文介绍了一种在iOS设备上实现应用无限侧载及自动续签的方案。通过结合SideStore与LiveContainer，可以突破常规侧载工具7天过期和3个App的数量限制。再通过设置快捷指令自动化，即可实现无需连接电脑的自动续签。</description>
+      <pubDate>Sun, 02 Nov 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>Quotes - 我的新地盘</title>
+      <link>https://ruinabla.shikoch.in/posts/我的新地盘</link>
+      <guid>https://ruinabla.shikoch.in/posts/我的新地盘</guid>
+      <description>作者重启了一个旧的Telegram频道，用于发布零碎的想法和内容。这些内容通过技术项目同步显示在一个名为“Quotes”的新网站上，用户可以从其主项目“Ruin”的菜单中访问。</description>
+      <pubDate>Sun, 26 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>记2025年中秋</title>
+      <link>https://ruinabla.shikoch.in/posts/记2025年中秋</link>
+      <guid>https://ruinabla.shikoch.in/posts/记2025年中秋</guid>
+      <description>月光穿透靛青薄纱，映出半边明亮的静谧景象。作者借这清冷朦胧的意象，表达了对深厚长久情感的戒备与疏离，将景物与心境巧妙融合。</description>
+      <pubDate>Wed, 08 Oct 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>作家</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/25-9-2</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/25-9-2</guid>
+      <description>本文探讨了写作与个人成长的深刻联系，并批判了应试作文教育的弊端。作者认为，僵化的教育模式强迫学生言不由衷，撰写虚伪、讨好的文字，这不仅与写作的真谛背道而驰，更扼杀了人们真诚表达的欲望和能力。</description>
+      <pubDate>Tue, 02 Sep 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>Swift 笔记</title>
+      <link>https://ruinabla.shikoch.in/posts/swift-notes</link>
+      <guid>https://ruinabla.shikoch.in/posts/swift-notes</guid>
+      <description>本文介绍了 Swift 中安全解包 Optional 值的三个方法：使用 `??` 操作符提供默认值，以及通过 `if-let` 和 `guard-let` 语句来处理可能为 `nil` 的情况。</description>
+      <pubDate>Sat, 30 Aug 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>关于 Arcaea 的改包和私服</title>
+      <link>https://ruinabla.shikoch.in/posts/arcaea-reverse-engineering-and-private-server</link>
+      <guid>https://ruinabla.shikoch.in/posts/arcaea-reverse-engineering-and-private-server</guid>
+      <description>本文是一篇针对iOS版《Arcaea》的技术教程，详细介绍了如何通过修改客户端绕过官方服务器验证，并搭建私人服务器。此方法可解锁全部歌曲内容，让玩家自由游玩并正常计算PTT。</description>
+      <pubDate>Mon, 18 Aug 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>A hot take</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/25-8-15</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/25-8-15</guid>
+      <description>文章通过举例批评了滥用网络缩写的现象。作者认为，这种行为不仅毫无必要，还人为制造沟通障碍，加深了人际交流的鸿沟。</description>
+      <pubDate>Thu, 14 Aug 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>Girls’ Talk</title>
+      <link>https://ruinabla.shikoch.in/posts/back to dust/Girls’ Talk</link>
+      <guid>https://ruinabla.shikoch.in/posts/back to dust/Girls’ Talk</guid>
+      <description>身处困境，对未来迷茫的人物决心离开。前路未知，他们只能紧握双手，带着微不足道的一切，在相互扶持中寻求前行的勇气。</description>
+      <pubDate>Wed, 04 Jun 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>月夜</title>
+      <link>https://ruinabla.shikoch.in/posts/back to dust/月夜</link>
+      <guid>https://ruinabla.shikoch.in/posts/back to dust/月夜</guid>
+      <description>姐姐布莱恩的虚荣与索取导致家中争吵不断。一次激烈冲突中，父亲用酒瓶重伤母亲，这幕惨剧让妹妹贝莎彻底崩溃。她无法再忍受压抑的家庭环境，选择独自逃离，奔向漫天风雪，去面对残酷的生活现实。</description>
+      <pubDate>Wed, 14 May 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>瘾</title>
+      <link>https://ruinabla.shikoch.in/posts/back to dust/瘾</link>
+      <guid>https://ruinabla.shikoch.in/posts/back to dust/瘾</guid>
+      <description>父亲莱特发现女儿抽烟后十分生气，却得知是妻子教的。由于经济上依赖妻子，他敢怒不敢言，最终只能无奈地抽起没收来的烟，显露出一个矛盾又无力的父亲形象。</description>
+      <pubDate>Tue, 13 May 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>第 46 号患者：生命</title>
+      <link>https://ruinabla.shikoch.in/posts/back to dust/第 46 号患者：生命</link>
+      <guid>https://ruinabla.shikoch.in/posts/back to dust/第 46 号患者：生命</guid>
+      <description>在产房里，父亲赫尔迎来了新生儿库伦的诞生。他激动落泪，深切祈祷孩子能摆脱时代的局限，生活在一个没有战争与剥削的自由世界。这份对未来的郑重期盼与深沉父爱，最终在他脸上汇聚成一个无比灿烂的笑容。</description>
+      <pubDate>Tue, 13 May 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>闪烁的快意</title>
+      <link>https://ruinabla.shikoch.in/posts/back to dust/闪烁的快意</link>
+      <guid>https://ruinabla.shikoch.in/posts/back to dust/闪烁的快意</guid>
+      <description>大小姐爱丽丝在优渥但孤独的生活中，被夜空中一颗独特闪烁的小星星吸引。当她希望能用望远镜看得更仔细时，星星却消失不见了。她将这份短暂的发现与随之而来的失落写入日记，流露出对美好事物转瞬即逝的怅惘。</description>
+      <pubDate>Tue, 13 May 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>四口之家</title>
+      <link>https://ruinabla.shikoch.in/posts/back to dust/四口之家</link>
+      <guid>https://ruinabla.shikoch.in/posts/back to dust/四口之家</guid>
+      <description>一张为庆祝大女儿布莱恩获奖而拍的全家福，记录了她的自信与荣耀。然而，因家庭贫困无法上学的妹妹贝莎，在拍照后独自离家，迷失在了街头。这幅温馨的画面也成为了一个家庭悲剧的开端。</description>
+      <pubDate>Mon, 12 May 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>对媒介的重新审视</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/25-5-12</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/25-5-12</guid>
+      <description>为更充分地表达观点与情感，作者认为应打破文字这一单一媒介的局限，寻求超越文本的、更多元化的创新表达方式。</description>
+      <pubDate>Mon, 12 May 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>DX Rating 16106!!!</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/25-4-20</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/25-4-20</guid>
+      <description>经过不懈努力，一名玩家终于在游戏中为角色“芙莉莲”集齐了1000个碎片（Piece），完成了100%的角色收集。这个来之不易的成就让他激动不已。</description>
+      <pubDate>Sun, 20 Apr 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>个人 macOS 软件仓库</title>
+      <link>https://ruinabla.shikoch.in/posts/personal-macOS-apps-repository</link>
+      <guid>https://ruinabla.shikoch.in/posts/personal-macOS-apps-repository</guid>
+      <description>作者因更新macOS Beta系统导致电脑故障且无备份，为方便日后重装，特此整理了一份个人常用软件清单。该清单详细罗列了其在命令行、开发、日常工具、游戏等多个方面所使用的各类应用和配置。</description>
+      <pubDate>Sun, 20 Apr 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>恋冬</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/25-1-22</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/25-1-22</guid>
+      <description>深冬暮色下，两人相依在公园长椅。在纷飞的雪花与凝结的叹息中，时间流逝，对方的心跳愈发清晰。这静谧的时刻，一如耳畔温柔的旋律，恰似对方那双无声而深情的眼眸，温暖动人。</description>
+      <pubDate>Wed, 22 Jan 2025 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>关于 🖋️ Losted</title>
+      <link>https://ruinabla.shikoch.in/posts/about-losted</link>
+      <guid>https://ruinabla.shikoch.in/posts/about-losted</guid>
+      <description>作者受启发创建了名为 Losted 的个人网站，用于摘录和分享电影台词、歌词等文字片段。该网站使用 Vue 和 TypeScript 构建，其名称 Losted 意为在文字之海中不断深潜而迷失。项目已在 GitHub 开源。</description>
+      <pubDate>Sat, 12 Oct 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>爱的偏见</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-7-15</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-7-15</guid>
+      <description>真正的爱是无私的，其最高境界在于纯粹希望对方幸福，即使这份幸福与自己无关。这意味着完全尊重对方为追求幸福所选择的任何道路，不带任何偏见。</description>
+      <pubDate>Mon, 15 Jul 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>世人与疯子</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-7-8</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-7-8</guid>
+      <description>本文指出“正常”与“疯狂”是相对的。当你认为世人皆疯时，在他们眼中你也是异类。真正的疯狂，并非与众不同，而是因执着于他人的“错误”而荒废自己的生活。与其徒劳地评判和叹息，不如过好自己的人生。</description>
+      <pubDate>Sun, 07 Jul 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>实验室</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-6-16</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-6-16</guid>
+      <description>本文以名为“政权”的实验室作比喻，描述了统治者如何通过残酷手段，消灭任何反抗意识，最终使被统治者在绝望中放弃自由，沦为只求生存的麻木工具。</description>
+      <pubDate>Sun, 16 Jun 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>凇落</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-6-14</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-6-14</guid>
+      <description>两位同志在冬日目睹阶级差距，并就革命方式展开思辨。一人对现状不满，另一人则告诫革命并非暴力。文章通过“风吹即落的雾凇”与“春天”的意象，含蓄地表达了对旧制度的蔑视，以及对变革既充满希望又感到迷茫的复杂心境。</description>
+      <pubDate>Fri, 14 Jun 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>夕仪</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-6-4</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-6-4</guid>
+      <description>本文描绘了一位在自然中沉思的女性。她曾因孤独而迷失自我，不甘于生命的沉寂。当她望见太阳，便重燃希望，开始回溯过往，追寻自己的根源。最终她领悟到，内在的探寻远比向外界求索更为重要。</description>
+      <pubDate>Tue, 04 Jun 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>入秋阙</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-5-30</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-5-30</guid>
+      <description>本文描绘了无论是自然风雨还是人生喧嚣，繁华过后皆归于寂寥独行的景象。作者借纷飞的思绪与悠长的笛声，抒发了独处时的清冷心境，并以落花腐朽后明月依旧照亮晚亭的画面，营造出一种凄美而隽永的意境。</description>
+      <pubDate>Thu, 30 May 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-5-26</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-5-26</guid>
+      <description>文章以“在血管上跳舞”为喻，描绘了一方为证明价值而做出的危险尝试。他因忽视对方的生命脉动而失败坠落，其脆弱本质暴露无遗，却也给对方留下了伤害。这整个过程被讽刺地称为一场“无与伦比的杰作”。</description>
+      <pubDate>Sun, 26 May 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>环</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-5-21</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-5-21</guid>
+      <description>光影流转的绸缎上演着世人不断重复的蹉跎故事。一位女子选择置身事外，躲在角落静静旁观这一切，对这宿命般的轮回报以洞悉而淡然的微笑。</description>
+      <pubDate>Tue, 21 May 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>诗与远方</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-5-13-1</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-5-13-1</guid>
+      <description>文章以“诗与远方”在2024年无人再提为引，借“文体不限，诗歌除外”的说法，巧妙比喻诗歌所代表的理想情怀正被现实排挤。作者感叹，在当今社会的高压环境下，追求精神生活（诗）与实现人生目标（远方）已变得难以兼得。</description>
+      <pubDate>Mon, 13 May 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>两个人</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-5-13-2</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-5-13-2</guid>
+      <description>文章通过“你”和“我”的对比，探讨金钱与才华的价值。十年后，追求金钱的“你”生活空虚，而坚守才华的“我”虽物质窘迫，却保留了满腹经纶。文章揭示了精神财富比物质财富更长久的道理，讽刺了空有财富而无思想的人生。</description>
+      <pubDate>Mon, 13 May 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-5-8</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-5-8</guid>
+      <description>在夏末秋初的季节更迭中，叙述者宣告了自己的死亡。其逝去与西风中凋零的繁花意象相呼应，借自然景物的衰败，抒发了生命逝去的哀伤，以及对人世无情的感叹。</description>
+      <pubDate>Wed, 08 May 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-3-24</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-3-24</guid>
+      <description>该文描绘了一种既不愿激进也不甘平庸的迷茫状态，认为自己所做之事毫无意义。这种困惑促使作者反思，并对“毅然”与“平凡”这类社会标签的真正定义提出质疑，流露出对自我认同和生命意义的深刻求索。</description>
+      <pubDate>Sun, 24 Mar 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>桃花源</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-3-15</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-3-15</guid>
+      <description>文章描绘了一种矛盾心态：既渴望走进从缝隙中窥见的理想青春，又在思考这种无人问津的隔绝状态，是否本身就是一片宁静的世外桃源。这体现了对美好事物的向往与对孤独价值的审视。</description>
+      <pubDate>Fri, 15 Mar 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>终点</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-3-13</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-3-13</guid>
+      <description>文章以几何线条比喻两种人生关系：相交线在短暂交汇后注定渐行渐远；而平行线虽永不交集，却因方向一致，即便步调不同，也能抵达共同的终点，象征着更长久的陪伴和共同的目标。</description>
+      <pubDate>Wed, 13 Mar 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>言可叹。</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-2-20</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-2-20</guid>
+      <description>此诗描绘了一位创作者的孤独与悲怆。他在枯寂的环境中倾尽心血，其呕心之作虽历经漫长岁月、留有余香，犹如风后落花，但最终只留下一声深沉的叹息，道尽了创作的艰辛与无奈。</description>
+      <pubDate>Tue, 20 Feb 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>听雨</title>
+      <link>https://ruinabla.shikoch.in/posts/listening to the rain/listening-to-the-rain</link>
+      <guid>https://ruinabla.shikoch.in/posts/listening to the rain/listening-to-the-rain</guid>
+      <description>少女“我”在雨中邂逅同学佐仓心羽，并逐渐被她吸引。心羽背负着弑亲、导致“我”前男友（其兄）身亡并让“我”失忆的沉重秘密。当真相揭开，两人选择跨越黑暗的过往，彼此救赎，最终相爱相守。</description>
+      <pubDate>Fri, 09 Feb 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>繁花与落花</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-1-4-1</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-1-4-1</guid>
+      <description>本文借初春的落花，鼓励人们珍视过往的价值。作者借花喻人，指出每个生命都曾在自己的时节里努力盛开，成为当时的“繁花”。因此，不必因辉煌逝去而自卑，过往的绚烂本身就值得肯定。</description>
+      <pubDate>Thu, 04 Jan 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/24-1-4-2</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/24-1-4-2</guid>
+      <description>面对一份不告而别的信，叙述者从最初望向窗外的故作平静，到最终泪水浸湿脆弱告白信纸的悲痛。文章描绘了一个因突如其来的离别而心碎的瞬间，展现了由麻木到悲伤的情感变化。</description>
+      <pubDate>Thu, 04 Jan 2024 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/23-12-11</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/23-12-11</guid>
+      <description>未来并非遥不可及，但实现理想的道路充满代价，总有人无法抵达终点，揭示了希望与牺牲并存的残酷现实。</description>
+      <pubDate>Mon, 11 Dec 2023 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/23-11-4</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/23-11-4</guid>
+      <description>本文描绘了恋人从初期想触碰却回避的矛盾克制，到深夜相拥后找到意义，最终顺应内心，沉溺于对方温暖深情的完整心路历程。</description>
+      <pubDate>Sat, 04 Nov 2023 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/23-10-3</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/23-10-3</guid>
+      <description>对于那段如桃花般美好的回忆，尽管依旧清晰，作者选择决绝地将其埋葬，让无法挽回的过去永远封存。</description>
+      <pubDate>Tue, 03 Oct 2023 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>浮</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/23-9-12</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/23-9-12</guid>
+      <description>此文以植物为喻，描绘了向上无法伸展、向下无处扎根的困境。这象征着一种进退维谷、动弹不得的僵局，表达了当事人身处绝境时，感觉无路可走、行动与静止皆是煎熬的无力与迷茫。</description>
+      <pubDate>Tue, 12 Sep 2023 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>小雨</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/23-6-14</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/23-6-14</guid>
+      <description>作者喜爱小雨的温柔。与猛烈的大雨和雷雨不同，小雨轻柔落下，在炎热的夏天为城市与行人带来清凉，冲刷掉燥热与汗水，显得格外舒适可爱。</description>
+      <pubDate>Wed, 14 Jun 2023 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/23-6-13</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/23-6-13</guid>
+      <description>这段文字描绘了物是人非的感慨：人们在时，生活气息（“人间烟火”）是鲜活而真实的；当人去楼空，同样的大自然（“野风”）却会勾起对往昔的无限回忆与思念，让记忆永存。</description>
+      <pubDate>Tue, 13 Jun 2023 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>回忆</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/22-6-24</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/22-6-24</guid>
+      <description>作者走過承載幾代人回憶的舊地，感嘆曾與故人共享的美好時光與景物，如老鞦韆，如今都已消逝。面對這無法迴避的變遷，往日的美好已然消逝，只剩下一個充滿失落與悲傷的「悲慘世界」。</description>
+      <pubDate>Fri, 24 Jun 2022 00:00:00 GMT</pubDate>
+    </item>
+  
+    <item>
+      <title>无题</title>
+      <link>https://ruinabla.shikoch.in/posts/essays/22-2-7</link>
+      <guid>https://ruinabla.shikoch.in/posts/essays/22-2-7</guid>
+      <description>在一个芬芳的夜晚，作者翻看旧相片追忆故人。他为能在人海中与“她”相遇而深感幸运，强烈的思念之情涌上心头，不禁潸然泪下，泪水浸湿了那段泛黄的记忆。</description>
+      <pubDate>Mon, 07 Feb 2022 00:00:00 GMT</pubDate>
+    </item>
+  
+  </channel>
+</rss>
