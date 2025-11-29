@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, markRaw, onMounted } from 'vue'
+import { computed, markRaw, onMounted, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
+import { useFancybox } from '@/composables/useFancybox'
 
 import { usePostStore } from '@/stores/postStore'
 import GiscusComment from '@/components/GiscusComment.vue'
@@ -18,6 +19,22 @@ const entry = computed(() => {
     component: markRaw(result.component),
   }
 })
+
+// -- Fancybox integration --
+
+// 1. Call useFancybox hook
+const { reinitialize } = useFancybox('[data-fancybox="markdown-gallery"]', {});
+
+// 2. Watch entry changes and rebind Fancybox
+watch(entry, (newEntry, oldEntry) => {
+  if (newEntry && newEntry !== oldEntry) {
+    setTimeout(() => {
+      reinitialize()
+    }, 50); // Slight delay to ensure dynamic component loads and renders
+  }
+}, { immediate: true }); // ensures it triggers on first mount
+
+// -- Fancybox integration end --
 
 // change title
 onMounted(() => {
@@ -57,6 +74,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* Styles section remains unchanged */
+/* ... (original style scoped content) */
 .entry {
   padding: 40px;
   display: flex;
