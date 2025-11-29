@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import mdx from '@mdx-js/rollup'
+import rehypeShiki from '@shikijs/rehype'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 
@@ -17,6 +18,14 @@ export default defineConfig({
       // @ts-expect-error no practical issues
       remarkPlugins: [remarkFrontmatter, [remarkMdxFrontmatter, { name: 'metadata' }]],
       extensions: ['.mdx', '.md'],
+      rehypePlugins: [
+        [
+          rehypeShiki,
+          {
+            theme: 'gruvbox-dark-hard',
+          },
+        ],
+      ],
     }),
     vueDevTools(),
   ],

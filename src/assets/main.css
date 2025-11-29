@@ -147,3 +147,43 @@ img {
     font-size: 15px;
   }
 }
+
+/* Shiki 代码块样式 */
+/* Shiki 会生成 inline styles，这里只添加布局相关的样式 */
+pre.shiki,
+pre.shiki-themes {
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  line-height: 1.6;
+  margin: 1.5rem 0;
+  /* 不设置 background-color，让 Shiki 的 inline style 生效 */
+}
+
+/* 只针对代码块内的 code，不影响行内代码 */
+pre.shiki code,
+pre.shiki-themes code {
+  font-family: 'Fira Code', 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-size: 14px;
+  background: transparent !important; /* 防止被其他样式覆盖 */
+  padding: 0;
+}
+
+/* 行内代码保持原样式 */
+:not(pre) > code {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+blockquote {
+  border-left: 4px solid var(--ruins-border);
+  padding-left: 16px;
+  p {
+    margin: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}
