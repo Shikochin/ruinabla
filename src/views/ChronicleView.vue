@@ -23,6 +23,18 @@ const lastDate = computed(() => timelineEntries.value[0]?.date ?? '')
 const distinctTags = computed(
   () => new Set(timelineEntries.value.flatMap((entry) => entry.tags)).size,
 )
+
+import { useHead } from '@unhead/vue'
+
+useHead({
+  title: '年轮',
+  meta: [
+    {
+      name: 'description',
+      content: '废墟的时间坐标 - Archive of posts',
+    },
+  ],
+})
 </script>
 
 <template>

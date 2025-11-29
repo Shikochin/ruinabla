@@ -14,6 +14,18 @@ const codeBlock = await codeToHtml(code, {
   lang: 'json',
   theme: 'gruvbox-dark-hard',
 })
+
+import { useHead } from '@unhead/vue'
+
+useHead({
+  title: '灯塔',
+  meta: [
+    {
+      name: 'description',
+      content: '光束信号 - Friends and links',
+    },
+  ],
+})
 </script>
 
 <template>

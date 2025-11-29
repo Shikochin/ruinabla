@@ -6,8 +6,20 @@ import { RouterLink } from 'vue-router'
 import PostCard from '@/components/post/PostCard.vue'
 import PostTimeline from '@/components/post/PostTimeline.vue'
 import { usePostStore } from '@/stores/postStore'
+import { useHead } from '@unhead/vue'
 
 const store = usePostStore()
+
+useHead({
+  title: '', // Will result in just "Rui∇abla" due to template
+  meta: [
+    {
+      name: 'description',
+      content: 'Records of Light and Dust. A personal blog by Shikochin.',
+    },
+  ],
+})
+
 const { featuredEntry, recentlyRecovered, timelineEntries, beaconSignals, tagCloud } =
   storeToRefs(store)
 

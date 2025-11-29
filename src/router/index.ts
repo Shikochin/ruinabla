@@ -45,13 +45,4 @@ const router = createRouter({
   },
 })
 
-// fallback to Ruinabla or meta.title if the next page is not a post
-router.afterEach((to, _) => {
-  let title = 'Rui∇abla'
-  if (to.meta.title) {
-    title = to.meta.title as string
-  }
-  document.title = title
-})
-
 export default router

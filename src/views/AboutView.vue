@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import GiscusComment from '@/components/GiscusComment.vue'
+import { useHead } from '@unhead/vue'
+
+useHead({
+  title: '余烬',
+  meta: [
+    {
+      name: 'description',
+      content: '关于我 - About Shikochin',
+    },
+  ],
+})
 </script>
 
 <template>

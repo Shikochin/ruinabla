@@ -18,6 +18,17 @@ watch(
     transitionName.value = to > from ? 'slide-left' : 'slide-right'
   },
 )
+
+import { useHead } from '@unhead/vue'
+
+useHead({
+  titleTemplate: (title) => (title ? `${title} - Rui∇abla` : 'Rui∇abla'),
+  meta: [
+    { charset: 'utf-8' },
+    { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+    { name: 'description', content: 'Records of Light and Dust. A personal blog by Shikochin.' },
+  ],
+})
 </script>
 
 <template>

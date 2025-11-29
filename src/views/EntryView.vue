@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, markRaw, onMounted, watch } from 'vue'
+import { computed, markRaw, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFancybox } from '@/composables/useFancybox'
 
 import { usePostStore } from '@/stores/postStore'
 import GiscusComment from '@/components/GiscusComment.vue'
+
+import { useHead } from '@unhead/vue'
 
 const route = useRoute()
 const store = usePostStore()
@@ -40,9 +42,35 @@ watch(
 
 // -- Fancybox integration end --
 
-// change title
-onMounted(() => {
-  document.title = `${entry.value?.title} - Rui∇abla`
+// SEO configuration
+useHead({
+  title: computed(() => entry.value?.title || 'Not Found'),
+  meta: [
+    {
+      name: 'description',
+      content: computed(() => entry.value?.summary || 'Entry not found'),
+    },
+    {
+      property: 'og:title',
+      content: computed(() => entry.value?.title || 'Not Found'),
+    },
+    {
+      property: 'og:description',
+      content: computed(() => entry.value?.summary || 'Entry not found'),
+    },
+    {
+      property: 'og:type',
+      content: 'article',
+    },
+    {
+      property: 'article:published_time',
+      content: computed(() => entry.value?.date),
+    },
+    {
+      name: 'author',
+      content: 'Shikochin',
+    },
+  ],
 })
 </script>
 
