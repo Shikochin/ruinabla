@@ -25,14 +25,16 @@ async function main() {
     if (!filePath.endsWith('.mdx')) continue
     const raw = fs.readFileSync(filePath, 'utf-8')
     const parsed = matter(raw)
+
     if (parsed.data.summary) {
-      console.log(`✅ ${filePath} 已有摘要或标记为不生成摘要，跳过`)
+      console.log(`✅ ${filePath} 已有摘要`)
       continue
     }
-    if (parsed.data.category === '小说') {
-      console.log(`🚫 ${filePath} 分类为小说，跳过`)
+    if (parsed.data.summary.trim() === '') {
+      console.log(`✅ ${filePath} 留空标记为不生成摘要`)
       continue
     }
+
     const text = parsed.content
       .replace(/<[^>]+>/g, '') // 去掉 HTML
       .replace(/```[\s\S]*?```/g, '') // 去掉代码块

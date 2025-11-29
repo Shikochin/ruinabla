@@ -5,7 +5,7 @@
     <link>https://shikoch.in</link>
     <description>Records of Light and Dust. A personal blog by Shikochin.</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 29 Nov 2025 18:59:10 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 29 Nov 2025 19:07:08 GMT</lastBuildDate>
     <atom:link href="https://shikoch.in/rss.xml" rel="self" type="application/rss+xml" />
     
     <item>
@@ -372,7 +372,7 @@
       <title>TypeScript Syntax Showcase</title>
       <link>https://shikoch.in/posts/typescript-syntax-showcase</link>
       <guid>https://shikoch.in/posts/typescript-syntax-showcase</guid>
-      <description>这是一份全面的TypeScript语法特性展示文件。文章通过代码示例，系统地介绍了其核心功能，包括基础类型、接口、类、泛型、模块，以及映射类型、条件类型等高级用法。</description>
+      <description></description>
       <pubDate>Sun, 06 Feb 2022 00:00:00 GMT</pubDate>
     </item>
   
