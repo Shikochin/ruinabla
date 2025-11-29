@@ -34,7 +34,6 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
-    "shiki": "^3.17.0",
     "@prettier/plugin-oxc": "^0.0.5",
     "@shikijs/rehype": "^3.17.0",
     "@tsconfig/node24": "^24.0.3",
@@ -52,6 +51,7 @@
     "eslint-plugin-vue": "~10.5.1",
     "gray-matter": "^4.0.3",
     "hast": "^1.0.0",
+    "hastscript": "^9.0.1",
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "jsdom": "^27.2.0",
@@ -60,6 +60,7 @@
     "openai": "^6.9.1",
     "oxlint": "~1.29.0",
     "prettier": "3.6.2",
+    "shiki": "^3.17.0",
     "typescript": "~5.9.0",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
