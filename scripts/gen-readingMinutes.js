@@ -1,4 +1,5 @@
-// scripts/fill-reading-minutes.js
+// will be deprecated when I figured how to use remark/rehype plugin to do this
+
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
