@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, Suspense } from 'vue'
+import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useThemeStore } from '@/stores/themeStore'
 

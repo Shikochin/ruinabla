@@ -164,8 +164,8 @@ const codeBlock = await codeToHtml(code, {
     padding: 24px;
   }
 
-  .signal-grid {
+  /* .signal-grid {
     grid-template-columns: 1fr;
-  }
+  } */
 }
 </style>
