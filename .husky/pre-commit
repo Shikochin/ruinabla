@@ -1,7 +1,3 @@
 echo "Run scripts, lint and format before commit..."
 
-node scripts/gen-ai-summary.js
-node scripts/gen-readingMinutes.js
-
-bun lint
-bun format
+bunx lint-staged

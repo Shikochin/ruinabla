@@ -54,6 +54,7 @@
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "jsdom": "^27.2.0",
+    "lint-staged": "^16.2.7",
     "npm-run-all2": "^8.0.4",
     "openai": "^6.9.1",
     "oxlint": "~1.29.0",
@@ -66,5 +67,18 @@
     "vite-plugin-vue-devtools": "^8.0.5",
     "vitest": "^4.0.14",
     "vue-tsc": "^3.1.5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "bun lint",
+      "bun format"
+    ],
+    "*.{json,css,scss}": [
+      "bun format"
+    ],
+    "*.{md,mdx}": [
+      "node scripts/gen-ai-summary.js",
+      "node scripts/gen-readingMinutes.js"
+    ]
   }
 }
