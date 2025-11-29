@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, markRaw, watch } from 'vue'
+import { computed, markRaw, watch, nextTick } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFancybox } from '@/composables/useFancybox'
 
@@ -7,6 +7,8 @@ import { usePostStore } from '@/stores/postStore'
 import GiscusComment from '@/components/GiscusComment.vue'
 
 import { useHead } from '@unhead/vue'
+
+import { useCodeCopy } from '@/composables/useCodeCopy'
 
 const route = useRoute()
 const store = usePostStore()
@@ -26,15 +28,17 @@ const entry = computed(() => {
 
 // 1. Call useFancybox hook
 const { reinitialize } = useFancybox('[data-fancybox="markdown-gallery"]', {})
+const { init: initCopy } = useCodeCopy('.entry__content')
 
 // 2. Watch entry changes and rebind Fancybox
 watch(
   entry,
   (newEntry, oldEntry) => {
     if (newEntry && newEntry !== oldEntry) {
-      setTimeout(() => {
+      nextTick(() => {
         reinitialize()
-      }, 50) // Slight delay to ensure dynamic component loads and renders
+        initCopy()
+      })
     }
   },
   { immediate: true },
@@ -89,7 +93,9 @@ useHead({
         <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>
         <div class="entry__excerpt">{{ entry.summary }}</div>
       </div>
-      <component v-if="entry.component" class="entry__content" :is="entry.component" />
+      <div class="entry__content">
+        <component v-if="entry.component" :is="entry.component" />
+      </div>
       <hr class="entry__divider" />
       <div v-if="entry.tags.length" class="entry__tags eyebrow">
         <span v-for="tag in entry.tags" :key="tag">#{{ tag }}</span>

@@ -16,6 +16,14 @@ const codeBlock = await codeToHtml(code, {
 })
 
 import { useHead } from '@unhead/vue'
+import { useCodeCopy } from '@/composables/useCodeCopy'
+import { onMounted } from 'vue'
+
+const { init: initCopy } = useCodeCopy('.join')
+
+onMounted(() => {
+  initCopy()
+})
 
 useHead({
   title: '灯塔',

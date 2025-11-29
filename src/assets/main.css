@@ -187,3 +187,46 @@ blockquote {
     margin-bottom: 8px;
   }
 }
+
+/* Copy Button Styles */
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ruins-muted);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--ruins-border);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+pre:hover .copy-btn,
+.copy-btn:focus {
+  opacity: 1;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--ruins-text);
+  border-color: var(--ruins-accent);
+}
+
+.copy-btn.copied {
+  background: var(--ruins-success);
+  color: #fff;
+  border-color: var(--ruins-success);
+}
+
+:root.light .copy-btn {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:root.light .copy-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
