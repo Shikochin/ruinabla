@@ -124,14 +124,7 @@ a:hover {
 img {
   max-width: 100%;
   display: block;
-  filter: grayscale(0.4) contrast(1.1);
 }
-
-/* 亮色模式下图片对比度调整 */
-:root.light img {
-  filter: grayscale(0.2) contrast(1.05);
-}
-
 /*
   Paper Panel 重定义：
   纯粹的线条与微弱的内部发光

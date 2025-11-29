@@ -20,17 +20,24 @@ const router = createRouter({
       component: () => import('@/views/ChronicleView.vue'),
       meta: { title: '年轮 - Rui∇abla', index: 1 },
     },
+
     {
-      path: '/posts/:slug(.*)',
-      name: 'posts',
-      component: () => import('@/views/EntryView.vue'),
-      meta: { index: 99 },
+      path: '/lighthouse',
+      name: 'lighthouse',
+      component: () => import('@/views/LighthouseView.vue'),
+      meta: { title: '灯塔 - Rui∇abla', index: 2 },
     },
     {
       path: '/about',
       name: 'about',
       component: () => import('@/views/AboutView.vue'),
-      meta: { title: '余烬 - Rui∇abla', index: 2 },
+      meta: { title: '余烬 - Rui∇abla', index: 3 },
+    },
+    {
+      path: '/posts/:slug(.*)',
+      name: 'posts',
+      component: () => import('@/views/EntryView.vue'),
+      meta: { index: 99 },
     },
   ],
   scrollBehavior() {
