@@ -154,10 +154,9 @@ pre.shiki,
 pre.shiki-themes {
   padding: 1.5rem;
   border-radius: 8px;
-  overflow-x: auto;
+  overflow: visible;
   line-height: 1.6;
   margin: 1.5rem 0;
-  /* 不设置 background-color，让 Shiki 的 inline style 生效 */
 }
 
 /* 只针对代码块内的 code，不影响行内代码 */

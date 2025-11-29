@@ -26,11 +26,7 @@ async function main() {
     const raw = fs.readFileSync(filePath, 'utf-8')
     const parsed = matter(raw)
     if (parsed.data.summary) {
-      console.log(`✅ ${filePath} 已有摘要，跳过`)
-      continue
-    }
-    if (parsed.data.summary === 'disabled') {
-      console.log(`🚫 ${filePath} 标记为不生成摘要，跳过`)
+      console.log(`✅ ${filePath} 已有摘要或标记为不生成摘要，跳过`)
       continue
     }
     if (parsed.data.category === '小说') {

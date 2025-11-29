@@ -89,7 +89,7 @@ useHead({
           {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span
         >
       </h1>
-      <div class="entry__summary-wrapper">
+      <div class="entry__summary-wrapper" v-if="entry.summary">
         <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>
         <div class="entry__excerpt">{{ entry.summary }}</div>
       </div>
@@ -192,7 +192,7 @@ useHead({
 .entry__content {
   padding: 10px 0;
   line-height: 1.9;
-  color: rgba(255, 255, 255, 0.9);
+  /* color: rgba(255, 255, 255, 0.9); */
 }
 
 .entry__content :global(h2),

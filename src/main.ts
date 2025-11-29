@@ -4,6 +4,8 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import './assets/main.css'
+// twoslash style
+import './assets/twoslash.css'
 
 import { createHead } from '@unhead/vue/client'
 

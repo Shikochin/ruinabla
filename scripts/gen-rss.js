@@ -4,7 +4,7 @@ import matter from 'gray-matter'
 
 const POSTS_DIR = path.join(import.meta.dirname, '../src/posts')
 const PUBLIC_DIR = path.join(import.meta.dirname, '../public')
-const SITE_URL = 'https://ruinabla.shikoch.in' // Replace with actual site URL if different
+const SITE_URL = 'https://shikoch.in' // Replace with actual site URL if different
 const SITE_TITLE = 'Rui∇abla'
 const SITE_DESCRIPTION = 'Records of Light and Dust. A personal blog by Shikochin.'
 

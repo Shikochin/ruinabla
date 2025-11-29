@@ -37,6 +37,7 @@
   "devDependencies": {
     "@prettier/plugin-oxc": "^0.0.5",
     "@shikijs/rehype": "^3.17.0",
+    "@shikijs/twoslash": "^3.17.0",
     "@tsconfig/node24": "^24.0.3",
     "@types/jsdom": "^27.0.0",
     "@types/node": "^24.10.1",
@@ -62,6 +63,7 @@
     "oxlint": "~1.29.0",
     "prettier": "3.6.2",
     "shiki": "^3.17.0",
+    "twoslash": "^0.3.4",
     "typescript": "~5.9.0",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
@@ -82,7 +84,8 @@
     "*.{md,mdx}": [
       "node scripts/gen-ai-summary.js",
       "node scripts/gen-readingMinutes.js",
-      "node scripts/gen-rss.js"
+      "node scripts/gen-rss.js",
+      "git add public/rss.xml"
     ]
   }
 }

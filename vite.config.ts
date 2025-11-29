@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import mdx from '@mdx-js/rollup'
 import rehypeShiki from '@shikijs/rehype'
+import { transformerTwoslash } from '@shikijs/twoslash'
 import rehypeFancybox from './src/rehypeFancybox'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
@@ -24,6 +25,7 @@ export default defineConfig({
           rehypeShiki,
           {
             theme: 'gruvbox-dark-hard',
+            transformers: [transformerTwoslash({})],
           },
         ],
         rehypeFancybox,
