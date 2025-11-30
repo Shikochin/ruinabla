@@ -20,7 +20,7 @@ export async function getLatestBuildStatusFromProxy(): Promise<FormattedBuildRes
   }
 
   try {
-    const response = await fetch(PROXY_API_ENDPOINT, {
+    const response = await fetch(`https://shikoch.in${PROXY_API_ENDPOINT}`, {
       method: 'GET',
     })
 
@@ -36,26 +36,7 @@ export async function getLatestBuildStatusFromProxy(): Promise<FormattedBuildRes
 
     const buildTime = data.lastBuildTime ? new Date(data.lastBuildTime) : null
 
-    let statusText = 'Unknown Status'
-    if (data.status) {
-      switch (data.status) {
-        case 'success':
-        case 'active':
-          statusText = 'Deployment Successful'
-          break
-        case 'failure':
-          statusText = 'Build Failed'
-          break
-        case 'building':
-          statusText = 'Building in Progress'
-          break
-        case 'deploying':
-          statusText = 'Deploying'
-          break
-        default:
-          statusText = data.status
-      }
-    }
+    const statusText = data.status
 
     return {
       buildTime: buildTime,

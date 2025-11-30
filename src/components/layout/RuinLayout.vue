@@ -55,7 +55,10 @@ function switchDevMode() {
 
       <button id="delta" @click="backToTop"><a>Δ</a></button>
 
-      <RuinFooter />
+      <Suspense>
+        <RuinFooter />
+        <template #fallback> Loading... </template>
+      </Suspense>
     </div>
   </div>
 </template>

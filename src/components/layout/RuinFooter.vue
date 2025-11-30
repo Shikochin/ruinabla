@@ -23,7 +23,7 @@ if (devStore.isDev) {
       })
       .then((res) => {
         console.log(res.data)
-        commitHash.value = res.data.object.sha
+        commitHash.value = res.data.object.sha.slice(0, 7)
       })
   } catch (error) {
     console.error(`Failed to fetch commit hash: ${error}`)
@@ -40,14 +40,14 @@ if (devStore.isDev) {
     </p>
     <p>Constructed with <a href="https://vuejs.org">Vue 3</a> & Persistence</p>
     <div v-if="devStore.isDev">
+      <p v-if="buildTime">Last Build Time: {{ buildTime.toLocaleString() }}</p>
+      <p>Build Status: {{ statusText }}</p>
       <p v-if="commitHash">
         Commit:
         <a :href="`https://github.com/Shikochin/ruinabla/commit/${commitHash}`" target="_blank">{{
           commitHash
         }}</a>
       </p>
-      <p v-if="buildTime">Last Build Time: {{ buildTime.toLocaleString() }}</p>
-      <p>Build Status: {{ statusText }}</p>
     </div>
   </footer>
 </template>
