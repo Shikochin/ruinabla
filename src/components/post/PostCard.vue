@@ -12,7 +12,13 @@ const entry = toRef(props, 'entry')
     <div class="post-card__header">
       <span class="post-card__date">{{ entry.date }}</span>
       <div class="post-card__divider"></div>
-      <span v-if="entry.category" class="post-card__tag">{{ entry.category }}</span>
+      <RouterLink
+        v-if="entry.category"
+        :to="`/categories/${entry.category}`"
+        class="post-card__tag"
+      >
+        {{ entry.category }}
+      </RouterLink>
     </div>
 
     <RouterLink :to="`/posts/${entry.slug}`" class="post-card__title">
@@ -138,5 +144,16 @@ const entry = toRef(props, 'entry')
   .post-card__title h3 {
     font-size: 1.6rem;
   }
+}
+
+.post-card__tag {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.post-card__tag:hover {
+  border-color: var(--ruins-accent);
+  color: var(--ruins-accent-strong);
 }
 </style>

@@ -28,7 +28,9 @@ const entries = toRef(props, 'entries')
             {{ entry.summary }}
           </p>
           <div v-if="entry.tags.length" class="timeline__tags">
-            <span v-for="tag in entry.tags" :key="tag">#{{ tag }}</span>
+            <RouterLink v-for="tag in entry.tags" :key="tag" :to="`/tags/${tag}`"
+              >#{{ tag }}</RouterLink
+            >
           </div>
         </div>
       </li>

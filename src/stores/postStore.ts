@@ -27,6 +27,12 @@ export const usePostStore = defineStore('Post', () => {
 
   const findBySlug = (slug: string) => getEntryBySlug(slug)
 
+  const getEntriesByTag = (tag: string) =>
+    timelineEntries.value.filter((entry) => entry.tags.includes(tag))
+
+  const getEntriesByCategory = (category: string) =>
+    timelineEntries.value.filter((entry) => entry.category === category)
+
   return {
     entries,
     featuredEntry,
@@ -35,5 +41,7 @@ export const usePostStore = defineStore('Post', () => {
     beaconSignals,
     tagCloud,
     findBySlug,
+    getEntriesByTag,
+    getEntriesByCategory,
   }
 })

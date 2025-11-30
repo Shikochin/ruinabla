@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { RouterLink } from 'vue-router'
 
 import PostCard from '@/components/post/PostCard.vue'
-import PostTimeline from '@/components/post/PostTimeline.vue'
+import PostList from '@/components/post/PostList.vue'
 import RecentComments from '@/components/RecentComments.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useHead } from '@unhead/vue'
@@ -68,9 +68,14 @@ const tagPairs = computed(() =>
         <p class="eyebrow">常现词</p>
         <h3>废墟里的高频词</h3>
         <div class="tag-cloud__items">
-          <span v-for="[tag, count] in tagPairs" :key="tag">
+          <RouterLink
+            v-for="[tag, count] in tagPairs"
+            :key="tag"
+            :to="`/tags/${tag}`"
+            class="tag-item"
+          >
             {{ tag }} <small>×{{ count }}</small>
-          </span>
+          </RouterLink>
         </div>
       </div>
     </section>
@@ -83,7 +88,7 @@ const tagPairs = computed(() =>
         </div>
         <RouterLink to="/chronicle">展开全部 &rarr;</RouterLink>
       </header>
-      <PostTimeline style="border: 0" :entries="timelineEntries.slice(0, 4)" />
+      <PostList style="border: 0" :entries="timelineEntries.slice(0, 4)" />
     </section>
   </div>
 </template>
@@ -288,17 +293,19 @@ const tagPairs = computed(() =>
   gap: 8px;
 }
 
-.tag-cloud__items span {
+.tag-cloud__items .tag-item {
   padding: 6px 10px;
   border: 1px solid var(--ruins-border);
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--ruins-muted);
-  cursor: default;
+  cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.tag-cloud__items span:hover {
+.tag-cloud__items .tag-item:hover {
   border-color: var(--ruins-accent);
   color: var(--ruins-accent-strong);
 }

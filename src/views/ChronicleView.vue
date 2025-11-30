@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import PostTimeline from '@/components/post/PostTimeline.vue'
+import PostList from '@/components/post/PostList.vue'
 import { usePostStore } from '@/stores/postStore'
 
 const store = usePostStore()
@@ -72,7 +72,7 @@ useHead({
       </div>
     </section>
 
-    <PostTimeline :entries="timelineEntries" />
+    <PostList :entries="timelineEntries" />
   </div>
 </template>
 

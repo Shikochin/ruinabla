@@ -39,6 +39,18 @@ const router = createRouter({
       component: () => import('@/views/EntryView.vue'),
       meta: { index: 99 },
     },
+    {
+      path: '/tags/:tag',
+      name: 'tag',
+      component: () => import('@/views/TagView.vue'),
+      meta: { index: 99 },
+    },
+    {
+      path: '/categories/:category',
+      name: 'category',
+      component: () => import('@/views/CategoryView.vue'),
+      meta: { index: 99 },
+    },
   ],
   scrollBehavior() {
     return { top: 0 }

@@ -85,7 +85,9 @@ useHead({
       <p class="eyebrow">
         {{ entry.date }} / {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }}
         read /
-        <strong>{{ entry.category }}</strong>
+        <RouterLink :to="`/categories/${entry.category}`">
+          <strong>{{ entry.category }}</strong>
+        </RouterLink>
       </p>
       <h1 class="entry__title">
         <span>{{ entry.title }}</span>
@@ -100,7 +102,9 @@ useHead({
       </div>
       <hr class="entry__divider" />
       <div v-if="entry.tags.length" class="entry__tags eyebrow">
-        <span v-for="tag in entry.tags" :key="tag">#{{ tag }}</span>
+        <RouterLink v-for="tag in entry.tags" :key="tag" :to="`/tags/${tag}`">
+          #{{ tag }}
+        </RouterLink>
       </div>
     </section>
 
@@ -246,5 +250,15 @@ useHead({
   span {
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
   }
+}
+
+.eyebrow a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.eyebrow a:hover {
+  color: var(--ruins-accent-strong);
 }
 </style>
