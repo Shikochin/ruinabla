@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-const TOKEN: string =
-  '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'
+// vite exposes env vars if it starts with VITE
+const TOKEN: string = import.meta.env.VITE_RECENT_COMMENTS_PAT
 
 interface Comment {
   id: string
@@ -112,7 +112,7 @@ const fetchComments = async () => {
 
     discussions.forEach((discussion: DiscussionNode) => {
       if (discussion.comments.nodes.length > 0) {
-        const comment = discussion.comments.nodes[0]
+        const comment = discussion.comments.nodes[0] as Comment
         fetchedComments.push({
           id: comment.id,
           body: comment.body,
