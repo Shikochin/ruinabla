@@ -10,11 +10,27 @@ export const usePostStore = defineStore('Post', () => {
 
   const recentlyRecovered = computed(() => PostEntries.slice(1, 4))
 
-  const timelineEntries = computed(() =>
+  const postEntries = computed(() =>
     [...PostEntries].sort((a, b) =>
       Temporal.PlainDate.compare(Temporal.PlainDate.from(b.date), Temporal.PlainDate.from(a.date)),
     ),
   )
+
+  const pickedUpPostsEntries = computed(() => {
+    const pinned = postEntries.value.filter((entry) => entry.pinned)
+    const regular = postEntries.value.filter((entry) => !entry.pinned)
+
+    const sortedPinned = pinned.sort((a, b) =>
+      Temporal.PlainDate.compare(Temporal.PlainDate.from(b.date), Temporal.PlainDate.from(a.date)),
+    )
+    const sortedRegular = regular.sort((a, b) =>
+      Temporal.PlainDate.compare(Temporal.PlainDate.from(b.date), Temporal.PlainDate.from(a.date)),
+    )
+
+    const all = [...sortedPinned, ...sortedRegular]
+    const limit = Math.max(pinned.length, 4)
+    return all.slice(0, limit)
+  })
 
   const beaconSignals = computed(() => PostEntries.slice(0, 3))
 
@@ -28,16 +44,17 @@ export const usePostStore = defineStore('Post', () => {
   const findBySlug = (slug: string) => getEntryBySlug(slug)
 
   const getEntriesByTag = (tag: string) =>
-    timelineEntries.value.filter((entry) => entry.tags.includes(tag))
+    postEntries.value.filter((entry) => entry.tags.includes(tag))
 
   const getEntriesByCategory = (category: string) =>
-    timelineEntries.value.filter((entry) => entry.category === category)
+    postEntries.value.filter((entry) => entry.category === category)
 
   return {
     entries,
     featuredEntry,
     recentlyRecovered,
-    timelineEntries,
+    postEntries,
+    pickedUpPostsEntries,
     beaconSignals,
     tagCloud,
     findBySlug,

@@ -9,6 +9,7 @@ export interface PostFrontMatter {
   categories?: string[]
   readingMinutes: number
   summary?: string
+  pinned?: boolean
 }
 
 export interface PostEntry extends PostFrontMatter {

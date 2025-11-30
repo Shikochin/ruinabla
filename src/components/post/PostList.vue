@@ -16,13 +16,17 @@ const entries = toRef(props, 'entries')
       <li v-for="entry in entries" :key="entry.id" class="timeline__item">
         <div class="timeline__meta">
           <span class="timeline__date">{{ entry.date }}</span>
+          <br />
+          <strong v-if="entry.pinned" class="timeline__date">Pinned</strong>
         </div>
         <div class="timeline__divider">
           <span class="timeline__dot"></span>
         </div>
         <div class="timeline__content">
           <RouterLink :to="`/posts/${entry.slug}`">
-            <h4>{{ entry.title }}</h4>
+            <h4>
+              {{ entry.title }}
+            </h4>
           </RouterLink>
           <p class="timeline__summary">
             {{ entry.summary }}
@@ -152,6 +156,27 @@ const entries = toRef(props, 'entries')
   color: var(--ruins-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.pinned-badge {
+  display: inline-block;
+  margin-left: 12px;
+  padding: 2px 8px;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--ruins-accent-strong);
+  border: 1px solid var(--ruins-accent);
+  background: rgba(177, 98, 134, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+}
+
+.timeline__content a:hover .pinned-badge {
+  background: rgba(177, 98, 134, 0.2);
+  box-shadow: 0 0 8px rgba(177, 98, 134, 0.3);
 }
 
 @media (max-width: 640px) {

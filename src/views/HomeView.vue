@@ -21,7 +21,7 @@ useHead({
   ],
 })
 
-const { featuredEntry, recentlyRecovered, timelineEntries, tagCloud } = storeToRefs(store)
+const { featuredEntry, recentlyRecovered, pickedUpPostsEntries, tagCloud } = storeToRefs(store)
 
 const tagPairs = computed(() =>
   Object.entries(tagCloud.value)
@@ -88,7 +88,7 @@ const tagPairs = computed(() =>
         </div>
         <RouterLink to="/chronicle">展开全部 &rarr;</RouterLink>
       </header>
-      <PostList style="border: 0" :entries="timelineEntries.slice(0, 4)" />
+      <PostList style="border: 0" :entries="pickedUpPostsEntries" />
     </section>
   </div>
 </template>

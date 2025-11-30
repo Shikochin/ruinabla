@@ -6,23 +6,21 @@ import PostList from '@/components/post/PostList.vue'
 import { usePostStore } from '@/stores/postStore'
 
 const store = usePostStore()
-const { timelineEntries } = storeToRefs(store)
+const { postEntries } = storeToRefs(store)
 
-const totalPosts = computed(() => timelineEntries.value.length)
+const totalPosts = computed(() => postEntries.value.length)
 const averageReading = computed(() => {
-  const list = timelineEntries.value
+  const list = postEntries.value
   if (!list.length) return 0
   const total = list.reduce((sum, entry) => sum + entry.readingMinutes, 0)
   return Math.round(total / list.length)
 })
 const firstDate = computed(() => {
-  const list = timelineEntries.value
+  const list = postEntries.value
   return list.length ? (list[list.length - 1]?.date ?? '') : ''
 })
-const lastDate = computed(() => timelineEntries.value[0]?.date ?? '')
-const distinctTags = computed(
-  () => new Set(timelineEntries.value.flatMap((entry) => entry.tags)).size,
-)
+const lastDate = computed(() => postEntries.value[0]?.date ?? '')
+const distinctTags = computed(() => new Set(postEntries.value.flatMap((entry) => entry.tags)).size)
 
 import { useHead } from '@unhead/vue'
 
@@ -72,7 +70,7 @@ useHead({
       </div>
     </section>
 
-    <PostList :entries="timelineEntries" />
+    <PostList :entries="postEntries" />
   </div>
 </template>
 
