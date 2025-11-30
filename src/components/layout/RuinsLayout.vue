@@ -80,11 +80,10 @@ onMounted(() => {
       </header>
 
       <main class="ruins-main">
-        <Suspense v-if="$route.meta?.async">
+        <Suspense>
           <slot />
           <template #fallback> Loading... </template>
         </Suspense>
-        <slot v-else />
       </main>
 
       <button id="delta" @click="backToTop"><a>Δ</a></button>
