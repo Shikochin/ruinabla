@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router'
 
 import PostCard from '@/components/post/PostCard.vue'
 import PostTimeline from '@/components/post/PostTimeline.vue'
+import RecentComments from '@/components/RecentComments.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useHead } from '@unhead/vue'
 
@@ -20,8 +21,7 @@ useHead({
   ],
 })
 
-const { featuredEntry, recentlyRecovered, timelineEntries, beaconSignals, tagCloud } =
-  storeToRefs(store)
+const { featuredEntry, recentlyRecovered, timelineEntries, tagCloud } = storeToRefs(store)
 
 const tagPairs = computed(() =>
   Object.entries(tagCloud.value)
@@ -62,27 +62,7 @@ const tagPairs = computed(() =>
     </section>
 
     <section class="signals">
-      <div class="signals__list paper-panel">
-        <header>
-          <div>
-            <p class="eyebrow">最新</p>
-            <h3>刚刚完成的笔记</h3>
-          </div>
-          <RouterLink to="/chronicle">查看年轮 &rarr;</RouterLink>
-        </header>
-        <ul>
-          <li v-for="entry in beaconSignals" :key="entry.id">
-            <div>
-              <p class="eyebrow">{{ entry.date }}</p>
-              <RouterLink :to="`/posts/${entry.slug}`">{{ entry.title }}</RouterLink>
-              <p class="signals__summary">
-                {{ entry.summary }}
-              </p>
-            </div>
-            <span class="signals__read-time">{{ entry.readingMinutes }}m</span>
-          </li>
-        </ul>
-      </div>
+      <RecentComments />
 
       <div class="tag-cloud paper-panel">
         <p class="eyebrow">常现词</p>
