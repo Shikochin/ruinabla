@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { Temporal } from '@js-temporal/polyfill'
 
 // vite exposes env vars if it starts with VITE
 const TOKEN: string = import.meta.env.VITE_RECENT_COMMENTS_PAT
@@ -41,13 +42,13 @@ const loading = ref(true)
 const error = ref<string | null>(null)
 
 const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diff = now.getTime() - date.getTime()
+  const instant = Temporal.Instant.from(dateString)
+  const now = Temporal.Now.instant()
+  const duration = now.since(instant)
 
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(minutes / 60)
-  const days = Math.floor(hours / 24)
+  const minutes = Math.floor(duration.total({ unit: 'minute' }))
+  const hours = Math.floor(duration.total({ unit: 'hour' }))
+  const days = Math.floor(duration.total({ unit: 'day' }))
 
   if (minutes < 1) return '刚刚'
   if (minutes < 60) return `${minutes}分钟前`
