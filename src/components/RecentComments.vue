@@ -120,7 +120,7 @@ const fetchComments = async () => {
           createdAt: comment.createdAt,
           url: comment.url,
           discussion: {
-            title: discussion.title,
+            title: discussion.title.slice(0, -1),
             url: discussion.url,
           },
         })
@@ -175,7 +175,7 @@ onMounted(() => {
             {{ comment.body.slice(0, 60) }}{{ comment.body.length > 60 ? '...' : '' }}
           </a>
           <a
-            :href="comment.discussion.url"
+            :href="comment.discussion.title"
             target="_blank"
             rel="noopener noreferrer"
             class="discussion-title"

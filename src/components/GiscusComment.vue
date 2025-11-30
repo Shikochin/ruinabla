@@ -6,7 +6,7 @@ const themeStore = useThemeStore()
 </script>
 
 <template>
-  <section class="comments paper-panel">
+  <section id="comments" class="paper-panel">
     <p class="eyebrow">评论</p>
     <Giscus
       repo="Shikochin/ruin"
@@ -26,7 +26,7 @@ const themeStore = useThemeStore()
 </template>
 
 <style scoped>
-.comments {
+#comments {
   padding: 40px;
   margin-top: 40px;
   border-top: 2px solid var(--ruins-border);
@@ -52,7 +52,7 @@ const themeStore = useThemeStore()
 }
 
 @media (max-width: 640px) {
-  .comments {
+  #comments {
     padding: 24px;
   }
 }

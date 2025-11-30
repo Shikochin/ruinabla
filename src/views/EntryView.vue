@@ -82,13 +82,15 @@ useHead({
   <div>
     <section v-if="entry" class="entry paper-panel">
       <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
-      <p class="eyebrow">{{ entry.date }}</p>
+      <p class="eyebrow">
+        {{ entry.date }} / {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }}
+        read /
+        <strong>{{ entry.category }}</strong>
+      </p>
       <h1 class="entry__title">
         <span>{{ entry.title }}</span>
-        <span class="eyebrow">
-          {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }} read</span
-        >
       </h1>
+
       <div class="entry__summary-wrapper" v-if="entry.summary">
         <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>
         <div class="entry__excerpt">{{ entry.summary }}</div>
