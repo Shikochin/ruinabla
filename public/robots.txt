@@ -3,4 +3,4 @@ Disallow: /
 User-agent: *
 Disallow: 
 Disallow: /cgi-bin/
-Sitemap: https://shikoch.in/rss.xml
+Sitemap: https://shikoch.in/sitemap.xml
