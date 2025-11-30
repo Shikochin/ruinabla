@@ -33,11 +33,6 @@ const themeStore = useThemeStore()
 }
 
 .eyebrow {
-  margin: 0 0 24px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  color: var(--ruins-muted);
   font-family: var(--font-mono);
 }
 

@@ -41,7 +41,7 @@ if (devStore.isDev) {
     <p>Constructed with <a href="https://vuejs.org">Vue 3</a> & Persistence</p>
     <div v-if="devStore.isDev">
       <p v-if="buildTime">Last Build Time: {{ buildTime.toLocaleString() }}</p>
-      <p>Build Status: {{ statusText }}</p>
+      <p v-if="statusText">Build Status: {{ statusText }}</p>
       <p v-if="commitHash">
         Commit:
         <a :href="`https://github.com/Shikochin/ruinabla/commit/${commitHash}`" target="_blank">{{

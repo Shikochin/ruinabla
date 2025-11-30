@@ -1,0 +1,6 @@
+User-agent: baiduspider
+Disallow: /
+User-agent: *
+Disallow: 
+Disallow: /cgi-bin/
+Sitemap: https://shikoch.in/rss.xml

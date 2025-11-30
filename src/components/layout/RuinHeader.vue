@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useThemeStore } from '@/stores/themeStore'
 import { onMounted } from 'vue'
-
+import { useDevStore } from '@/stores/devStore'
+const devStore = useDevStore()
 const themeStore = useThemeStore()
 onMounted(() => {
   themeStore.initTheme()
@@ -20,6 +21,7 @@ onMounted(() => {
       <RouterLink to="/chronicle">年轮</RouterLink>
       <RouterLink to="/lighthouse">灯塔</RouterLink>
       <RouterLink to="/about">余烬</RouterLink>
+      <RouterLink to="/experiment" v-if="devStore.isDev">实验</RouterLink>
       <button
         class="theme-toggle"
         @click="themeStore.toggleTheme"

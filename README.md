@@ -10,7 +10,7 @@ Rui∇abla means Ruin + Nabla( ∇).
 - [TypeScript](https://www.typescriptlang.org)
 - [Vite](https://vite.dev)
 - [MDXjs](https://mdxjs.com)
-- [Shiki 式](https://shikijs.io)
+- [Shiki 式](https://shiki.style)
 - [Pinia](https://pinia.vuejs.org)
 
 ## Develop

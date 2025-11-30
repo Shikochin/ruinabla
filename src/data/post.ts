@@ -10,6 +10,7 @@ export interface PostFrontMatter {
   readingMinutes: number
   summary?: string
   pinned?: boolean
+  hide?: boolean
 }
 
 export interface PostEntry extends PostFrontMatter {

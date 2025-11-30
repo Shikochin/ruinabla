@@ -219,14 +219,6 @@ useHead({
   border-radius: 4px;
 }
 
-.eyebrow {
-  margin: 0;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  color: var(--ruins-muted);
-}
-
 @media (max-width: 640px) {
   .entry {
     padding: 26px;

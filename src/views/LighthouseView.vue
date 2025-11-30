@@ -72,7 +72,6 @@ useHead({
 }
 
 .lighthouse h1 {
-  margin: 0 0 16px;
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   line-height: 1.3;
 }
@@ -170,22 +169,10 @@ useHead({
   background: rgba(0, 0, 0, 0.03);
 }
 
-.eyebrow {
-  margin: 0 0 8px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  color: var(--ruins-muted);
-}
-
 @media (max-width: 640px) {
   .lighthouse,
   .join {
     padding: 24px;
   }
-
-  /* .signal-grid {
-    grid-template-columns: 1fr;
-  } */
 }
 </style>

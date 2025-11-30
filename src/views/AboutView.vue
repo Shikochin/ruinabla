@@ -42,7 +42,7 @@ const age = Temporal.Now.plainDateISO().year - 2008
     <section class="intro paper-panel">
       <p class="eyebrow">联系我</p>
       <div class="links">
-        <a href="https://github.com/Shikochin" target="_blank" class="social-btn">
+        <a href="https://github.com/Shikochin" target="_blank" class="btn">
           <svg
             viewBox="0 0 24 24"
             width="20"
@@ -59,7 +59,7 @@ const age = Temporal.Now.plainDateISO().year - 2008
           </svg>
           GitHub
         </a>
-        <a href="https://x.com/shikoch1n" target="_blank" class="social-btn">
+        <a href="https://x.com/shikoch1n" target="_blank" class="btn">
           <svg
             viewBox="0 0 24 24"
             width="20"
@@ -75,7 +75,7 @@ const age = Temporal.Now.plainDateISO().year - 2008
           </svg>
           X (Twitter)
         </a>
-        <a href="mailto:i@shikoch.in" class="social-btn">
+        <a href="mailto:i@shikoch.in" class="btn">
           <svg
             viewBox="0 0 24 24"
             width="20"
@@ -165,63 +165,6 @@ const age = Temporal.Now.plainDateISO().year - 2008
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-}
-
-.social-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
-  border: 1px solid var(--ruins-border);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ruins-muted);
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  background: transparent;
-  position: relative;
-  overflow: hidden;
-}
-
-.social-btn svg {
-  transition: transform 0.3s ease;
-}
-
-.social-btn:hover {
-  border-color: var(--ruins-accent);
-  color: var(--ruins-accent-strong);
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
-}
-
-.social-btn:hover svg {
-  transform: scale(1.1);
-  stroke: var(--ruins-accent);
-}
-
-.social-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s ease;
-}
-
-.social-btn:hover::before {
-  left: 100%;
-}
-
-.eyebrow {
-  margin: 0;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  color: var(--ruins-muted);
 }
 
 @media (max-width: 640px) {

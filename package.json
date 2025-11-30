@@ -86,7 +86,8 @@
       "node scripts/gen-ai-summary.js",
       "node scripts/gen-readingMinutes.js",
       "node scripts/gen-rss.js",
-      "git add public/rss.xml"
+      "node scripts/gen-sitemap.js",
+      "git add public/rss.xml public/sitemap.xml"
     ]
   }
 }

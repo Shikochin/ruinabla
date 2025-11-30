@@ -25,13 +25,19 @@ const router = createRouter({
       path: '/lighthouse',
       name: 'lighthouse',
       component: () => import('@/views/LighthouseView.vue'),
-      meta: { title: '灯塔 - Rui∇abla', index: 2, async: true },
+      meta: { title: '灯塔 - Rui∇abla', index: 2 },
     },
     {
       path: '/about',
       name: 'about',
       component: () => import('@/views/AboutView.vue'),
       meta: { title: '余烬 - Rui∇abla', index: 3 },
+    },
+    {
+      path: '/experiment',
+      name: 'experiment',
+      component: () => import('@/views/ExperimentView.vue'),
+      meta: { title: '实验 - Rui∇abla', index: 4 },
     },
     {
       path: '/posts/:slug(.*)',

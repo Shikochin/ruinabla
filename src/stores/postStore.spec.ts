@@ -51,6 +51,16 @@ vi.mock('@/data/post', () => {
         slug: 'r3',
         component: {},
       },
+      {
+        title: 'Hidden Post',
+        date: '2023-06-01',
+        pinned: false,
+        tags: [],
+        readingMinutes: 1,
+        slug: 'hidden',
+        component: {},
+        hide: true,
+      },
     ],
     getEntryBySlug: vi.fn(),
   }
@@ -61,9 +71,9 @@ describe('postStore', () => {
     setActivePinia(createPinia())
   })
 
-  it('homeTimelineEntries sorts pinned posts first and limits to 4', () => {
+  it('pickedUpPostsEntries sorts pinned posts first and limits to 4', () => {
     const store = usePostStore()
-    const entries = store.homeTimelineEntries
+    const entries = store.pickedUpPostsEntries
 
     // Expected order: Pinned 2 (newest pinned), Pinned 1 (oldest pinned), Regular 3 (newest regular), Regular 2 (next regular)
     // Total 4
@@ -74,9 +84,13 @@ describe('postStore', () => {
     expect(entries[3].title).toBe('Regular 2')
   })
 
-  it('homeTimelineEntries shows all pinned posts if more than 4', () => {
-    // We need to remock or use a different test setup for this, but let's stick to the first test for now to verify basic logic.
-    // To properly test this with vi.mock, we might need a factory or do it in a separate file/describe block with different mock.
-    // For now, let's assume the first test covers the core logic of sorting and slicing.
+  it('filters out hidden posts', () => {
+    const store = usePostStore()
+    const entries = store.postEntries
+    const hidden = entries.find((e) => e.title === 'Hidden Post')
+    expect(hidden).toBeUndefined()
+
+    const pickedUp = store.pickedUpPostsEntries.find((e) => e.title === 'Hidden Post')
+    expect(pickedUp).toBeUndefined()
   })
 })

@@ -177,14 +177,6 @@ useHead({
   box-shadow: 0 0 12px rgba(var(--ruins-accent-rgb, 177, 98, 134), 0.8);
 }
 
-.eyebrow {
-  margin: 0;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  color: var(--ruins-muted);
-}
-
 @media (max-width: 640px) {
   .chronicle {
     padding: 26px;

@@ -333,11 +333,6 @@ const tagPairs = computed(() =>
 }
 
 .eyebrow {
-  margin: 0 0 4px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  color: var(--ruins-muted);
   font-family: var(--font-mono);
 }
 

@@ -45,11 +45,6 @@ useHead({
 }
 
 .eyebrow {
-  margin: 0;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  color: var(--ruins-muted);
   font-family: var(--font-mono);
 }
 
