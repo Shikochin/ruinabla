@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { toRef } from 'vue'
 import type { PostEntry } from '@/data/post'
-import { RouterLink } from 'vue-router'
 
 const props = defineProps<{
   entries: PostEntry[]

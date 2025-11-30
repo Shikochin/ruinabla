@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
-import RuinsLayout from '@/components/layout/RuinsLayout.vue'
+import RuinLayout from '@/components/layout/RuinLayout.vue'
 
 const route = useRoute()
 const transitionName = ref('')
@@ -40,7 +40,7 @@ useHead({
 </script>
 
 <template>
-  <RuinsLayout>
+  <RuinLayout>
     <RouterView v-slot="{ Component, route }">
       <!-- make sure components have only one root element -->
       <!-- otherwise transition will not work -->
@@ -48,7 +48,7 @@ useHead({
         <component :is="Component" :key="route.path" />
       </Transition>
     </RouterView>
-  </RuinsLayout>
+  </RuinLayout>
 </template>
 
 <style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { Temporal } from 'temporal-polyfill'
+import { Octokit } from '@octokit/core'
 
 // vite exposes env vars if it starts with VITE
 const TOKEN: string = import.meta.env.VITE_RECENT_COMMENTS_PAT
@@ -63,6 +64,10 @@ const fetchComments = async () => {
     return
   }
 
+  const octokit = new Octokit({
+    auth: TOKEN,
+  })
+
   const query = `
     query {
       repository(owner: "Shikochin", name: "ruin") {
@@ -89,26 +94,19 @@ const fetchComments = async () => {
   `
 
   try {
-    const response = await fetch('https://api.github.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${TOKEN}`,
-      },
-      body: JSON.stringify({ query }),
-    })
+    const { repository } = await octokit.graphql<{
+      repository: {
+        discussions: {
+          nodes: DiscussionNode[]
+        }
+      }
+    }>(query)
 
-    const data = await response.json()
-
-    if (data.errors) {
-      throw new Error(data.errors[0].message)
-    }
-
-    if (!data.data?.repository?.discussions?.nodes) {
+    if (!repository?.discussions?.nodes) {
       throw new Error('Invalid data structure received from GitHub API')
     }
 
-    const discussions = data.data.repository.discussions.nodes
+    const discussions = repository.discussions.nodes
     const fetchedComments: Comment[] = []
 
     discussions.forEach((discussion: DiscussionNode) => {

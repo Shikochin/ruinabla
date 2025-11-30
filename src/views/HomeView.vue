@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { RouterLink } from 'vue-router'
 
 import PostCard from '@/components/post/PostCard.vue'
 import PostList from '@/components/post/PostList.vue'
@@ -45,7 +44,9 @@ const tagPairs = computed(() =>
           }}
           READ</span
         >
-        <span v-if="featuredEntry.tags.length">#{{ featuredEntry.tags[0] }}</span>
+        <RouterLink v-if="featuredEntry.tags.length" :to="`/tags/${featuredEntry.tags[0]}`"
+          >#{{ featuredEntry.tags[0] }}
+        </RouterLink>
       </div>
       <RouterLink :to="`/posts/${featuredEntry.slug}`" class="hero__cta">
         前往阅读全文 &rarr;
