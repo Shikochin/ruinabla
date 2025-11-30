@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as readline from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
-import { Temporal } from '@js-temporal/polyfill'
+import { Temporal } from 'temporal-polyfill'
 
 // get posts dir
 const POSTS_DIR = path.join(process.cwd(), 'src', 'posts')

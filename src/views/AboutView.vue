@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import GiscusComment from '@/components/GiscusComment.vue'
-import { Temporal } from '@js-temporal/polyfill'
+import { Temporal } from 'temporal-polyfill'
 import { useHead } from '@unhead/vue'
 
 useHead({
@@ -25,9 +25,7 @@ const age = Temporal.Now.plainDateISO().year - 2008
         <img src="https://avatars.githubusercontent.com/u/60309542" alt="Avatar" class="avatar" />
         <div class="bio-text">
           <p>
-            <strong>にしみや 缄</strong>，也可以叫 Shikochin，Nishimiya Chin。{{
-              age
-            }}
+            <strong>にしみや 缄</strong>，也可以叫 Shikochin，Nishimiya Chin。{{ age }}
             岁，居住在中国，是一个高中生。创造遗迹来留下一些自己的想法和生活琐碎。 2021
             年开始折腾个人博客，每次都不尽如人意，虽然折腾不算在写博客的快乐之内，但依旧从中学习到了不少东西。
           </p>

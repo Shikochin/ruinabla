@@ -23,7 +23,6 @@
   "dependencies": {
     "@fancyapps/ui": "^6.1.6",
     "@giscus/vue": "^3.1.1",
-    "@js-temporal/polyfill": "^0.5.1",
     "@mdx-js/mdx": "^3.1.0",
     "@mdx-js/rollup": "^3.1.0",
     "@mdx-js/vue": "^3.1.0",
@@ -31,6 +30,7 @@
     "pinia": "^3.0.4",
     "remark-frontmatter": "^5.0.0",
     "remark-mdx-frontmatter": "^3.0.0",
+    "temporal-polyfill": "^0.3.0",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3"
   },

@@ -3,7 +3,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import { Temporal } from '@js-temporal/polyfill'
+import { Temporal } from 'temporal-polyfill'
 
 const POSTS_DIR = path.join(import.meta.dirname, '../src/posts')
 

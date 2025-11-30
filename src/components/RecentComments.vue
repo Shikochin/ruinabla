@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Temporal } from '@js-temporal/polyfill'
+import { Temporal } from 'temporal-polyfill'
 
 // vite exposes env vars if it starts with VITE
 const TOKEN: string = import.meta.env.VITE_RECENT_COMMENTS_PAT

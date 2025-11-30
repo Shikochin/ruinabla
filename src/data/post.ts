@@ -1,5 +1,5 @@
 import type { Component } from 'vue'
-import { Temporal } from '@js-temporal/polyfill'
+import { Temporal } from 'temporal-polyfill'
 
 export interface PostFrontMatter {
   id: number

@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { defineStore } from 'pinia'
-import { Temporal } from '@js-temporal/polyfill'
+import { Temporal } from 'temporal-polyfill'
 import { getEntryBySlug, PostEntries } from '@/data/post'
 
 export const usePostStore = defineStore('Post', () => {
