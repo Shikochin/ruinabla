@@ -34,9 +34,16 @@ onMounted(() => {
           <button
             class="theme-toggle"
             @click="themeStore.toggleTheme"
-            :title="themeStore.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+            :title="
+              themeStore.themeMode === 'auto'
+                ? 'Auto'
+                : themeStore.themeMode === 'light'
+                  ? 'Light'
+                  : 'Dark'
+            "
           >
-            <span v-if="themeStore.isDark">☼</span>
+            <span v-if="themeStore.themeMode === 'auto'">⛅︎</span>
+            <span v-else-if="themeStore.themeMode === 'light'">☀</span>
             <span v-else>☾</span>
           </button>
         </nav>

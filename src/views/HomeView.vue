@@ -83,8 +83,8 @@ const tagPairs = computed(() =>
     <section class="timeline-section">
       <header class="timeline-section__header">
         <div>
-          <p class="eyebrow">年轮</p>
-          <h3>踏过的路径</h3>
+          <p class="eyebrow">CRISPR-Cas9</p>
+          <h3>重组信标</h3>
         </div>
         <RouterLink to="/chronicle">展开全部 &rarr;</RouterLink>
       </header>
