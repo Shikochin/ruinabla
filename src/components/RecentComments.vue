@@ -128,6 +128,15 @@ const fetchComments = async () => {
       }
     })
 
+    // Re-sort by comment creation time to handle cases where discussion was updated (e.g. title edit)
+    // but no new comment was added.
+    fetchedComments.sort((a, b) => {
+      return Temporal.Instant.compare(
+        Temporal.Instant.from(b.createdAt),
+        Temporal.Instant.from(a.createdAt),
+      )
+    })
+
     comments.value = fetchedComments
   } catch (e: unknown) {
     console.error('Failed to fetch comments:', e)
