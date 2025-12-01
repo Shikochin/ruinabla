@@ -6,6 +6,8 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import mdx from '@mdx-js/rollup'
 import rehypeShiki from '@shikijs/rehype'
 import { transformerTwoslash } from '@shikijs/twoslash'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeFancybox from './src/rehypeFancybox'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
@@ -21,6 +23,22 @@ export default defineConfig({
       remarkPlugins: [remarkFrontmatter, [remarkMdxFrontmatter, { name: 'metadata' }]],
       extensions: ['.mdx', '.md'],
       rehypePlugins: [
+        rehypeSlug,
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: 'prepend',
+            content: {
+              type: 'text',
+              value: '#',
+            },
+            properties: {
+              class: 'anchor-link',
+              ariaHidden: true,
+              tabIndex: -1,
+            },
+          },
+        ],
         [
           rehypeShiki,
           {

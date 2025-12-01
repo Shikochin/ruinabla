@@ -233,6 +233,36 @@ useHead({
   border-radius: 4px;
 }
 
+.entry__content :global(h1),
+.entry__content :global(h2),
+.entry__content :global(h3),
+.entry__content :global(h4),
+.entry__content :global(h5),
+.entry__content :global(h6) {
+  position: relative;
+}
+
+.entry__content :global(.anchor-link) {
+  position: absolute;
+  left: -1.2em;
+  opacity: 0;
+  text-decoration: none;
+  color: var(--ruins-accent);
+  transition: opacity 0.2s ease;
+  user-select: none;
+  width: 1em;
+  text-align: right;
+}
+
+.entry__content :global(h1:hover .anchor-link),
+.entry__content :global(h2:hover .anchor-link),
+.entry__content :global(h3:hover .anchor-link),
+.entry__content :global(h4:hover .anchor-link),
+.entry__content :global(h5:hover .anchor-link),
+.entry__content :global(h6:hover .anchor-link) {
+  opacity: 1;
+}
+
 @media (max-width: 640px) {
   .entry {
     padding: 26px;
