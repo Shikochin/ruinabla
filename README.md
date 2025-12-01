@@ -24,3 +24,9 @@ bun new
 
 bun run build
 ```
+
+## License
+
+Code: Unlicense
+
+Content: CC BY-SA 4.0

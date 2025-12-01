@@ -100,11 +100,18 @@ useHead({
       <div class="entry__content">
         <component v-if="entry.component" :is="entry.component" />
       </div>
+
       <hr class="entry__divider" />
-      <div v-if="entry.tags.length" class="entry__tags eyebrow">
-        <RouterLink v-for="tag in entry.tags" :key="tag" :to="`/tags/${tag}`">
-          #{{ tag }}
-        </RouterLink>
+      <div class="extra-info">
+        <div v-if="entry.tags.length" class="entry__tags eyebrow">
+          <RouterLink v-for="tag in entry.tags" :key="tag" :to="`/tags/${tag}`">
+            #{{ tag }}
+          </RouterLink>
+        </div>
+        <div class="entry__license">
+          Licensed by
+          <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+        </div>
       </div>
     </section>
 
@@ -121,6 +128,13 @@ useHead({
 <style scoped>
 /* Styles section remains unchanged */
 /* ... (original style scoped content) */
+
+.extra-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .entry {
   padding: 40px;
   display: flex;
@@ -184,7 +198,7 @@ useHead({
 }
 
 .entry__tags {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -242,6 +256,11 @@ useHead({
   span {
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
   }
+}
+
+.entry__license {
+  font-size: 0.8rem;
+  color: var(--ruins-muted);
 }
 
 .eyebrow a {

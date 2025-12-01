@@ -11,6 +11,7 @@ export interface PostFrontMatter {
   summary?: string
   pinned?: boolean
   hide?: boolean
+  license?: string
 }
 
 export interface PostEntry extends PostFrontMatter {
@@ -18,6 +19,7 @@ export interface PostEntry extends PostFrontMatter {
   component: Component
   category: string
   summary?: string
+  license: string
 }
 
 type MdxModule = {
@@ -54,6 +56,8 @@ function loadPostEntries(): PostEntry[] {
           .pop()
           ?.replace(/\.(mdx|md)$/, '') || ''
 
+    const license = mod.metadata.license || 'CC BY-SA 4.0'
+
     return {
       ...mod.metadata,
       slug,
@@ -63,6 +67,7 @@ function loadPostEntries(): PostEntry[] {
       readingMinutes,
       category,
       summary,
+      license,
     }
   })
 
