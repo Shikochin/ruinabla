@@ -3,7 +3,7 @@ import path from 'node:path'
 import matter from 'gray-matter'
 import { glob } from 'glob'
 
-const API_URL = 'https://shikoch.in/api/posts' // Change if needed
+const API_URL = 'http://localhost:8788/api/posts' // Wrangler dev default port
 
 async function migrate() {
   const files = await glob('src/posts/**/*.{md,mdx}')

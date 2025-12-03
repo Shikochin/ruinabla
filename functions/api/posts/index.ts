@@ -1,11 +1,6 @@
-interface Env {
-  DB: D1Database
-  BUCKET: R2Bucket
-}
-
 export const onRequestGet: PagesFunction<Env> = async (context) => {
-  const { DB } = context.env
-  const { results } = await DB.prepare('SELECT * FROM posts ORDER BY date DESC').all()
+  const { RUINABLA_DB } = context.env
+  const { results } = await RUINABLA_DB.prepare('SELECT * FROM posts ORDER BY date DESC').all()
 
   // Parse JSON tags
   const posts = results.map((post) => ({
@@ -21,8 +16,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
-  const { DB, BUCKET } = context.env
-  const body = (await context.request.json()) as any
+  const { RUINABLA_DB, RUINABLA_BUCKET } = context.env
+  const body = await context.request.json()
 
   const {
     slug,
@@ -46,7 +41,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   try {
     // 1. Save to D1
-    await DB.prepare(
+    await RUINABLA_DB.prepare(
       `INSERT INTO posts (slug, title, date, tags, category, summary, readingMinutes, pinned, hide, license)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(slug) DO UPDATE SET
@@ -70,7 +65,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // 2. Save content to R2
     if (content) {
-      await BUCKET.put(`posts/${slug}.md`, content)
+      await RUINABLA_BUCKET.put(`posts/${slug}.md`, content)
     }
 
     return new Response(JSON.stringify({ success: true, slug }), {

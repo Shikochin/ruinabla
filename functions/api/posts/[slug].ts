@@ -1,21 +1,16 @@
-interface Env {
-  DB: D1Database
-  BUCKET: R2Bucket
-}
-
 export const onRequestGet: PagesFunction<Env> = async (context) => {
-  const { DB, BUCKET } = context.env
+  const { RUINABLA_DB, RUINABLA_BUCKET } = context.env
   const slug = context.params.slug as string
 
   // 1. Get metadata from D1
-  const post = await DB.prepare('SELECT * FROM posts WHERE slug = ?').bind(slug).first()
+  const post = await RUINABLA_DB.prepare('SELECT * FROM posts WHERE slug = ?').bind(slug).first()
 
   if (!post) {
     return new Response('Post not found', { status: 404 })
   }
 
   // 2. Get content from R2
-  const object = await BUCKET.get(`posts/${slug}.md`)
+  const object = await RUINABLA_BUCKET.get(`posts/${slug}.md`)
   let content = ''
 
   if (object) {
@@ -36,14 +31,14 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 }
 
 export const onRequestDelete: PagesFunction<Env> = async (context) => {
-  const { DB, BUCKET } = context.env
+  const { RUINABLA_DB, RUINABLA_BUCKET } = context.env
   const slug = context.params.slug as string
 
   // TODO: Add authentication check here
 
   try {
-    await DB.prepare('DELETE FROM posts WHERE slug = ?').bind(slug).run()
-    await BUCKET.delete(`posts/${slug}.md`)
+    await RUINABLA_DB.prepare('DELETE FROM posts WHERE slug = ?').bind(slug).run()
+    await RUINABLA_BUCKET.delete(`posts/${slug}.md`)
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { 'Content-Type': 'application/json' },
