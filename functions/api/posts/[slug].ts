@@ -1,6 +1,6 @@
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { RUINABLA_DB, RUINABLA_BUCKET } = context.env
-  const slug = context.params.slug as string
+  const slug = (context.params.slug as string).trim()
 
   // 1. Get metadata from D1
   const post = await RUINABLA_DB.prepare('SELECT * FROM posts WHERE slug = ?').bind(slug).first()
@@ -32,7 +32,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
 export const onRequestDelete: PagesFunction<Env> = async (context) => {
   const { RUINABLA_DB, RUINABLA_BUCKET } = context.env
-  const slug = context.params.slug as string
+  const slug = (context.params.slug as string).trim()
 
   // TODO: Add authentication check here
 
