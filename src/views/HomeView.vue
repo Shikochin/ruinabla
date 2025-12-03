@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import PostCard from '@/components/post/PostCard.vue'
@@ -9,6 +9,10 @@ import { usePostStore } from '@/stores/postStore'
 import { useHead } from '@unhead/vue'
 
 const store = usePostStore()
+
+onMounted(() => {
+  store.fetchPosts()
+})
 
 useHead({
   title: '', // Will result in just "Rui∇abla" due to template

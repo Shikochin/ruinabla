@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, watch, nextTick } from 'vue'
+import { computed, watch, nextTick, ref } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFancybox } from '@/composables/useFancybox'
-import MarkdownIt from 'markdown-it'
+import { renderMarkdown } from '@/utils/markdown'
 
 import { usePostStore } from '@/stores/postStore'
 import GiscusComment from '@/components/GiscusComment.vue'
@@ -13,11 +13,6 @@ import { useCodeCopy } from '@/composables/useCodeCopy'
 
 const route = useRoute()
 const store = usePostStore()
-const md = new MarkdownIt({
-  html: true,
-  linkify: true,
-  typographer: true,
-})
 
 const entry = computed(() => {
   const slug = route.params.slug
@@ -25,16 +20,32 @@ const entry = computed(() => {
   return store.findBySlug(slug) ?? null
 })
 
-const renderedContent = computed(() => {
-  if (!entry.value?.content) return ''
-  return md.render(entry.value.content)
-})
+const renderedContent = ref('')
 
+// Watch for slug changes and fetch content
 watch(
   () => route.params.slug,
-  (newSlug) => {
+  async (newSlug) => {
     if (typeof newSlug === 'string') {
-      store.fetchPostContent(newSlug)
+      await store.fetchPostContent(newSlug)
+    }
+  },
+  { immediate: true },
+)
+
+// Watch for content changes and render markdown
+watch(
+  () => entry.value?.content,
+  async (content) => {
+    if (!content) {
+      renderedContent.value = ''
+      return
+    }
+    try {
+      renderedContent.value = await renderMarkdown(content)
+    } catch (error) {
+      console.error('Failed to render markdown:', error)
+      renderedContent.value = `<p>Error rendering content</p>`
     }
   },
   { immediate: true },

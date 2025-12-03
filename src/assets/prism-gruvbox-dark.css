@@ -1,0 +1,166 @@
+/**
+ * Gruvbox Dark theme for Prism.js
+ * Based on Gruvbox color scheme
+ */
+
+code[class*='language-'],
+pre[class*='language-'] {
+  color: #ebdbb2;
+  font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.5;
+  tab-size: 4;
+  hyphens: none;
+  background-color: #1e2021;
+}
+
+/* Code blocks */
+pre[class*='language-'] {
+  padding: 1em;
+  margin: 0.5em 0;
+  overflow: auto;
+  border-radius: 4px;
+  background: #1d2021;
+}
+
+:not(pre) > code[class*='language-'],
+pre[class*='language-'] {
+  background: #1d2021;
+}
+
+/* Inline code */
+:not(pre) > code[class*='language-'] {
+  padding: 0.1em 0.3em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.cdata {
+  color: #928374;
+}
+
+.token.delimiter,
+.token.boolean,
+.token.keyword,
+.token.selector,
+.token.important,
+.token.atrule {
+  color: #fb4934;
+}
+
+.token.operator,
+.token.punctuation,
+.token.attr-name {
+  color: #ebdbb2;
+}
+
+.token.tag,
+.token.tag .punctuation,
+.token.doctype,
+.token.builtin {
+  color: #fabd2f;
+}
+
+.token.entity,
+.token.number,
+.token.symbol {
+  color: #d3869b;
+}
+
+.token.property,
+.token.constant,
+.token.variable {
+  color: #fb4934;
+}
+
+.token.string,
+.token.char {
+  color: #b8bb26;
+}
+
+.token.attr-value,
+.token.attr-value .punctuation {
+  color: #a89984;
+}
+
+.token.url {
+  color: #b8bb26;
+  text-decoration: underline;
+}
+
+.token.function {
+  color: #fabd2f;
+}
+
+.token.regex {
+  background: #b8bb26;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.inserted {
+  background: #b8bb26;
+  color: #1d2021;
+}
+
+.token.deleted {
+  background: #fb4934;
+  color: #1d2021;
+}
+
+/* Line numbers */
+.line-numbers .line-numbers-rows {
+  border-right: 1px solid #504945;
+}
+
+.line-numbers-rows > span:before {
+  color: #7c6f64;
+}
+
+pre[class*='language-'].line-numbers {
+  position: relative;
+  padding-left: 3.8em;
+  counter-reset: linenumber;
+}
+
+pre[class*='language-'].line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  font-size: 100%;
+  left: -3.8em;
+  width: 3em;
+  letter-spacing: -1px;
+  border-right: 1px solid #504945;
+  user-select: none;
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #7c6f64;
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}

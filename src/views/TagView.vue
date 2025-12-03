@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePostStore } from '@/stores/postStore'
 import PostList from '@/components/post/PostList.vue'
@@ -7,6 +7,10 @@ import { useHead } from '@unhead/vue'
 
 const route = useRoute()
 const store = usePostStore()
+
+onMounted(() => {
+  store.fetchPosts()
+})
 
 const tag = computed(() => route.params.tag as string)
 const posts = computed(() => store.getEntriesByTag(tag.value))

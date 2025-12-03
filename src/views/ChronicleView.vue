@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import PostList from '@/components/post/PostList.vue'
 import { usePostStore } from '@/stores/postStore'
 
 const store = usePostStore()
+
+onMounted(() => {
+  store.fetchPosts()
+})
+
 const { postEntries } = storeToRefs(store)
 
 const totalPosts = computed(() => postEntries.value.length)

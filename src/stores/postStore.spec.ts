@@ -83,7 +83,7 @@ describe('postStore', () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockPosts),
-    }) as any
+    })
   })
 
   afterEach(() => {
