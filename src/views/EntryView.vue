@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, markRaw, watch, nextTick } from 'vue'
+import { computed, watch, nextTick } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFancybox } from '@/composables/useFancybox'
+import MarkdownIt from 'markdown-it'
 
 import { usePostStore } from '@/stores/postStore'
 import GiscusComment from '@/components/GiscusComment.vue'
@@ -12,17 +13,32 @@ import { useCodeCopy } from '@/composables/useCodeCopy'
 
 const route = useRoute()
 const store = usePostStore()
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+})
 
 const entry = computed(() => {
   const slug = route.params.slug
   if (typeof slug !== 'string') return null
-  const result = store.findBySlug(slug) ?? null
-  if (!result) return null
-  return {
-    ...result,
-    component: markRaw(result.component),
-  }
+  return store.findBySlug(slug) ?? null
 })
+
+const renderedContent = computed(() => {
+  if (!entry.value?.content) return ''
+  return md.render(entry.value.content)
+})
+
+watch(
+  () => route.params.slug,
+  (newSlug) => {
+    if (typeof newSlug === 'string') {
+      store.fetchPostContent(newSlug)
+    }
+  },
+  { immediate: true },
+)
 
 // -- Fancybox integration --
 
@@ -32,9 +48,9 @@ const { init: initCopy } = useCodeCopy('.entry__content')
 
 // 2. Watch entry changes and rebind Fancybox
 watch(
-  entry,
-  (newEntry, oldEntry) => {
-    if (newEntry && newEntry !== oldEntry) {
+  renderedContent,
+  (newContent) => {
+    if (newContent) {
       nextTick(() => {
         reinitialize()
         initCopy()
@@ -97,9 +113,7 @@ useHead({
         <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>
         <div class="entry__excerpt">{{ entry.summary }}</div>
       </div>
-      <div class="entry__content">
-        <component v-if="entry.component" :is="entry.component" />
-      </div>
+      <div class="entry__content" v-html="renderedContent"></div>
 
       <hr class="entry__divider" />
       <div class="extra-info">

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { toRef } from 'vue'
-import type { PostEntry } from '@/data/post'
+import type { Post } from '@/stores/postStore'
 
 const props = defineProps<{
-  entries: PostEntry[]
+  entries: Post[]
 }>()
 
 const entries = toRef(props, 'entries')
@@ -12,7 +12,7 @@ const entries = toRef(props, 'entries')
 <template>
   <div class="timeline-container paper-panel">
     <ol class="timeline">
-      <li v-for="entry in entries" :key="entry.id" class="timeline__item">
+      <li v-for="entry in entries" :key="entry.slug" class="timeline__item">
         <div class="timeline__meta">
           <span class="timeline__date">{{ entry.date }}</span>
           <br />

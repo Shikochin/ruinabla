@@ -57,6 +57,12 @@ const router = createRouter({
       component: () => import('@/views/CategoryView.vue'),
       meta: { index: 99 },
     },
+    {
+      path: '/editor',
+      name: 'editor',
+      component: () => import('@/views/EditorView.vue'),
+      meta: { title: 'Editor - Rui∇abla', index: 100 },
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

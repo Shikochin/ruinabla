@@ -31,7 +31,7 @@ const tagPairs = computed(() =>
 
 <template>
   <div>
-    <section class="hero paper-panel">
+    <section class="hero paper-panel" v-if="featuredEntry">
       <div class="hero__eyebrow">近日信标 · {{ featuredEntry.date }}</div>
       <RouterLink :to="`/posts/${featuredEntry.slug}`" class="title">
         <h1>{{ featuredEntry.title }}</h1>
@@ -56,7 +56,7 @@ const tagPairs = computed(() =>
     <section class="grid">
       <PostCard
         v-for="entry in recentlyRecovered"
-        :key="entry.id"
+        :key="entry.slug"
         :entry="entry"
         :vol="recentlyRecovered.indexOf(entry) + 2"
       />

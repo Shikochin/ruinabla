@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { toRef } from 'vue'
-import type { PostEntry } from '@/data/post'
+import type { Post } from '@/stores/postStore'
 
-const props = defineProps<{ entry: PostEntry; vol: number }>()
+const props = defineProps<{ entry: Post; vol: number }>()
 const entry = toRef(props, 'entry')
 </script>
 
