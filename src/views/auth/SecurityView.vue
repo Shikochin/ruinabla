@@ -328,7 +328,7 @@ async function deletePasskey(id: string) {
             <li v-for="code in backupCodes" :key="code">{{ code }}</li>
           </ul>
         </div>
-        <p class="success-text">✓ 两步验证已启用</p>
+        <p class="success-text">✓ 双因素验证已启用</p>
         <button @click="disableTOTP" class="danger">关闭两步验证</button>
       </div>
     </section>

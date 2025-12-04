@@ -309,8 +309,8 @@ async function loginWithPasskey() {
                 pattern="[0-9]{6}"
                 maxlength="6"
                 placeholder="000000"
-                autof
-                ocus
+                inputmode="numeric"
+                autocomplete="one-time-code"
               />
             </div>
             <button @click="verifyWithTOTP" class="primary" :disabled="!totpCode || auth.loading">

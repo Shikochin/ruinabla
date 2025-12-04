@@ -193,9 +193,8 @@ export const useAuthStore = defineStore('auth', () => {
       if (!user.value?.id) return false
 
       const res = await fetch('/api/totp/check', {
-        headers: {
-          userId: user.value.id,
-        },
+        method: 'POST',
+        body: JSON.stringify({ userId: user.value.id }),
       })
 
       if (!res.ok) {
