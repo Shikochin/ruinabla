@@ -14,6 +14,11 @@ useHead({
 if (router.currentRoute.value.path === '/settings') {
   router.replace('/settings/security')
 }
+
+function logout() {
+  auth.logout()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -35,13 +40,7 @@ if (router.currentRoute.value.path === '/settings') {
       </nav>
 
       <div class="sidebar-footer">
-        <button
-          @click="
-            auth.logout()
-            router.push('/login')
-          "
-          class="logout-btn"
-        >
+        <button @click="logout()" class="logout-btn">
           <span class="icon">🚪</span>
           <span>退出登录</span>
         </button>
