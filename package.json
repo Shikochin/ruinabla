@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "deploy": "vite build && wrangler pages deploy",
     "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",

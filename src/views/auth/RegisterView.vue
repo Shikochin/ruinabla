@@ -155,7 +155,6 @@ async function handleRegister() {
 }
 
 .field input {
-  background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--ruins-border);
   color: var(--ruins-text);
   padding: 12px;
