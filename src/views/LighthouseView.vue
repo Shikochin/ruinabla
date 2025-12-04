@@ -1,29 +1,8 @@
 <script setup lang="ts">
+import { useHead } from '@unhead/vue'
 import FriendLink from '@/components/FriendLink.vue'
 import friendsData from '@/assets/friends.json'
 import GiscusComment from '@/components/GiscusComment.vue'
-import { codeToHtml } from 'shiki'
-
-const code = `{
-  "name": "Your Name",
-  "url": "https://your-site.com",
-  "avatar": "https://your-site.com/avatar.png",
-  "desc": "A short description of your site."
-}`
-const codeBlock = await codeToHtml(code, {
-  lang: 'json',
-  theme: 'gruvbox-dark-hard',
-})
-
-import { useHead } from '@unhead/vue'
-import { useCodeCopy } from '@/composables/useCodeCopy'
-import { onMounted } from 'vue'
-
-const { init: initCopy } = useCodeCopy('.join')
-
-onMounted(() => {
-  initCopy()
-})
 
 useHead({
   title: '灯塔',
@@ -53,7 +32,12 @@ useHead({
     <section class="join paper-panel">
       <h3>加入光束网络</h3>
       <p>如果你也建立了自己的灯塔，欢迎交换光束。</p>
-      <div v-html="codeBlock"></div>
+      <pre class="code-block"><code>{
+  "name": "Your Name",
+  "url": "https://your-site.com",
+  "avatar": "https://your-site.com/avatar.png",
+  "desc": "A short description of your site."
+}</code></pre>
       <p>
         请通过 <a href="mailto:i@shikoch.in">Email</a>，评论区或
         <a href="https://github.com/Shikochin/ruinabla/issues" target="_blank">GitHub Issues</a>
@@ -158,7 +142,7 @@ useHead({
 .code-block {
   margin: 16px 0;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.2);
+  background: transparent;
   border: 1px solid var(--ruins-border);
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -166,7 +150,7 @@ useHead({
 }
 
 :root.light .code-block {
-  background: rgba(0, 0, 0, 0.03);
+  background: transparent;
 }
 
 @media (max-width: 640px) {

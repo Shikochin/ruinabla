@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import type { D1Database, R2Bucket } from '@cloudflare/workers-types'
+import { requireAuth, requireRole } from '../middleware/auth'
 
 type Bindings = {
   RUINABLA_DB: D1Database
@@ -24,8 +25,8 @@ posts.get('/', async (c) => {
   return c.json(posts)
 })
 
-// POST /api/posts - Create or update a post
-posts.post('/', async (c) => {
+// POST /api/posts - Create or update a post (requires admin)
+posts.post('/', requireAuth, requireRole('admin'), async (c) => {
   const body = await c.req.json()
   const {
     slug,

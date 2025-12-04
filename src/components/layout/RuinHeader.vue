@@ -1,13 +1,47 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useThemeStore } from '@/stores/themeStore'
-import { onMounted } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
 import { useDevStore } from '@/stores/devStore'
+import { useRouter } from 'vue-router'
+
 const devStore = useDevStore()
 const themeStore = useThemeStore()
+const auth = useAuthStore()
+const router = useRouter()
+
+const showUserMenu = ref(false)
+
+function toggleUserMenu() {
+  showUserMenu.value = !showUserMenu.value
+}
+
+function closeUserMenu() {
+  showUserMenu.value = false
+}
+
+async function handleLogout() {
+  await auth.logout()
+  closeUserMenu()
+  router.push('/')
+}
+
+// Close menu when clicking outside
+function handleClickOutside(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  if (!target.closest('.user-menu-container')) {
+    closeUserMenu()
+  }
+}
+
 onMounted(() => {
   themeStore.initTheme()
+  if (typeof window !== 'undefined') {
+    document.addEventListener('click', handleClickOutside)
+  }
 })
 </script>
+
 <template>
   <header class="ruins-header paper-panel">
     <div class="brand">
@@ -22,6 +56,7 @@ onMounted(() => {
       <RouterLink to="/lighthouse">灯塔</RouterLink>
       <RouterLink to="/about">余烬</RouterLink>
       <RouterLink to="/experiment" v-if="devStore.isDev">实验</RouterLink>
+
       <button
         class="theme-toggle"
         @click="themeStore.toggleTheme"
@@ -37,6 +72,33 @@ onMounted(() => {
         <span v-else-if="themeStore.themeMode === 'light'">☀</span>
         <span v-else>☾</span>
       </button>
+
+      <!-- User menu -->
+      <div class="user-menu-container" v-if="auth.isAuthenticated">
+        <button class="user-button" @click.stop="toggleUserMenu">
+          {{ auth.user?.email?.split('@')[0] }}
+        </button>
+
+        <Transition name="dropdown">
+          <div v-if="showUserMenu" class="user-dropdown">
+            <RouterLink to="/settings" @click="closeUserMenu" class="dropdown-item">
+              ⚙️ 设置
+            </RouterLink>
+            <RouterLink
+              to="/editor"
+              @click="closeUserMenu"
+              class="dropdown-item"
+              v-if="devStore.isDev"
+            >
+              ✏️ 编辑器
+            </RouterLink>
+            <button @click="handleLogout" class="dropdown-item logout">🚪 退出登录</button>
+          </div>
+        </Transition>
+      </div>
+
+      <!-- Login button for unauthenticated users -->
+      <RouterLink to="/login" v-else class="login-button"> 登录 </RouterLink>
     </nav>
   </header>
 </template>
@@ -115,10 +177,86 @@ onMounted(() => {
   color: var(--ruins-accent-strong);
 }
 
+/* User menu */
+.user-menu-container {
+  position: relative;
+}
+
+.user-button,
+.login-button {
+  background: transparent;
+  border: 1px solid var(--ruins-border);
+  color: var(--ruins-text);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.user-button:hover,
+.login-button:hover {
+  border-color: var(--ruins-accent);
+  color: var(--ruins-accent-strong);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: var(--ruins-bg);
+  border: 1px solid var(--ruins-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--ruins-text);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-item.logout {
+  color: #ff4444;
+}
+
+.dropdown-item.logout:hover {
+  background: rgba(255, 68, 68, 0.1);
+}
+
+/* Dropdown animation */
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.2s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
 .brand a {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   color: inherit;
   border: none;
 }

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { usePostStore, type Post } from '@/stores/postStore'
+import { useAuthStore } from '@/stores/authStore'
+import { getCurrentDate } from '@/utils/temporal'
 
+const auth = useAuthStore()
 const store = usePostStore()
 const editingPost = ref<Post | null>(null)
 const isNew = ref(false)
@@ -11,11 +14,11 @@ const message = ref('')
 const form = ref({
   slug: '',
   title: '',
-  date: new Date().toISOString().split('T')[0],
+  date: getCurrentDate(),
   tags: '',
   category: '',
   summary: '',
-  readingMinutes: 1,
+  readingMinutes: 10,
   pinned: false,
   hide: false,
   license: 'CC BY-SA 4.0',
@@ -53,7 +56,7 @@ const startNew = () => {
   form.value = {
     slug: '',
     title: '',
-    date: new Date().toISOString().split('T')[0],
+    date: getCurrentDate(),
     tags: '',
     category: '',
     summary: '',
@@ -84,7 +87,10 @@ const savePost = async () => {
 
     const res = await fetch('/api/posts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: auth.getAuthHeader(),
+      },
       body: JSON.stringify(payload),
     })
 
@@ -111,7 +117,12 @@ const deletePost = async (slug: string) => {
   if (!confirm(`Delete post ${slug}?`)) return
 
   try {
-    const res = await fetch(`/api/posts/${slug}`, { method: 'DELETE' })
+    const res = await fetch(`/api/posts/${slug}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: auth.getAuthHeader(),
+      },
+    })
     if (!res.ok) throw new Error('Failed to delete')
     await store.fetchPosts()
     if (editingPost.value?.slug === slug) {

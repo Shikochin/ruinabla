@@ -1,8 +1,17 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import Giscus from '@giscus/vue'
 import { useThemeStore } from '@/stores/themeStore'
 
 const themeStore = useThemeStore()
+
+// When theme is auto, default to light for Giscus
+const giscusTheme = computed(() => {
+  if (themeStore.themeMode === 'auto') {
+    return themeStore.getSystemTheme() ? 'dark' : 'light'
+  }
+  return themeStore.themeMode
+})
 </script>
 
 <template>
@@ -20,7 +29,7 @@ const themeStore = useThemeStore()
       input-position="top"
       lang="zh-CN"
       loading="lazy"
-      :theme="themeStore.isDark ? 'dark' : 'light'"
+      :theme="giscusTheme"
     />
   </section>
 </template>

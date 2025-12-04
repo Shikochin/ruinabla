@@ -61,10 +61,36 @@ const router = createRouter({
       path: '/editor',
       name: 'editor',
       component: () => import('@/views/EditorView.vue'),
-      meta: { title: 'Editor - Rui∇abla', index: 100 },
+      meta: { title: '编辑器 - Rui∇abla', index: 100, requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/auth/LoginView.vue'),
+      meta: { index: 101 },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/auth/RegisterView.vue'),
+      meta: { index: 102 },
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('@/components/layout/SettingsLayout.vue'),
+      meta: { title: '设置 - Rui∇abla', index: 103, requiresAuth: true },
+      children: [
+        {
+          path: 'security',
+          name: 'settings-security',
+          component: () => import('@/views/auth/SecurityView.vue'),
+          meta: { title: '安全设置 - Rui∇abla' },
+        },
+      ],
     },
   ],
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(to, _, savedPosition) {
     if (savedPosition) {
       return savedPosition
     }
@@ -76,6 +102,28 @@ const router = createRouter({
     }
     return { top: 0 }
   },
+})
+
+// Navigation guards
+router.beforeEach((to, _, next) => {
+  // Lazy import to avoid circular dependency
+  import('@/stores/authStore').then(({ useAuthStore }) => {
+    const auth = useAuthStore()
+
+    // Check if route requires authentication
+    if (to.meta.requiresAuth && !auth.isAuthenticated) {
+      next({ name: 'login', query: { redirect: to.fullPath } })
+      return
+    }
+
+    // Check if route requires admin role
+    if (to.meta.requiresAdmin && !auth.isAdmin) {
+      next({ name: 'home' })
+      return
+    }
+
+    next()
+  })
 })
 
 export default router
