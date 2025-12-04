@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS posts;
-CREATE TABLE posts (
+CREATE TABLE IF NOT EXISTS posts (
   slug TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   date TEXT NOT NULL,
@@ -15,8 +14,7 @@ CREATE TABLE posts (
 );
 
 -- Authentication tables
-DROP TABLE IF EXISTS users;
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
@@ -25,8 +23,7 @@ CREATE TABLE users (
   updated_at INTEGER DEFAULT (unixepoch())
 );
 
-DROP TABLE IF EXISTS totp_secrets;
-CREATE TABLE totp_secrets (
+CREATE TABLE IF NOT EXISTS totp_secrets (
   user_id TEXT PRIMARY KEY,
   secret TEXT NOT NULL,
   enabled BOOLEAN DEFAULT FALSE,
@@ -35,8 +32,7 @@ CREATE TABLE totp_secrets (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS passkeys;
-CREATE TABLE passkeys (
+CREATE TABLE IF NOT EXISTS passkeys (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
   credential_id TEXT UNIQUE NOT NULL,
@@ -48,8 +44,7 @@ CREATE TABLE passkeys (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS sessions;
-CREATE TABLE sessions (
+CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
   expires_at INTEGER NOT NULL,

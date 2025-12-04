@@ -14,20 +14,21 @@ type Bindings = {
 
 const totp = new Hono<{ Bindings: Bindings }>()
 
-totp.get('/enabled', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+// Check TOTP enabled status by userId (for 2FA flow, no auth required)
+totp.post('/check', async (c) => {
+  const { userId } = await c.req.json()
+
+  if (!userId) {
+    return c.json({ error: 'User ID required' }, 400)
+  }
 
   const totpRecord = await c.env.RUINABLA_DB.prepare(
     'SELECT enabled FROM totp_secrets WHERE user_id = ?',
   )
-    .bind(user.id)
+    .bind(userId)
     .first()
 
-  if (!totpRecord) {
-    return c.json({ enabled: false })
-  }
-
-  return c.json({ enabled: Boolean(totpRecord.enabled) })
+  return c.json({ enabled: totpRecord ? Boolean(totpRecord.enabled) : false })
 })
 
 // Enable TOTP - Generate secret and return URI for QR code

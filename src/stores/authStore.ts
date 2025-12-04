@@ -190,9 +190,11 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function totpEnabled(): Promise<boolean> {
     try {
-      const res = await fetch('/api/totp/enabled', {
+      if (!user.value?.id) return false
+
+      const res = await fetch('/api/totp/check', {
         headers: {
-          Authorization: getAuthHeader(),
+          userId: user.value.id,
         },
       })
 

@@ -34,15 +34,23 @@ async function handlePasswordLogin() {
     pendingUserId.value = result.userId!
     show2FAOptions.value = true
 
-    // Fetch 2FA options (passkeys availability)
-    const options = await fetch('/api/passkey/2fa-options', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: result.userId }),
-    }).then((r) => r.json())
+    // Fetch TOTP status and Passkey availability
+    const [totpStatus, passkeyOpts] = await Promise.all([
+      fetch('/api/totp/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: result.userId }),
+      }).then((r) => r.json()),
+      fetch('/api/passkey/2fa-options', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: result.userId }),
+      }).then((r) => r.json()),
+    ])
 
-    hasPasskeys.value = options.hasPasskeys
-    passkeyOptions.value = options.passkeyOptions
+    isTOTPEnabled.value = totpStatus.enabled
+    hasPasskeys.value = passkeyOpts.hasPasskeys
+    passkeyOptions.value = passkeyOpts.passkeyOptions
   }
 }
 
