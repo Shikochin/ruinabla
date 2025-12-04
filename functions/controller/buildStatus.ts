@@ -1,16 +1,19 @@
-interface Env {
+import { Hono } from 'hono'
+
+type Bindings = {
   CLOUDFLARE_API_TOKEN: string
   CLOUDFLARE_ACCOUNT_ID: string
 }
 
-export async function onRequest(context: EventContext<Env, any, Record<string, any>>) {
-  const API_TOKEN = context.env.CLOUDFLARE_API_TOKEN
-  const ACCOUNT_ID = context.env.CLOUDFLARE_ACCOUNT_ID
+const buildStatus = new Hono<{ Bindings: Bindings }>()
 
+buildStatus.get('/', async (c) => {
+  const API_TOKEN = c.env.CLOUDFLARE_API_TOKEN
+  const ACCOUNT_ID = c.env.CLOUDFLARE_ACCOUNT_ID
   const PROJECT_NAME = 'ruinabla'
 
   if (!API_TOKEN || !ACCOUNT_ID) {
-    return new Response('Required environment variables are not configured.', { status: 500 })
+    return c.text('Required environment variables are not configured.', 500)
   }
 
   const url = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/pages/projects/${PROJECT_NAME}/deployments?page=1&per_page=1`
@@ -36,14 +39,15 @@ export async function onRequest(context: EventContext<Env, any, Record<string, a
         latestDeployment?.latest_stage?.status === 'active',
     }
 
-    return new Response(JSON.stringify(result), {
+    return c.json(result, {
       headers: {
-        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
     })
   } catch (error) {
     console.error('Cloudflare API request failed:', error)
-    return new Response('Failed to retrieve build status from Cloudflare API.', { status: 500 })
+    return c.text('Failed to retrieve build status from Cloudflare API.', 500)
   }
-}
+})
+
+export default buildStatus

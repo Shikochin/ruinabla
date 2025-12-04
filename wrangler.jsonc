@@ -1,13 +1,14 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "ruinabla",
-  "compatibility_date": "2025-12-03",
+  "compatibility_date": "2025-12-04",
   "pages_build_output_dir": "./dist",
+  "compatibility_flags": ["nodejs_compat"],
   "r2_buckets": [
     {
       "binding": "RUINABLA_BUCKET",
       "bucket_name": "ruinabla-content",
-      "remote": true,
+      //   "remote": true,
     },
   ],
   "d1_databases": [
@@ -15,7 +16,7 @@
       "binding": "RUINABLA_DB",
       "database_name": "ruinabla-db",
       "database_id": "9605e55c-fb4a-40b2-947f-736e9f91eea0",
-      "remote": true,
+      //   "remote": true,
     },
   ],
 }

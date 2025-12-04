@@ -25,6 +25,7 @@
     "@giscus/vue": "^3.1.1",
     "@octokit/core": "^7.0.6",
     "@unhead/vue": "^2.0.19",
+    "hono": "^4.10.7",
     "pinia": "^3.0.4",
     "prismjs": "^1.30.0",
     "rehype-prism-plus": "^2.0.1",
@@ -36,13 +37,14 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251202.0",
     "@prettier/plugin-oxc": "^0.0.5",
     "@tsconfig/node24": "^24.0.3",
     "@types/hast": "^3.0.4",
     "@types/jsdom": "^27.0.0",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.2",
-    "@vitest/eslint-plugin": "^1.5.0",
+    "@vitest/eslint-plugin": "^1.5.1",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/test-utils": "^2.4.6",
@@ -55,7 +57,6 @@
     "hast": "^1.0.0",
     "hastscript": "^9.0.1",
     "husky": "^9.1.7",
-    "jiti": "^2.6.1",
     "jsdom": "^27.2.0",
     "lint-staged": "^16.2.7",
     "npm-run-all2": "^8.0.4",
@@ -64,17 +65,13 @@
     "prettier": "3.6.2",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
-    "shiki": "^3.17.0",
-    "twoslash": "^0.3.4",
-    "typescript": "~5.9.0",
+    "typescript": "~5.9.3",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.0.0",
     "vite": "npm:rolldown-vite@latest",
-    "vite-plugin-raw": "^1.0.3",
     "vite-plugin-vue-devtools": "^8.0.5",
-    "vitest": "^4.0.14",
+    "vitest": "^4.0.15",
     "vue-tsc": "^3.1.5",
-    "wrangler": "^4.51.0"
+    "wrangler": "^4.52.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,vue}": [
@@ -83,13 +80,6 @@
     ],
     "*.{json,css,scss}": [
       "prettier --write --experimental-cli src/"
-    ],
-    "*.{md,mdx}": [
-      "node scripts/gen-ai-summary.js",
-      "node scripts/gen-readingMinutes.js",
-      "node scripts/gen-rss.js",
-      "node scripts/gen-sitemap.js",
-      "git add public/rss.xml public/sitemap.xml"
     ]
   }
 }
