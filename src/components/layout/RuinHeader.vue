@@ -3,12 +3,10 @@ import { ref, onMounted } from 'vue'
 import { useThemeStore } from '@/stores/themeStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useDevStore } from '@/stores/devStore'
-import { useRouter } from 'vue-router'
 
 const devStore = useDevStore()
 const themeStore = useThemeStore()
 const auth = useAuthStore()
-const router = useRouter()
 
 const showUserMenu = ref(false)
 
@@ -18,12 +16,6 @@ function toggleUserMenu() {
 
 function closeUserMenu() {
   showUserMenu.value = false
-}
-
-async function handleLogout() {
-  await auth.logout()
-  closeUserMenu()
-  router.push('/')
 }
 
 // Close menu when clicking outside
@@ -82,7 +74,8 @@ onMounted(() => {
         <Transition name="dropdown">
           <div v-if="showUserMenu" class="user-dropdown">
             <RouterLink to="/settings" @click="closeUserMenu" class="dropdown-item">
-              ⚙️ 设置
+              <span class="icon">⚙️</span>
+              <span>设置</span>
             </RouterLink>
             <RouterLink
               to="/editor"
@@ -90,9 +83,9 @@ onMounted(() => {
               class="dropdown-item"
               v-if="devStore.isDev"
             >
-              ✏️ 编辑器
+              <span class="icon">✏️</span>
+              <span>编辑器</span>
             </RouterLink>
-            <button @click="handleLogout" class="dropdown-item logout">🚪 退出登录</button>
           </div>
         </Transition>
       </div>
@@ -215,7 +208,9 @@ onMounted(() => {
 }
 
 .dropdown-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 100%;
   padding: 10px 14px;
   text-align: left;
@@ -230,12 +225,14 @@ onMounted(() => {
   text-decoration: none;
 }
 
-.dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+.dropdown-item .icon {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
-.dropdown-item.logout {
-  color: #ff4444;
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .dropdown-item.logout:hover {

@@ -236,8 +236,8 @@ async function loginWithPasskey() {
 <template>
   <div class="auth-view">
     <div class="auth-card paper-panel">
-      <h1>登录废墟</h1>
-      <p class="eyebrow">Sign in to continue</p>
+      <h1>重蹈覆辙</h1>
+      <p class="eyebrow">登录以继续</p>
 
       <!-- Passkey login (quick access) -->
       <div v-if="!show2FAOptions" class="passkey-login">
@@ -347,15 +347,12 @@ async function loginWithPasskey() {
 
 <style scoped>
 .auth-view {
-  min-height: calc(100vh - 100px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
 }
 
 .auth-card {
-  max-width: 600px;
   width: 100%;
   padding: 48px;
   display: flex;

@@ -49,12 +49,12 @@ async function handleRegister() {
 <template>
   <div class="auth-view">
     <div class="auth-card paper-panel">
-      <h1>在 Rui∇abla 中寻得安身之所</h1>
+      <h1>寻得安身之所</h1>
       <p class="eyebrow">创建账户</p>
 
       <form @submit.prevent="handleRegister" class="auth-form">
         <div class="field">
-          <label for="email">Email</label>
+          <label for="email">邮箱</label>
           <input
             id="email"
             v-model="email"
@@ -101,7 +101,7 @@ async function handleRegister() {
         </div>
 
         <button type="submit" class="primary" :disabled="auth.loading">
-          {{ auth.loading ? 'Creating account...' : 'Register' }}
+          {{ auth.loading ? '创建账号...' : '注册' }}
         </button>
       </form>
 
@@ -114,15 +114,12 @@ async function handleRegister() {
 
 <style scoped>
 .auth-view {
-  min-height: calc(100vh - 100px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
 }
 
 .auth-card {
-  max-width: 450px;
   width: 100%;
   padding: 48px;
   display: flex;
