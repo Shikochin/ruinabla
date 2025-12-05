@@ -59,15 +59,15 @@ auth.post('/register', async (c) => {
       .bind(token, email, 'verify_email', expiresAt)
       .run()
 
-    // Send verification email
-    const resend = createResendClient(c.env.RESEND_API_KEY)
-    const baseUrl = new URL(c.req.url).origin
-
+    // Send verification email - wrapped in try-catch to prevent registration failure
     try {
+      const resend = createResendClient(c.env.RESEND_API_KEY)
+      const baseUrl = new URL(c.req.url).origin
       await sendVerificationEmail(resend, email, token, baseUrl)
     } catch (emailError) {
       console.error('Failed to send verification email:', emailError)
-      // Continue registration even if email fails
+      // Continue registration even if email fails (API key not configured, etc.)
+      // User can request resend later
     }
 
     return c.json({
