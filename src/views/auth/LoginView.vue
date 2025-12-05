@@ -25,7 +25,7 @@ onMounted(async () => {
 })
 
 useHead({
-  title: '登录 - Rui∇abla',
+  title: '登录',
 })
 
 async function handlePasswordLogin() {
@@ -51,6 +51,9 @@ async function handlePasswordLogin() {
     isTOTPEnabled.value = totpStatus.enabled
     hasPasskeys.value = passkeyOpts.hasPasskeys
     passkeyOptions.value = passkeyOpts.passkeyOptions
+  } else if (result.success && !result.requires2FA) {
+    // No 2FA required, redirect to home
+    router.push('/')
   }
 }
 
@@ -281,6 +284,10 @@ async function loginWithPasskey() {
           />
         </div>
 
+        <div class="forgot-password-link">
+          <RouterLink to="/forgot-password">忘记密码？</RouterLink>
+        </div>
+
         <div v-if="auth.error" class="error-message">
           {{ auth.error }}
         </div>
@@ -450,7 +457,6 @@ async function loginWithPasskey() {
 
 .divider span {
   position: relative;
-  background: var(--ruins-bg);
   padding: 0 16px;
   color: var(--ruins-muted);
   font-size: 0.85rem;
@@ -544,6 +550,21 @@ button:disabled {
   border-radius: 4px;
   color: #ff4444;
   font-size: 0.9rem;
+}
+
+.forgot-password-link {
+  text-align: right;
+  margin-top: -8px;
+}
+
+.forgot-password-link a {
+  color: var(--ruins-accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
 }
 
 .auth-links {

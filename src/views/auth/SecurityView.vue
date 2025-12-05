@@ -354,7 +354,7 @@ async function deletePasskey(id: string) {
           </div>
         </div>
 
-        <div class="field" style="margin-top: 20px">
+        <div class="field">
           <label>Passkey 名称</label>
           <input v-model="passkeyName" placeholder="My Passkey" />
         </div>
@@ -550,6 +550,7 @@ async function deletePasskey(id: string) {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 12px;
 }
 
 .field label {

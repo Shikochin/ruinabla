@@ -2,9 +2,11 @@ import { Hono } from 'hono'
 import { hashPassword, verifyPassword, generateId } from '../utils/crypto'
 import { requireAuth, createSession, invalidateSession } from '../middleware/auth'
 import { D1Database } from '@cloudflare/workers-types'
+import { createResendClient, sendVerificationEmail, sendPasswordResetEmail } from '../utils/email'
 
 type Bindings = {
   RUINABLA_DB: D1Database
+  RESEND_API_KEY: string
 }
 
 const auth = new Hono<{ Bindings: Bindings }>()
@@ -42,22 +44,36 @@ auth.post('/register', async (c) => {
     const passwordHash = await hashPassword(password)
 
     await c.env.RUINABLA_DB.prepare(
-      'INSERT INTO users (id, email, password_hash, role) VALUES (?, ?, ?, ?)',
+      'INSERT INTO users (id, email, password_hash, email_verified, role) VALUES (?, ?, ?, ?, ?)',
     )
-      .bind(userId, email, passwordHash, 'user')
+      .bind(userId, email, passwordHash, false, 'user')
       .run()
 
-    // Create session
-    const sessionId = await createSession(c.env.RUINABLA_DB, userId)
+    // Generate verification token
+    const token = generateId(32)
+    const expiresAt = Math.floor(Date.now() / 1000) + 3600 // 1 hour
+
+    await c.env.RUINABLA_DB.prepare(
+      'INSERT INTO email_verification_tokens (token, email, type, expires_at) VALUES (?, ?, ?, ?)',
+    )
+      .bind(token, email, 'verify_email', expiresAt)
+      .run()
+
+    // Send verification email
+    const resend = createResendClient(c.env.RESEND_API_KEY)
+    const baseUrl = new URL(c.req.url).origin
+
+    try {
+      await sendVerificationEmail(resend, email, token, baseUrl)
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError)
+      // Continue registration even if email fails
+    }
 
     return c.json({
       success: true,
-      sessionId,
-      user: {
-        id: userId,
-        email,
-        role: 'user',
-      },
+      message: 'Registration successful. Please check your email to verify your account.',
+      userId, // Return userId but don't create session yet
     })
   } catch (e) {
     console.error('Registration error:', e)
@@ -89,12 +105,39 @@ auth.post('/login', async (c) => {
     return c.json({ error: 'Invalid credentials' }, 401)
   }
 
-  // Password-based login ALWAYS requires 2FA
-  // User can choose TOTP or Passkey for the second factor
+  // Check if user has any 2FA methods set up
+  const [totpRecord, passkeyRecords] = await Promise.all([
+    c.env.RUINABLA_DB.prepare('SELECT enabled FROM totp_secrets WHERE user_id = ?')
+      .bind(user.id)
+      .first(),
+    c.env.RUINABLA_DB.prepare('SELECT id FROM passkeys WHERE user_id = ? LIMIT 1')
+      .bind(user.id)
+      .first(),
+  ])
+
+  const hasTOTP = totpRecord && totpRecord.enabled
+  const hasPasskey = !!passkeyRecords
+
+  // Only require 2FA if user has set up at least one method
+  if (hasTOTP || hasPasskey) {
+    return c.json({
+      requires2FA: true,
+      userId: user.id,
+      email: user.email,
+    })
+  }
+
+  // No 2FA set up, create session directly
+  const sessionId = await createSession(c.env.RUINABLA_DB, user.id as string)
+
   return c.json({
-    requires2FA: true,
-    userId: user.id,
-    email: user.email,
+    success: true,
+    sessionId,
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
   })
 })
 
@@ -173,6 +216,252 @@ auth.post('/logout', requireAuth, async (c) => {
 auth.get('/me', requireAuth, async (c) => {
   const user = c.get('user')
   return c.json({ user })
+})
+
+// Verify email
+auth.post('/verify-email', async (c) => {
+  const { token } = await c.req.json()
+
+  if (!token) {
+    return c.json({ error: 'Token is required' }, 400)
+  }
+
+  try {
+    // Get token from database
+    const tokenRecord = await c.env.RUINABLA_DB.prepare(
+      'SELECT * FROM email_verification_tokens WHERE token = ? AND type = ?',
+    )
+      .bind(token, 'verify_email')
+      .first()
+
+    if (!tokenRecord) {
+      return c.json({ error: 'Invalid or expired token' }, 404)
+    }
+
+    // Check if expired
+    const now = Math.floor(Date.now() / 1000)
+    if (now > (tokenRecord.expires_at as number)) {
+      // Delete expired token
+      await c.env.RUINABLA_DB.prepare('DELETE FROM email_verification_tokens WHERE token = ?')
+        .bind(token)
+        .run()
+      return c.json({ error: 'Token has expired' }, 400)
+    }
+
+    // Update user's email_verified status
+    await c.env.RUINABLA_DB.prepare('UPDATE users SET email_verified = ? WHERE email = ?')
+      .bind(true, tokenRecord.email)
+      .run()
+
+    // Delete used token
+    await c.env.RUINABLA_DB.prepare('DELETE FROM email_verification_tokens WHERE token = ?')
+      .bind(token)
+      .run()
+
+    // Get user and create session
+    const user = await c.env.RUINABLA_DB.prepare(
+      'SELECT id, email, role FROM users WHERE email = ?',
+    )
+      .bind(tokenRecord.email as string)
+      .first()
+
+    if (!user) {
+      return c.json({ error: 'User not found' }, 404)
+    }
+
+    const sessionId = await createSession(c.env.RUINABLA_DB, user.id as string)
+
+    return c.json({
+      success: true,
+      message: 'Email verified successfully',
+      sessionId,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+    })
+  } catch (e) {
+    console.error('Email verification error:', e)
+    return c.json({ error: 'Verification failed' }, 500)
+  }
+})
+
+// Resend verification email
+auth.post('/resend-verification', async (c) => {
+  const { email } = await c.req.json()
+
+  if (!email) {
+    return c.json({ error: 'Email is required' }, 400)
+  }
+
+  try {
+    // Check if user exists and needs verification
+    const user = await c.env.RUINABLA_DB.prepare(
+      'SELECT id, email_verified FROM users WHERE email = ?',
+    )
+      .bind(email)
+      .first()
+
+    if (!user) {
+      return c.json({ error: 'User not found' }, 404)
+    }
+
+    if (user.email_verified) {
+      return c.json({ error: 'Email already verified' }, 400)
+    }
+
+    // Delete old tokens for this email
+    await c.env.RUINABLA_DB.prepare(
+      'DELETE FROM email_verification_tokens WHERE email = ? AND type = ?',
+    )
+      .bind(email, 'verify_email')
+      .run()
+
+    // Generate new token
+    const token = generateId(32)
+    const expiresAt = Math.floor(Date.now() / 1000) + 3600 // 1 hour
+
+    await c.env.RUINABLA_DB.prepare(
+      'INSERT INTO email_verification_tokens (token, email, type, expires_at) VALUES (?, ?, ?, ?)',
+    )
+      .bind(token, email, 'verify_email', expiresAt)
+      .run()
+
+    // Send verification email
+    const resend = createResendClient(c.env.RESEND_API_KEY)
+    const baseUrl = new URL(c.req.url).origin
+
+    await sendVerificationEmail(resend, email, token, baseUrl)
+
+    return c.json({
+      success: true,
+      message: 'Verification email sent',
+    })
+  } catch (e) {
+    console.error('Resend verification error:', e)
+    return c.json({ error: 'Failed to resend verification email' }, 500)
+  }
+})
+
+// Request password reset
+auth.post('/request-reset', async (c) => {
+  const { email } = await c.req.json()
+
+  if (!email) {
+    return c.json({ error: 'Email is required' }, 400)
+  }
+
+  try {
+    // Check if user exists
+    const user = await c.env.RUINABLA_DB.prepare('SELECT id FROM users WHERE email = ?')
+      .bind(email)
+      .first()
+
+    // Always return success to prevent email enumeration
+    if (!user) {
+      return c.json({
+        success: true,
+        message: 'If the email exists, a reset link has been sent',
+      })
+    }
+
+    // Delete old reset tokens for this email
+    await c.env.RUINABLA_DB.prepare(
+      'DELETE FROM email_verification_tokens WHERE email = ? AND type = ?',
+    )
+      .bind(email, 'reset_password')
+      .run()
+
+    // Generate reset token
+    const token = generateId(32)
+    const expiresAt = Math.floor(Date.now() / 1000) + 3600 // 1 hour
+
+    await c.env.RUINABLA_DB.prepare(
+      'INSERT INTO email_verification_tokens (token, email, type, expires_at) VALUES (?, ?, ?, ?)',
+    )
+      .bind(token, email, 'reset_password', expiresAt)
+      .run()
+
+    // Send reset email
+    const resend = createResendClient(c.env.RESEND_API_KEY)
+    const baseUrl = new URL(c.req.url).origin
+
+    await sendPasswordResetEmail(resend, email, token, baseUrl)
+
+    return c.json({
+      success: true,
+      message: 'If the email exists, a reset link has been sent',
+    })
+  } catch (e) {
+    console.error('Request reset error:', e)
+    return c.json({ error: 'Failed to send reset email' }, 500)
+  }
+})
+
+// Reset password
+auth.post('/reset-password', async (c) => {
+  const { token, newPassword } = await c.req.json()
+
+  if (!token || !newPassword) {
+    return c.json({ error: 'Token and new password are required' }, 400)
+  }
+
+  // Validate password strength
+  if (newPassword.length < 8) {
+    return c.json({ error: 'Password must be at least 8 characters' }, 400)
+  }
+
+  try {
+    // Get token from database
+    const tokenRecord = await c.env.RUINABLA_DB.prepare(
+      'SELECT * FROM email_verification_tokens WHERE token = ? AND type = ?',
+    )
+      .bind(token, 'reset_password')
+      .first()
+
+    if (!tokenRecord) {
+      return c.json({ error: 'Invalid or expired token' }, 404)
+    }
+
+    // Check if expired
+    const now = Math.floor(Date.now() / 1000)
+    if (now > (tokenRecord.expires_at as number)) {
+      // Delete expired token
+      await c.env.RUINABLA_DB.prepare('DELETE FROM email_verification_tokens WHERE token = ?')
+        .bind(token)
+        .run()
+      return c.json({ error: 'Token has expired' }, 400)
+    }
+
+    // Update password
+    const passwordHash = await hashPassword(newPassword)
+    await c.env.RUINABLA_DB.prepare('UPDATE users SET password_hash = ? WHERE email = ?')
+      .bind(passwordHash, tokenRecord.email)
+      .run()
+
+    // Delete used token
+    await c.env.RUINABLA_DB.prepare('DELETE FROM email_verification_tokens WHERE token = ?')
+      .bind(token)
+      .run()
+
+    // Invalidate all existing sessions for this user
+    const user = await c.env.RUINABLA_DB.prepare('SELECT id FROM users WHERE email = ?')
+      .bind(tokenRecord.email as string)
+      .first()
+
+    if (user) {
+      await c.env.RUINABLA_DB.prepare('DELETE FROM sessions WHERE user_id = ?').bind(user.id).run()
+    }
+
+    return c.json({
+      success: true,
+      message: 'Password reset successfully',
+    })
+  } catch (e) {
+    console.error('Reset password error:', e)
+    return c.json({ error: 'Failed to reset password' }, 500)
+  }
 })
 
 export default auth

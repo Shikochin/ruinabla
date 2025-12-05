@@ -76,10 +76,28 @@ const router = createRouter({
       meta: { index: 102 },
     },
     {
+      path: '/verify-email/:token',
+      name: 'verify-email',
+      component: () => import('@/views/auth/VerifyEmailView.vue'),
+      meta: { index: 103 },
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import('@/views/auth/ForgotPasswordView.vue'),
+      meta: { index: 104 },
+    },
+    {
+      path: '/reset-password/:token',
+      name: 'reset-password',
+      component: () => import('@/views/auth/ResetPasswordView.vue'),
+      meta: { index: 105 },
+    },
+    {
       path: '/settings',
       name: 'settings',
       component: () => import('@/components/layout/SettingsLayout.vue'),
-      meta: { title: '设置 - Rui∇abla', index: 103, requiresAuth: true },
+      meta: { title: '设置 - Rui∇abla', index: 106, requiresAuth: true },
       children: [
         {
           path: 'security',

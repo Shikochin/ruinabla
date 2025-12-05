@@ -42,12 +42,8 @@ export const useAuthStore = defineStore('auth', () => {
         throw new Error(data.error || 'Registration failed')
       }
 
-      // Save session
-      sessionId.value = data.sessionId
-      user.value = data.user
-      localStorage.setItem('sessionId', data.sessionId)
-      localStorage.setItem('user', JSON.stringify(data.user))
-
+      // Registration successful - email verification required
+      // Don't save session/user yet, will be set after email verification
       return { success: true }
     } catch (e) {
       error.value = (e as Error).message
@@ -190,23 +186,26 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function totpEnabled(): Promise<boolean> {
     try {
-      if (!user.value?.id) return false
+      // Early return if no user ID - prevents sending undefined in request body
+      if (!user.value?.id) {
+        return false
+      }
 
       const res = await fetch('/api/totp/check', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.value.id }),
       })
 
       if (!res.ok) {
-        // Session expired
-        await logout()
+        // TOTP not set up or error - just return false, don't logout
         return false
       }
 
       const data = await res.json()
       return data.enabled
     } catch (e) {
-      console.error('Failed to fetch user:', e)
+      console.error('Failed to check TOTP status:', e)
       return false
     }
   }

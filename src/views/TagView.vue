@@ -16,7 +16,7 @@ const tag = computed(() => route.params.tag as string)
 const posts = computed(() => store.getEntriesByTag(tag.value))
 
 useHead({
-  title: computed(() => `Tag: ${tag.value} - Rui∇abla`),
+  title: computed(() => `标签: ${tag.value}`),
 })
 </script>
 

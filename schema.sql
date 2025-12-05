@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
+  email_verified BOOLEAN DEFAULT FALSE,
   role TEXT DEFAULT 'user' CHECK(role IN ('admin', 'user')),
   created_at INTEGER DEFAULT (unixepoch()),
   updated_at INTEGER DEFAULT (unixepoch())
@@ -50,4 +51,12 @@ CREATE TABLE IF NOT EXISTS sessions (
   expires_at INTEGER NOT NULL,
   created_at INTEGER DEFAULT (unixepoch()),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS email_verification_tokens (
+  token TEXT PRIMARY KEY,
+  email TEXT NOT NULL,
+  type TEXT NOT NULL CHECK(type IN ('verify_email', 'reset_password')),
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER DEFAULT (unixepoch())
 );
