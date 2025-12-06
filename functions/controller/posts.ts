@@ -1,10 +1,12 @@
 import { Hono } from 'hono'
 import type { D1Database, R2Bucket } from '@cloudflare/workers-types'
 import { requireAuth, requireRole } from '../middleware/auth'
+import { calculateReadingTime } from '../utils/readingTime'
 
 type Bindings = {
   RUINABLA_DB: D1Database
   RUINABLA_BUCKET: R2Bucket
+  AI: Ai
 }
 
 const posts = new Hono<{ Bindings: Bindings }>()
@@ -15,14 +17,31 @@ posts.get('/', async (c) => {
     'SELECT * FROM posts ORDER BY date DESC',
   ).all()
 
-  const posts = results.map((post) => ({
-    ...post,
-    tags: post.tags ? JSON.parse(post.tags as string) : [],
-    pinned: Boolean(post.pinned),
-    hide: Boolean(post.hide),
-  }))
+  // Calculate reading time for each post from R2 content
+  const postsWithReadingTime = await Promise.all(
+    results.map(async (post) => {
+      let readingMinutes = 1 // default
+      try {
+        const object = await c.env.RUINABLA_BUCKET.get(`posts/${post.slug}.md`)
+        if (object) {
+          const content = await object.text()
+          readingMinutes = calculateReadingTime(content)
+        }
+      } catch (e) {
+        console.error(`Failed to calculate reading time for ${post.slug}:`, e)
+      }
 
-  return c.json(posts)
+      return {
+        ...post,
+        tags: post.tags ? JSON.parse(post.tags as string) : [],
+        pinned: Boolean(post.pinned),
+        hide: Boolean(post.hide),
+        readingMinutes,
+      }
+    }),
+  )
+
+  return c.json(postsWithReadingTime)
 })
 
 // POST /api/posts - Create or update a post (requires admin)
@@ -34,8 +53,8 @@ posts.post('/', requireAuth, requireRole('admin'), async (c) => {
     date,
     tags,
     category,
-    summary,
-    readingMinutes,
+    summary: providedSummary,
+    readingMinutes: providedReadingMinutes,
     pinned,
     hide,
     license,
@@ -46,7 +65,42 @@ posts.post('/', requireAuth, requireRole('admin'), async (c) => {
     return c.text('Missing required fields', 400)
   }
 
-  // TODO: Add authentication check here
+  // Calculate reading minutes and generate summary if content is updated
+  let readingMinutes = providedReadingMinutes
+  let summary = providedSummary
+
+  if (content) {
+    readingMinutes = calculateReadingTime(content)
+
+    // Generate AI summary
+    try {
+      const response = await c.env.AI.run('@cf/openai/gpt-oss-120b', {
+        messages: [
+          {
+            role: 'system',
+            content:
+              '请为以下文章写一个简短的摘要，直接输出摘要，不要给我选择（不超过100字，中文）：',
+          },
+          {
+            role: 'user',
+            content: content,
+          },
+        ],
+      })
+
+      if ('response' in response) {
+        summary = response.response
+      }
+    } catch (e) {
+      console.error('AI Summary Generation Failed:', e)
+      // Fallback: don't update summary or keep existing?
+      // For now we just log error and proceed.
+      // If summary is empty and generation failed, we might want a fallback truncation.
+      if (!summary) {
+        summary = content.slice(0, 150) + '...'
+      }
+    }
+  }
 
   try {
     // 1. Save to D1
@@ -104,12 +158,16 @@ posts.get('/:slug', async (c) => {
     content = await object.text()
   }
 
+  // 3. Calculate reading time dynamically
+  const readingMinutes = calculateReadingTime(content)
+
   const result = {
     ...post,
     tags: post.tags ? JSON.parse(post.tags as string) : [],
     pinned: Boolean(post.pinned),
     hide: Boolean(post.hide),
     content,
+    readingMinutes,
   }
 
   return c.json(result)

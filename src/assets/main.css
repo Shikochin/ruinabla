@@ -232,6 +232,12 @@ pre:hover .copy-btn,
   border-color: var(--ruins-success);
 }
 
+button.primary {
+  background: var(--ruins-accent);
+  color: var(--ruins-bg);
+  border: none;
+}
+
 :root.light .copy-btn {
   background: rgba(0, 0, 0, 0.05);
 }

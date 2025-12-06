@@ -17,8 +17,6 @@ const form = ref({
   date: getCurrentDate(),
   tags: '',
   category: '',
-  summary: '',
-  readingMinutes: 10,
   pinned: false,
   hide: false,
   license: 'CC BY-SA 4.0',
@@ -41,7 +39,7 @@ const startEdit = async (post: Post) => {
   editingPost.value = post
   form.value = {
     ...post,
-    summary: post.summary || '',
+    ...post,
     pinned: post.pinned || false,
     hide: post.hide || false,
     license: post.license || 'CC BY-SA 4.0',
@@ -59,8 +57,6 @@ const startNew = () => {
     date: getCurrentDate(),
     tags: '',
     category: '',
-    summary: '',
-    readingMinutes: 1,
     pinned: false,
     hide: false,
     license: 'CC BY-SA 4.0',
@@ -82,7 +78,6 @@ const savePost = async () => {
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean),
-      readingMinutes: Number(form.value.readingMinutes),
     }
 
     const res = await fetch('/api/posts', {
@@ -185,14 +180,6 @@ const deletePost = async (slug: string) => {
         <div class="field full">
           <label>Tags (comma separated)</label>
           <input v-model="form.tags" />
-        </div>
-        <div class="field full">
-          <label>Summary</label>
-          <textarea v-model="form.summary" rows="2"></textarea>
-        </div>
-        <div class="field">
-          <label>Reading Mins</label>
-          <input type="number" v-model="form.readingMinutes" />
         </div>
         <div class="field checkboxes">
           <label><input type="checkbox" v-model="form.pinned" /> Pinned</label>
@@ -316,7 +303,6 @@ const deletePost = async (slug: string) => {
 
 input,
 textarea {
-  background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--ruins-border);
   color: var(--ruins-text);
   padding: 8px;
@@ -345,7 +331,7 @@ button:hover {
 
 button.primary {
   background: var(--ruins-accent);
-  color: #000;
+  color: var(--ruins-bg);
   border: none;
 }
 

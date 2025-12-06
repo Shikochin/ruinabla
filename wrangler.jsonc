@@ -19,4 +19,8 @@
       "remote": true,
     },
   ],
+  "ai": {
+    "binding": "AI",
+    "remote": true,
+  },
 }
