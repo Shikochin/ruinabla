@@ -2,11 +2,9 @@
 import { useDevStore } from '@/stores/devStore'
 import { Octokit } from '@octokit/core'
 import { ref } from 'vue'
-import { getLatestBuildStatusFromProxy } from '@/composables/useBuildStatus'
 const devStore = useDevStore()
 
 const commitHash = ref('')
-const { buildTime, statusText } = await getLatestBuildStatusFromProxy()
 
 if (devStore.isDev) {
   const TOKEN: string = import.meta.env.VITE_COMMIT_HASH_PAT
@@ -40,8 +38,6 @@ if (devStore.isDev) {
     </p>
     <p>Constructed with <a href="https://vuejs.org">Vue 3</a> & Persistence</p>
     <div v-if="devStore.isDev">
-      <p v-if="buildTime">Last Build Time: {{ buildTime.toLocaleString() }}</p>
-      <p v-if="statusText">Build Status: {{ statusText }}</p>
       <p v-if="commitHash">
         Commit:
         <a :href="`https://github.com/Shikochin/ruinabla/commit/${commitHash}`" target="_blank">{{
