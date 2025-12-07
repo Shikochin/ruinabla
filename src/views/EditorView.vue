@@ -13,13 +13,14 @@ const editingPost = ref<Post | null>(null)
 const isNew = ref(false)
 const message = ref('')
 const sidebarCollapsed = ref(false)
+const MAX_TAGS = 10
 
 // Form fields
 const form = ref({
   slug: '',
   title: '',
   date: getCurrentDate(),
-  tags: '',
+  tags: [] as string[],
   category: '',
   summary: '',
   pinned: false,
@@ -27,6 +28,28 @@ const form = ref({
   license: 'CC BY-SA 4.0',
   content: '',
 })
+
+const newTagInput = ref('')
+const tagInput = ref<HTMLInputElement | null>(null)
+
+const addTag = () => {
+  const val = newTagInput.value.trim()
+  if (val && !form.value.tags.includes(val)) {
+    if (form.value.tags.length >= 10) return
+    form.value.tags.push(val)
+  }
+  newTagInput.value = ''
+}
+
+const removeTag = (index: number) => {
+  form.value.tags.splice(index, 1)
+}
+
+const handleBackspace = () => {
+  if (!newTagInput.value && form.value.tags.length > 0) {
+    removeTag(form.value.tags.length - 1)
+  }
+}
 
 onMounted(() => {
   store.fetchPosts()
@@ -59,7 +82,7 @@ const startEdit = async (post: Post) => {
     hide: post.hide || false,
     license: post.license || 'CC BY-SA 4.0',
     summary: post.summary || '',
-    tags: post.tags.join(', '),
+    tags: [...post.tags], // Clone array
     content: post.content || '',
   }
 }
@@ -71,7 +94,7 @@ const startNew = () => {
     slug: '',
     title: '',
     date: getCurrentDate(),
-    tags: '',
+    tags: [],
     category: '',
     summary: '',
     pinned: false,
@@ -91,10 +114,7 @@ const savePost = async () => {
   try {
     const payload = {
       ...form.value,
-      tags: form.value.tags
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean),
+      tags: form.value.tags, // Already array
     }
 
     const res = await fetch('/api/posts', {
@@ -174,9 +194,9 @@ const deletePost = async (slug: string) => {
           class="theme-toggle"
           :title="`当前: ${themeStore.themeMode}`"
         >
-          <span v-if="themeStore.themeMode === 'dark'">☀️</span>
-          <span v-else-if="themeStore.themeMode === 'light'">🌙</span>
-          <span v-else>🌓</span>
+          <span v-if="themeStore.themeMode === 'dark'">☽</span>
+          <span v-else-if="themeStore.themeMode === 'light'">☀</span>
+          <span v-else>⛅︎</span>
         </button>
 
         <RouterLink to="/settings" class="nav-link">设置</RouterLink>
@@ -234,8 +254,27 @@ const deletePost = async (slug: string) => {
             <input v-model="form.category" />
           </div>
           <div class="field full">
-            <label>标签</label>
-            <input v-model="form.tags" />
+            <div class="field-label-row">
+              <label>标签</label>
+            </div>
+            <div class="tags-input-container" @click="tagInput?.focus()">
+              <div class="tag-chip" v-for="(tag, index) in form.tags" :key="tag">
+                {{ tag }}
+                <span class="remove-tag" @click.stop="removeTag(index)">×</span>
+              </div>
+              <input
+                ref="tagInput"
+                v-model="newTagInput"
+                @keydown.enter.prevent="addTag"
+                @keydown.backspace="handleBackspace"
+                placeholder="按 Enter 创建标签"
+                class="tag-input-field"
+                :disabled="form.tags.length >= MAX_TAGS"
+              />
+              <span class="tag-counter" v-if="form.tags.length < MAX_TAGS">
+                {{ form.tags.length }} / {{ MAX_TAGS }}
+              </span>
+            </div>
           </div>
           <div class="field full">
             <label>摘要</label>
@@ -618,6 +657,85 @@ input:disabled {
   font-weight: 600;
   font-size: 0.9rem;
   color: var(--ruins-muted);
+}
+
+.tags-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--ruins-border);
+  background: var(--ruins-bg);
+  padding: 6px 10px;
+  border-radius: 6px;
+  min-height: 42px;
+  cursor: text;
+  transition: all 0.2s ease;
+}
+
+.tags-input-container:focus-within {
+  border-color: var(--ruins-accent);
+  box-shadow: 0 0 0 3px rgba(var(--ruins-accent-rgb, 255, 107, 53), 0.1);
+}
+
+.tag-chip {
+  border: 1px solid var(--ruins-border);
+  color: var(--ruins-text);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.remove-tag {
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 0.8;
+  opacity: 0.8;
+}
+
+.remove-tag:hover {
+  opacity: 1;
+}
+
+.tag-input-field {
+  flex: 1;
+  min-width: 150px;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 4px !important;
+  margin: 0;
+  color: var(--ruins-text);
+}
+
+.tag-counter {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--ruins-muted);
+  white-space: nowrap;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--ruins-muted);
+  font-size: 0.7rem;
+  color: var(--ruins-muted);
+  cursor: help;
 }
 
 .summary-input {
