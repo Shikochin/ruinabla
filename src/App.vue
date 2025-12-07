@@ -40,7 +40,15 @@ useHead({
 </script>
 
 <template>
-  <RuinLayout>
+  <!-- Conditionally render layout: editor gets no wrapper -->
+  <template v-if="route.name === 'editor'">
+    <RouterView v-slot="{ Component, route }">
+      <component :is="Component" :key="route.path" />
+    </RouterView>
+  </template>
+
+  <!-- All other routes use RuinLayout -->
+  <RuinLayout v-else>
     <RouterView v-slot="{ Component, route }">
       <!-- make sure components have only one root element -->
       <!-- otherwise transition will not work -->

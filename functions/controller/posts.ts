@@ -11,6 +11,44 @@ type Bindings = {
 
 const posts = new Hono<{ Bindings: Bindings }>()
 
+const generateFilename = (extension: string) => {
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${extension}`
+}
+
+// Upload image for markdown content
+posts.post('/upload', requireAuth, requireRole('admin'), async (c) => {
+  try {
+    const body = await c.req.parseBody()
+    const file = body['file']
+
+    if (!file || !(file instanceof File)) {
+      return c.json({ error: 'No file uploaded' }, 400)
+    }
+
+    if (!file.type.startsWith('image/')) {
+      return c.json({ error: 'File must be an image' }, 400)
+    }
+
+    const extension = file.name.split('.').pop() || 'png'
+    const filename = `images/${generateFilename(extension)}`
+
+    // 上传到 R2
+    await c.env.RUINABLA_BUCKET.put(filename, await file.arrayBuffer(), {
+      httpMetadata: { contentType: file.type },
+    })
+
+    const publicUrl = `https://assets.shikoch.in/${filename}`
+
+    return c.json({
+      success: true,
+      url: publicUrl,
+    })
+  } catch (e) {
+    console.error('Upload error:', e)
+    return c.json({ error: 'Image upload failed' }, 500)
+  }
+})
+
 // GET /api/posts - List all posts
 posts.get('/', async (c) => {
   const { results } = await c.env.RUINABLA_DB.prepare(
