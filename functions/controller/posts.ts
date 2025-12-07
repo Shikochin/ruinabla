@@ -3,10 +3,13 @@ import type { D1Database, R2Bucket } from '@cloudflare/workers-types'
 import { requireAuth, requireRole } from '../middleware/auth'
 import { calculateReadingTime } from '../utils/readingTime'
 
+import { OpenAI } from 'openai'
+
 type Bindings = {
   RUINABLA_DB: D1Database
   RUINABLA_BUCKET: R2Bucket
-  AI: Ai
+  OPENAI_API_KEY: string
+  OPENAI_API_BASE: string
 }
 
 const posts = new Hono<{ Bindings: Bindings }>()
@@ -110,32 +113,52 @@ posts.post('/', requireAuth, requireRole('admin'), async (c) => {
   if (content) {
     readingMinutes = calculateReadingTime(content)
 
-    // Generate AI summary
-    try {
-      const response = await c.env.AI.run('@cf/openai/gpt-oss-120b', {
-        messages: [
-          {
-            role: 'system',
-            content:
-              '请为以下文章写一个简短的摘要，直接输出摘要，不要给我选择（不超过100字，中文）：',
-          },
-          {
-            role: 'user',
-            content: content,
-          },
-        ],
-      })
-
-      if ('response' in response) {
-        summary = response.response
-      }
-    } catch (e) {
-      console.error('AI Summary Generation Failed:', e)
-      // Fallback: don't update summary or keep existing?
-      // For now we just log error and proceed.
-      // If summary is empty and generation failed, we might want a fallback truncation.
+    // Generate AI summary asynchronously if not provided
+    if (content && !providedSummary) {
       if (!summary) {
         summary = content.slice(0, 150) + '...'
+      }
+
+      const apiKey = c.env.OPENAI_API_KEY
+      const baseURL = c.env.OPENAI_API_BASE || 'https://api.openai.com/v1'
+
+      if (apiKey) {
+        c.executionCtx.waitUntil(
+          (async () => {
+            try {
+              const openai = new OpenAI({
+                apiKey,
+                baseURL,
+              })
+
+              const completion = await openai.chat.completions.create({
+                model: 'gemini-2.5-pro',
+                messages: [
+                  {
+                    role: 'system',
+                    content:
+                      '请为以下文章写一个简短的摘要，直接输出摘要，不要给我选择（不超过100字，使用文章的语言）：',
+                  },
+                  {
+                    role: 'user',
+                    content: content.slice(0, 4000), // Limit context
+                  },
+                ],
+              })
+
+              if (completion.choices && completion.choices[0]?.message?.content) {
+                const aiSummary = completion.choices[0].message.content.trim()
+
+                // Define the update query separately to avoid syntax issues in interpolation
+                await c.env.RUINABLA_DB.prepare('UPDATE posts SET summary = ? WHERE slug = ?')
+                  .bind(aiSummary, slug)
+                  .run()
+              }
+            } catch (e) {
+              console.error('Async AI Summary Generation Failed:', e)
+            }
+          })(),
+        )
       }
     }
   }
@@ -147,8 +170,9 @@ posts.post('/', requireAuth, requireRole('admin'), async (c) => {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(slug) DO UPDATE SET
        title=excluded.title, date=excluded.date, tags=excluded.tags, category=excluded.category,
-       summary=excluded.summary, readingMinutes=excluded.readingMinutes, pinned=excluded.pinned,
-       hide=excluded.hide, license=excluded.license, updated_at=unixepoch()`,
+       readingMinutes=excluded.readingMinutes, pinned=excluded.pinned,
+       hide=excluded.hide, license=excluded.license, updated_at=unixepoch()
+       ${providedSummary ? ', summary=excluded.summary' : ''}`,
     )
       .bind(
         slug,

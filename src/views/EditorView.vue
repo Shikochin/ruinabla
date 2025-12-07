@@ -21,6 +21,7 @@ const form = ref({
   date: getCurrentDate(),
   tags: '',
   category: '',
+  summary: '',
   pinned: false,
   hide: false,
   license: 'CC BY-SA 4.0',
@@ -57,6 +58,7 @@ const startEdit = async (post: Post) => {
     pinned: post.pinned || false,
     hide: post.hide || false,
     license: post.license || 'CC BY-SA 4.0',
+    summary: post.summary || '',
     tags: post.tags.join(', '),
     content: post.content || '',
   }
@@ -71,6 +73,7 @@ const startNew = () => {
     date: getCurrentDate(),
     tags: '',
     category: '',
+    summary: '',
     pinned: false,
     hide: false,
     license: 'CC BY-SA 4.0',
@@ -234,9 +237,17 @@ const deletePost = async (slug: string) => {
             <label>标签</label>
             <input v-model="form.tags" />
           </div>
+          <div class="field full">
+            <label>摘要</label>
+            <textarea
+              v-model="form.summary"
+              class="summary-input"
+              placeholder="文章摘要（留空则自动生成）"
+            ></textarea>
+          </div>
           <div class="field checkboxes">
-            <label><input type="checkbox" v-model="form.pinned" /> Pinned</label>
-            <label><input type="checkbox" v-model="form.hide" /> Hide</label>
+            <label><input type="checkbox" v-model="form.pinned" /> 置顶</label>
+            <label><input type="checkbox" v-model="form.hide" /> 隐藏</label>
           </div>
         </div>
 
@@ -607,6 +618,13 @@ input:disabled {
   font-weight: 600;
   font-size: 0.9rem;
   color: var(--ruins-muted);
+}
+
+.summary-input {
+  min-height: 80px;
+  resize: vertical;
+  font-family: var(--font-sans);
+  line-height: 1.5;
 }
 
 button {
