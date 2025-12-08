@@ -1,31 +1,167 @@
 <script setup lang="ts">
+import { ref, onMounted, reactive, computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import FriendLink from '@/components/FriendLink.vue'
-import friendsData from '@/assets/friends.json'
 import GiscusComment from '@/components/GiscusComment.vue'
+import { useAuthStore } from '@/stores/authStore'
+
+// 定义接口
+interface Friend {
+  id: string
+  name: string
+  url: string
+  avatar: string
+  desc: string
+}
 
 useHead({
   title: '灯塔',
-  meta: [
-    {
-      name: 'description',
-      content: '光束信号 - Friends and links',
-    },
-  ],
+  meta: [{ name: 'description', content: '光束信号 - Friends and links' }],
+})
+
+// 状态管理
+const authStore = useAuthStore()
+const friends = ref<Friend[]>([])
+const isLoading = ref(true)
+const showModal = ref(false)
+const isEditing = ref(false)
+
+// 响应式权限判断
+const isAdmin = computed(() => authStore.isAdmin)
+
+// 表单数据
+const form = reactive({
+  id: '',
+  name: '',
+  url: '',
+  avatar: '',
+  desc: '',
+})
+
+// 获取数据
+const fetchFriends = async () => {
+  try {
+    const res = await fetch('/api/friends')
+    if (res.ok) {
+      friends.value = await res.json()
+    }
+  } catch (e) {
+    console.error('Signal lost:', e)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 打开新增窗口
+const openAddModal = () => {
+  isEditing.value = false
+  form.id = ''
+  form.name = ''
+  form.url = ''
+  form.avatar = ''
+  form.desc = ''
+  showModal.value = true
+}
+
+// 打开编辑窗口
+const openEditModal = (friend: Friend) => {
+  isEditing.value = true
+  Object.assign(form, friend)
+  showModal.value = true
+}
+
+// 提交表单
+const submitForm = async () => {
+  if (!authStore.sessionId) return
+
+  const endpoint = isEditing.value ? `/api/friends/${form.id}` : '/api/friends'
+  const method = isEditing.value ? 'PUT' : 'POST'
+
+  try {
+    const res = await fetch(endpoint, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authStore.sessionId}`, // 直接使用 Store 中的 SessionID
+      },
+      body: JSON.stringify(form),
+    })
+
+    if (res.ok) {
+      showModal.value = false
+      await fetchFriends()
+    } else {
+      alert('信号发射失败')
+    }
+  } catch (e) {
+    console.error(e)
+    alert('连接断开')
+  }
+}
+
+// 删除功能
+const deleteFriend = async (id: string) => {
+  if (!confirm('确定要熄灭这座灯塔吗？')) return
+  if (!authStore.sessionId) return
+
+  try {
+    const res = await fetch(`/api/friends/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authStore.sessionId}`,
+      },
+    })
+
+    if (res.ok) {
+      friends.value = friends.value.filter((f) => f.id !== id)
+    }
+  } catch (e) {
+    console.error(e)
+    alert('删除失败')
+  }
+}
+
+onMounted(() => {
+  fetchFriends()
+  // 尝试获取当前用户信息以确认权限，如果 Store 里没有且 Session 存在
+  if (!authStore.user && authStore.sessionId) {
+    authStore.fetchMe()
+  }
 })
 </script>
 
 <template>
   <div>
     <section class="lighthouse paper-panel">
-      <p class="eyebrow">灯塔</p>
-      <h1>光束信号</h1>
+      <div class="header-row">
+        <div>
+          <p class="eyebrow">灯塔</p>
+          <h1>光束信号</h1>
+        </div>
+        <button v-if="isAdmin" @click="openAddModal" class="admin-btn add-btn">
+          <span>+</span> 建立新坐标
+        </button>
+      </div>
+
       <p class="lead">
         在这片废墟中，偶尔能接收到来自远方的信号。它们是其他幸存者建立的灯塔，指引着不同的方向。
       </p>
 
       <div class="signal-grid">
-        <FriendLink v-for="friend in friendsData" :key="friend.url" v-bind="friend" />
+        <div v-if="isLoading" class="loading-state">正在搜索频段...</div>
+
+        <div v-else v-for="friend in friends" :key="friend.id" class="friend-wrapper">
+          <FriendLink v-bind="friend" />
+
+          <div v-if="isAdmin" class="admin-overlay">
+            <button @click.prevent="openEditModal(friend)" class="icon-btn edit" title="调整">
+              ✎
+            </button>
+            <button @click.prevent="deleteFriend(friend.id)" class="icon-btn delete" title="熄灭">
+              ×
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -44,7 +180,36 @@ useHead({
         发送你的信号数据。
       </p>
     </section>
+
     <GiscusComment />
+
+    <div v-if="showModal" class="modal-backdrop" @click.self="showModal = false">
+      <div class="modal-panel paper-panel">
+        <h3>{{ isEditing ? '调整信号参数' : '建立新坐标' }}</h3>
+        <form @submit.prevent="submitForm">
+          <div class="form-group">
+            <label>名称</label>
+            <input v-model="form.name" required placeholder="Site Name" />
+          </div>
+          <div class="form-group">
+            <label>地址 (URL)</label>
+            <input v-model="form.url" required type="url" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label>头像 (URL)</label>
+            <input v-model="form.avatar" placeholder="Avatar Image URL" />
+          </div>
+          <div class="form-group">
+            <label>描述</label>
+            <input v-model="form.desc" placeholder="Short description" />
+          </div>
+          <div class="modal-actions">
+            <button type="button" @click="showModal = false" class="btn-cancel">取消</button>
+            <button type="submit" class="btn-confirm">发射信号</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -53,6 +218,13 @@ useHead({
 .join {
   padding: 40px;
   margin-bottom: 24px;
+}
+
+/* Header layout */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .lighthouse h1 {
@@ -68,72 +240,177 @@ useHead({
   line-height: 1.8;
 }
 
+/* Grid & Card Wrapper */
 .signal-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
+  position: relative;
+  min-height: 100px;
 }
 
-.signal-card {
+.loading-state {
+  color: var(--ruins-muted);
+  font-family: var(--font-mono);
+  padding: 20px;
+  border: 1px dashed var(--ruins-border);
+  text-align: center;
+}
+
+.friend-wrapper {
+  position: relative;
+}
+
+/* Admin Controls */
+.admin-btn {
+  background: transparent;
+  border: 1px dashed var(--ruins-border);
+  color: var(--ruins-muted);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.admin-btn:hover {
+  border-color: var(--ruins-accent);
+  color: var(--ruins-accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.admin-overlay {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.friend-wrapper:hover .admin-overlay {
+  opacity: 1;
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 20px;
+  justify-content: center;
   border: 1px solid var(--ruins-border);
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  text-decoration: none;
+  background: var(--ruins-bg);
+  color: var(--ruins-text);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
 }
 
-.signal-card:hover {
-  border-color: var(--ruins-accent);
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px var(--ruins-light-color);
-}
-
-.signal-avatar {
-  flex-shrink: 0;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1px solid var(--ruins-border);
-  transition: border-color 0.3s ease;
-}
-
-.signal-card:hover .signal-avatar {
+.icon-btn:hover {
+  background: var(--ruins-accent);
+  color: #fff;
   border-color: var(--ruins-accent);
 }
 
-.signal-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: filter 0.3s ease;
+.icon-btn.delete:hover {
+  background: #ff4757;
+  border-color: #ff4757;
 }
 
-.signal-info {
-  flex: 1;
-  min-width: 0;
+/* Modal Styling - Keeping the Ruins Vibe */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.signal-name {
-  margin: 0 0 4px;
+.modal-panel {
+  width: 90%;
+  max-width: 450px;
+  padding: 32px;
+  background: var(--ruins-bg, #111);
+  border: 1px solid var(--ruins-accent);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-panel h3 {
+  margin-top: 0;
+  color: var(--ruins-accent);
   font-family: var(--font-mono);
-  font-size: 1.1rem;
-  color: var(--ruins-accent-strong);
+  border-bottom: 1px solid var(--ruins-border);
+  padding-bottom: 12px;
+  margin-bottom: 20px;
 }
 
-.signal-desc {
-  margin: 0;
-  font-size: 0.9rem;
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
   color: var(--ruins-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-family: var(--font-mono);
 }
 
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--ruins-border);
+  color: var(--ruins-text);
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--ruins-accent);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-actions button {
+  padding: 8px 24px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--ruins-muted);
+}
+
+.btn-cancel:hover {
+  color: var(--ruins-text);
+}
+
+.btn-confirm {
+  background: var(--ruins-bg);
+  border: 1px solid var(--ruins-accent);
+  color: var(--ruins-text);
+}
+
+.btn-confirm:hover {
+  opacity: 0.9;
+}
+
+/* Original Styles */
 .join h3 {
   margin-top: 0;
   margin-bottom: 16px;

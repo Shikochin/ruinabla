@@ -60,3 +60,13 @@ CREATE TABLE IF NOT EXISTS email_verification_tokens (
   expires_at INTEGER NOT NULL,
   created_at INTEGER DEFAULT (unixepoch())
 );
+
+CREATE TABLE IF NOT EXISTS friend_links (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  url TEXT NOT NULL,
+  avatar TEXT,
+  desc TEXT,
+  sort_order INTEGER DEFAULT 0,
+  created_at INTEGER DEFAULT (unixepoch())
+);
