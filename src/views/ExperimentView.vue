@@ -13,6 +13,7 @@ const devStore = useDevStore()
           <RouterLink to="posts/typescript-syntax-showcase">TypeScript Syntax Showcase</RouterLink>
         </li>
       </ul>
+      <button class="btn" @click="devStore.setIsDev(false)">Disable Dev Mode</button>
     </div>
 
     <div v-else>

@@ -1,41 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useDevStore } from '@/stores/devStore'
 import RuinFooter from './RuinFooter.vue'
 import RuinHeader from './RuinHeader.vue'
 
-const devStore = useDevStore()
-
-const clickCount = ref(0)
-let clickTimer: number | null = null
-
 function backToTop() {
   scroll({ top: 0, behavior: 'smooth' })
-  switchDevMode()
-}
-
-function switchDevMode() {
-  // Increment click count
-  clickCount.value++
-
-  // Clear previous timer
-  if (clickTimer) {
-    clearTimeout(clickTimer)
-  }
-
-  // Check if reached 5 clicks
-  if (clickCount.value >= 5) {
-    // Toggle dev mode
-    devStore.setIsDev(!devStore.isDev)
-    console.log(`Developer mode ${devStore.isDev ? 'enabled' : 'disabled'}`)
-    // Reset counter
-    clickCount.value = 0
-  } else {
-    // Reset counter after 500ms of no clicks
-    clickTimer = setTimeout(() => {
-      clickCount.value = 0
-    }, 500)
-  }
 }
 </script>
 

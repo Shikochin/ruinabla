@@ -2,6 +2,7 @@
 import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import PostList from '@/components/post/PostList.vue'
 import { usePostStore } from '@/stores/postStore'
 
@@ -11,7 +12,7 @@ onMounted(() => {
   store.fetchPosts()
 })
 
-const { postEntries } = storeToRefs(store)
+const { postEntries, loaded } = storeToRefs(store)
 
 const totalPosts = computed(() => postEntries.value.length)
 const averageReading = computed(() => {
@@ -45,14 +46,22 @@ useHead({
     <section class="chronicle paper-panel">
       <p class="eyebrow">年轮记录</p>
       <h1>废墟的时间坐标</h1>
-      <p class="hero-copy">从 {{ firstDate }} 到 {{ lastDate }}</p>
+      <p class="hero-copy" v-if="!loaded">
+        从
+        <SkeletonPlaceholder width="100px" height="1em" style="display: inline-block" /> 到
+        <SkeletonPlaceholder width="100px" height="1em" style="display: inline-block" />
+      </p>
+      <p class="hero-copy" v-else>从 {{ firstDate }} 到 {{ lastDate }}</p>
 
       <div class="metrics">
         <article class="metric-card">
           <div class="metric-icon">📝</div>
           <div class="metric-content">
             <span class="metric-label">文章篇数</span>
-            <strong class="metric-value">{{ totalPosts }}</strong>
+            <strong class="metric-value" v-if="!loaded">
+              <SkeletonPlaceholder width="40px" height="2rem" />
+            </strong>
+            <strong class="metric-value" v-else>{{ totalPosts }}</strong>
           </div>
         </article>
         <article class="metric-card">
@@ -60,7 +69,10 @@ useHead({
           <div class="metric-content">
             <span class="metric-label">平均阅读</span>
             <div class="metric-with-unit">
-              <strong class="metric-value">{{ averageReading }}</strong>
+              <strong class="metric-value" v-if="!loaded">
+                <SkeletonPlaceholder width="40px" height="2rem" />
+              </strong>
+              <strong class="metric-value" v-else>{{ averageReading }}</strong>
               <span class="metric-unit">分钟</span>
             </div>
           </div>
@@ -69,13 +81,16 @@ useHead({
           <div class="metric-icon">🏷️</div>
           <div class="metric-content">
             <span class="metric-label">标签数</span>
-            <strong class="metric-value">{{ distinctTags }}</strong>
+            <strong class="metric-value" v-if="!loaded">
+              <SkeletonPlaceholder width="40px" height="2rem" />
+            </strong>
+            <strong class="metric-value" v-else>{{ distinctTags }}</strong>
           </div>
         </article>
       </div>
     </section>
 
-    <PostList :entries="postEntries" />
+    <PostList :entries="postEntries" :loading="!loaded" />
   </div>
 </template>
 

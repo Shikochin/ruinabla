@@ -3,8 +3,10 @@ import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import PostCard from '@/components/post/PostCard.vue'
+import PostCardSkeleton from '@/components/post/PostCardSkeleton.vue'
 import PostList from '@/components/post/PostList.vue'
 import RecentComments from '@/components/RecentComments.vue'
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useHead } from '@unhead/vue'
 
@@ -24,7 +26,8 @@ useHead({
   ],
 })
 
-const { featuredEntry, recentlyRecovered, pickedUpPostsEntries, tagCloud } = storeToRefs(store)
+const { featuredEntry, recentlyRecovered, pickedUpPostsEntries, tagCloud, loaded } =
+  storeToRefs(store)
 
 const tagPairs = computed(() =>
   Object.entries(tagCloud.value)
@@ -35,7 +38,28 @@ const tagPairs = computed(() =>
 
 <template>
   <div>
-    <section class="hero paper-panel" v-if="featuredEntry">
+    <section class="hero paper-panel" v-if="!loaded">
+      <div class="hero__eyebrow">
+        <SkeletonPlaceholder width="120px" height="0.8rem" />
+      </div>
+      <div class="title" style="width: 100%">
+        <SkeletonPlaceholder width="80%" height="4rem" style="margin: 16px 0" />
+      </div>
+      <div style="width: 100%; max-width: 60ch">
+        <SkeletonPlaceholder width="100%" height="1.1rem" style="margin-bottom: 16px" />
+        <SkeletonPlaceholder width="90%" height="1.1rem" style="margin-bottom: 16px" />
+        <SkeletonPlaceholder width="40%" height="1.1rem" />
+      </div>
+      <div class="hero__meta">
+        <SkeletonPlaceholder width="100px" height="0.85rem" />
+        <SkeletonPlaceholder width="80px" height="0.85rem" />
+      </div>
+      <div class="hero__cta">
+        <SkeletonPlaceholder width="140px" height="1rem" />
+      </div>
+    </section>
+
+    <section class="hero paper-panel" v-else-if="featuredEntry">
       <div class="hero__eyebrow">近日信标 · {{ featuredEntry.date }}</div>
       <RouterLink :to="`/posts/${featuredEntry.slug}`" class="title">
         <h1>{{ featuredEntry.title }}</h1>
@@ -58,12 +82,17 @@ const tagPairs = computed(() =>
     </section>
 
     <section class="grid">
-      <PostCard
-        v-for="entry in recentlyRecovered"
-        :key="entry.slug"
-        :entry="entry"
-        :vol="recentlyRecovered.indexOf(entry) + 2"
-      />
+      <template v-if="!loaded">
+        <PostCardSkeleton v-for="i in 3" :key="i" />
+      </template>
+      <template v-else>
+        <PostCard
+          v-for="entry in recentlyRecovered"
+          :key="entry.slug"
+          :entry="entry"
+          :vol="recentlyRecovered.indexOf(entry) + 2"
+        />
+      </template>
     </section>
 
     <section class="signals">
@@ -72,7 +101,17 @@ const tagPairs = computed(() =>
       <div class="tag-cloud paper-panel">
         <p class="eyebrow">常现词</p>
         <h3>废墟里的高频词</h3>
-        <div class="tag-cloud__items">
+        <div class="tag-cloud__items" v-if="!loaded">
+          <SkeletonPlaceholder
+            v-for="i in 8"
+            :key="i"
+            width="80px"
+            height="32px"
+            border-radius="0"
+            style="display: inline-block"
+          />
+        </div>
+        <div class="tag-cloud__items" v-else>
           <RouterLink
             v-for="[tag, count] in tagPairs"
             :key="tag"

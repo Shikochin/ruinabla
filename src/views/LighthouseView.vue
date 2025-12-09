@@ -3,6 +3,7 @@ import { ref, onMounted, reactive, computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import FriendLink from '@/components/FriendLink.vue'
 import GiscusComment from '@/components/GiscusComment.vue'
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import { useAuthStore } from '@/stores/authStore'
 
 // 定义接口
@@ -148,7 +149,20 @@ onMounted(() => {
       </p>
 
       <div class="signal-grid">
-        <div v-if="isLoading" class="loading-state">正在搜索频段...</div>
+        <template v-if="isLoading">
+          <div v-for="i in 3" :key="i" class="skeleton-card">
+            <SkeletonPlaceholder
+              width="60px"
+              height="60px"
+              border-radius="50%"
+              class="skeleton-avatar"
+            />
+            <div class="skeleton-info">
+              <SkeletonPlaceholder width="50%" height="1.1rem" style="margin-bottom: 8px" />
+              <SkeletonPlaceholder width="90%" height="0.9rem" />
+            </div>
+          </div>
+        </template>
 
         <div v-else v-for="friend in friends" :key="friend.id" class="friend-wrapper">
           <FriendLink v-bind="friend" />
@@ -169,11 +183,11 @@ onMounted(() => {
       <h3>加入光束网络</h3>
       <p>如果你也建立了自己的灯塔，欢迎交换光束。</p>
       <pre class="code-block"><code>{
-  "name": "Your Name",
-  "url": "https://your-site.com",
-  "avatar": "https://your-site.com/avatar.png",
-  "desc": "A short description of your site."
-}</code></pre>
+      "name": "Your Name",
+      "url": "https://your-site.com",
+      "avatar": "https://your-site.com/avatar.png",
+      "desc": "A short description of your site."
+      }</code></pre>
       <p>
         请通过 <a href="mailto:i@shikoch.in">Email</a>，评论区或
         <a href="https://github.com/Shikochin/ruinabla/issues" target="_blank">GitHub Issues</a>
@@ -435,5 +449,24 @@ onMounted(() => {
   .join {
     padding: 24px;
   }
+}
+
+.skeleton-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--ruins-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.skeleton-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-avatar {
+  flex-shrink: 0;
 }
 </style>

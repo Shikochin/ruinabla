@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { toRef } from 'vue'
 import type { Post } from '@/stores/postStore'
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 
-const props = defineProps<{
-  entries: Post[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    entries: Post[]
+    loading?: boolean
+  }>(),
+  {
+    loading: false,
+  },
+)
 
 const entries = toRef(props, 'entries')
 </script>
@@ -12,31 +19,61 @@ const entries = toRef(props, 'entries')
 <template>
   <div class="timeline-container paper-panel">
     <ol class="timeline">
-      <li v-for="entry in entries" :key="entry.slug" class="timeline__item">
-        <div class="timeline__meta">
-          <span class="timeline__date">{{ entry.date }}</span>
-          <br />
-          <strong v-if="entry.pinned" class="timeline__date">Pinned</strong>
-        </div>
-        <div class="timeline__divider">
-          <span class="timeline__dot"></span>
-        </div>
-        <div class="timeline__content">
-          <RouterLink :to="`/posts/${entry.slug}`">
-            <h4>
-              {{ entry.title }}
-            </h4>
-          </RouterLink>
-          <p class="timeline__summary">
-            {{ entry.summary }}
-          </p>
-          <div v-if="entry.tags.length" class="timeline__tags">
-            <RouterLink v-for="tag in entry.tags" :key="tag" :to="`/tags/${tag}`"
-              >#{{ tag }}</RouterLink
-            >
+      <template v-if="loading">
+        <li v-for="i in 5" :key="i" class="timeline__item">
+          <div class="timeline__meta">
+            <SkeletonPlaceholder
+              width="80px"
+              height="0.8rem"
+              style="margin-left: auto; margin-bottom: 4px"
+            />
           </div>
-        </div>
-      </li>
+          <div class="timeline__divider">
+            <span class="timeline__dot"></span>
+          </div>
+          <div class="timeline__content">
+            <SkeletonPlaceholder width="60%" height="1.5rem" style="margin-bottom: 12px" />
+            <SkeletonPlaceholder width="100%" height="0.95rem" style="margin-bottom: 8px" />
+            <SkeletonPlaceholder width="90%" height="0.95rem" style="margin-bottom: 8px" />
+            <div class="timeline__tags" style="margin-top: 16px">
+              <SkeletonPlaceholder
+                v-for="j in 2"
+                :key="j"
+                width="60px"
+                height="1rem"
+                style="display: inline-block"
+              />
+            </div>
+          </div>
+        </li>
+      </template>
+      <template v-else>
+        <li v-for="entry in entries" :key="entry.slug" class="timeline__item">
+          <div class="timeline__meta">
+            <span class="timeline__date">{{ entry.date }}</span>
+            <br />
+            <strong v-if="entry.pinned" class="timeline__date">Pinned</strong>
+          </div>
+          <div class="timeline__divider">
+            <span class="timeline__dot"></span>
+          </div>
+          <div class="timeline__content">
+            <RouterLink :to="`/posts/${entry.slug}`">
+              <h4>
+                {{ entry.title }}
+              </h4>
+            </RouterLink>
+            <p class="timeline__summary">
+              {{ entry.summary }}
+            </p>
+            <div v-if="entry.tags.length" class="timeline__tags">
+              <RouterLink v-for="tag in entry.tags" :key="tag" :to="`/tags/${tag}`"
+                >#{{ tag }}
+              </RouterLink>
+            </div>
+          </div>
+        </li>
+      </template>
     </ol>
   </div>
 </template>

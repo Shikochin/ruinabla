@@ -77,12 +77,7 @@ onMounted(() => {
               <span class="icon">⚙️</span>
               <span>设置</span>
             </RouterLink>
-            <RouterLink
-              to="/editor"
-              @click="closeUserMenu"
-              class="dropdown-item"
-              v-if="devStore.isDev"
-            >
+            <RouterLink to="/editor" @click="closeUserMenu" class="dropdown-item">
               <span class="icon">✏️</span>
               <span>编辑器</span>
             </RouterLink>

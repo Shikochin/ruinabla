@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { Temporal } from 'temporal-polyfill'
 import { Octokit } from '@octokit/core'
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 
 // vite exposes env vars if it starts with VITE
 const TOKEN: string = import.meta.env.VITE_RECENT_COMMENTS_PAT
@@ -165,7 +166,37 @@ onMounted(() => {
       </a>
     </header>
 
-    <div v-if="loading" class="loading">加载中...</div>
+    <div v-if="loading">
+      <ul>
+        <li v-for="i in 4" :key="i">
+          <div class="comment-content">
+            <div class="comment-meta">
+              <SkeletonPlaceholder
+                width="20px"
+                height="20px"
+                border-radius="50%"
+                style="display: block"
+              />
+              <SkeletonPlaceholder
+                width="160px"
+                height="0.75rem"
+                style="display: block; margin-left: 4px"
+              />
+              <SkeletonPlaceholder
+                width="80px"
+                height="0.75rem"
+                style="display: block; margin-left: 4px"
+              />
+            </div>
+            <div style="margin-top: 4px; margin-bottom: 4px; width: 100%">
+              <SkeletonPlaceholder width="100%" height="1rem" style="margin-bottom: 4px" />
+              <SkeletonPlaceholder width="60%" height="1rem" />
+            </div>
+            <SkeletonPlaceholder width="120px" height="0.8rem" style="margin-top: 4px" />
+          </div>
+        </li>
+      </ul>
+    </div>
 
     <div v-else-if="error" class="error">
       {{ error }}
