@@ -18,6 +18,14 @@ export default defineConfig({
         target: 'http://localhost:8788',
         changeOrigin: true,
       },
+      '/rss.xml': {
+        target: 'http://localhost:8788',
+        changeOrigin: true,
+      },
+      '/sitemap.xml': {
+        target: 'http://localhost:8788',
+        changeOrigin: true,
+      },
     },
   },
 })

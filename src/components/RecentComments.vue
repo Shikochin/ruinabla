@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { Temporal } from 'temporal-polyfill'
 import { Octokit } from '@octokit/core'
-import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
+import SkeletonPlaceholder from '@/components/ui/Skeleton.vue'
 
 // vite exposes env vars if it starts with VITE
 const TOKEN: string = import.meta.env.VITE_RECENT_COMMENTS_PAT

@@ -2,7 +2,7 @@
 import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
+import SkeletonPlaceholder from '@/components/ui/Skeleton.vue'
 import PostList from '@/components/post/PostList.vue'
 import { usePostStore } from '@/stores/postStore'
 
