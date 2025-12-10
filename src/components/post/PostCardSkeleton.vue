@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SkeletonPlaceholder from '@/components/ui/Skeleton.vue'
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 </script>
 
 <template>

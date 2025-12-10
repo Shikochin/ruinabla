@@ -3,7 +3,7 @@ import { ref, onMounted, reactive, computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import FriendLink from '@/components/FriendLink.vue'
 import GiscusComment from '@/components/GiscusComment.vue'
-import SkeletonPlaceholder from '@/components/ui/Skeleton.vue'
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import { useAuthStore } from '@/stores/authStore'
 
 // 定义接口

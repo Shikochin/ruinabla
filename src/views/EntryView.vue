@@ -11,8 +11,12 @@ import { useHead } from '@unhead/vue'
 
 import { useCodeCopy } from '@/composables/useCodeCopy'
 
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
+
 const route = useRoute()
 const store = usePostStore()
+
+const isLoading = ref(true)
 
 const entry = computed(() => {
   const slug = route.params.slug
@@ -27,7 +31,19 @@ watch(
   () => route.params.slug,
   async (newSlug) => {
     if (typeof newSlug === 'string') {
-      await store.fetchPostContent(newSlug)
+      const cached = store.findBySlug(newSlug)
+      if (cached?.content) {
+        isLoading.value = false
+        // Still fetch to ensure latest content if needed, but no blocking load
+        store.fetchPostContent(newSlug)
+      } else {
+        isLoading.value = true
+        try {
+          await store.fetchPostContent(newSlug)
+        } finally {
+          isLoading.value = false
+        }
+      }
     }
   },
   { immediate: true },
@@ -107,7 +123,37 @@ useHead({
 
 <template>
   <div>
-    <section v-if="entry" class="entry paper-panel">
+    <!-- Skeleton Loading State -->
+    <section v-if="isLoading" class="entry paper-panel">
+      <SkeletonPlaceholder width="120px" height="1.2em" />
+      <div class="eyebrow-skeleton">
+        <SkeletonPlaceholder width="250px" height="1em" />
+      </div>
+      <h1 class="entry__title">
+        <SkeletonPlaceholder width="60%" height="2rem" />
+      </h1>
+
+      <!-- Summary Skeleton -->
+      <div class="entry__summary-wrapper skeleton-summary">
+        <SkeletonPlaceholder width="100px" height="0.8rem" style="margin-bottom: 10px" />
+        <SkeletonPlaceholder width="100%" height="1.1rem" style="margin-bottom: 8px" />
+        <SkeletonPlaceholder width="90%" height="1.1rem" />
+      </div>
+
+      <!-- Content Skeleton -->
+      <div class="entry__content">
+        <SkeletonPlaceholder width="100%" height="1.2rem" style="margin-bottom: 16px" />
+        <SkeletonPlaceholder width="95%" height="1.2rem" style="margin-bottom: 16px" />
+        <SkeletonPlaceholder width="90%" height="1.2rem" style="margin-bottom: 16px" />
+        <SkeletonPlaceholder width="98%" height="1.2rem" style="margin-bottom: 16px" />
+        <br />
+        <SkeletonPlaceholder width="80%" height="1.2rem" style="margin-bottom: 16px" />
+        <SkeletonPlaceholder width="85%" height="1.2rem" style="margin-bottom: 16px" />
+      </div>
+    </section>
+
+    <!-- Actual Content -->
+    <section v-else-if="entry" class="entry paper-panel">
       <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
       <p class="eyebrow">
         {{ entry.date }} / {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }}
@@ -140,9 +186,10 @@ useHead({
       </div>
     </section>
 
-    <GiscusComment v-if="entry" />
+    <GiscusComment v-if="entry && !isLoading" />
 
-    <section v-else class="entry paper-panel">
+    <!-- Not Found State -->
+    <section v-if="!entry && !isLoading" class="entry paper-panel">
       <h1>未找到对应的信标</h1>
       <p>可能被风沙掩埋了。返回信标重新定位吧。</p>
       <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
@@ -230,14 +277,11 @@ useHead({
 
 .entry__tags span {
   padding: 6px 12px;
-  /* border-radius: 12px;
-  background: rgba(255, 255, 255, 0.07); */
 }
 
 .entry__content {
   padding: 10px 0;
   line-height: 1.9;
-  /* color: rgba(255, 255, 255, 0.9); */
 }
 
 .entry__content :global(h2),
@@ -326,5 +370,22 @@ useHead({
 
 .eyebrow a:hover {
   color: var(--ruins-accent-strong);
+}
+</style>
+
+<style scoped>
+/* Append these styles */
+.eyebrow-skeleton {
+  margin: 10px 0 20px;
+}
+
+.skeleton-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--ruins-border);
+  padding: 16px;
+  margin-top: 32px;
+  margin-bottom: 32px;
 }
 </style>

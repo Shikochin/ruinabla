@@ -6,7 +6,7 @@ import PostCard from '@/components/post/PostCard.vue'
 import PostCardSkeleton from '@/components/post/PostCardSkeleton.vue'
 import PostList from '@/components/post/PostList.vue'
 import RecentComments from '@/components/RecentComments.vue'
-import SkeletonPlaceholder from '@/components/ui/Skeleton.vue'
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useHead } from '@unhead/vue'
 

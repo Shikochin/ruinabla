@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toRef } from 'vue'
 import type { Post } from '@/stores/postStore'
-import SkeletonPlaceholder from '@/components/ui/Skeleton.vue'
+import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 
 const props = withDefaults(
   defineProps<{
