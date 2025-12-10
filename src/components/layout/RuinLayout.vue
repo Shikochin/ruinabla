@@ -1,6 +1,37 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useGravityStore } from '@/stores/gravityStore'
 import RuinFooter from './RuinFooter.vue'
 import RuinHeader from './RuinHeader.vue'
+
+const gravity = useGravityStore()
+
+const gridStyle = computed(() => {
+  if (!gravity.enabled) return {}
+  const x = gravity.offsetX * 0.3
+  const y = gravity.offsetY * 0.3
+  return {
+    transform: `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`,
+    willChange: 'transform',
+  }
+})
+
+const lightStyle = computed(() => {
+  if (!gravity.enabled) return {}
+  const x = gravity.offsetX * 0.5
+  const y = gravity.offsetY * 0.4
+  return {
+    transform: `translateX(-50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`,
+    willChange: 'transform',
+  }
+})
+
+const containerStyle = computed(() => {
+  if (!gravity.enabled) return {}
+  return {
+    willChange: 'transform',
+  }
+})
 
 function backToTop() {
   scroll({ top: 0, behavior: 'smooth' })
@@ -9,9 +40,9 @@ function backToTop() {
 
 <template>
   <div class="ruins-layout">
-    <div class="ruins-grid-bg" aria-hidden="true"></div>
-    <div class="ruins-light" aria-hidden="true"></div>
-    <div class="ruins-container">
+    <div class="ruins-grid-bg" aria-hidden="true" :style="gridStyle"></div>
+    <div class="ruins-light" aria-hidden="true" :style="lightStyle"></div>
+    <div class="ruins-container" :style="containerStyle">
       <RuinHeader />
 
       <main class="ruins-main">
