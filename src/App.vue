@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import RuinLayout from '@/components/layout/RuinLayout.vue'
+import ToastContainer from '@/components/ui/ToastContainer.vue'
 
 const route = useRoute()
 const transitionName = ref('')
@@ -40,6 +41,7 @@ useHead({
 </script>
 
 <template>
+  <ToastContainer />
   <!-- Conditionally render layout: editor gets no wrapper -->
   <template v-if="route.name === 'editor'">
     <RouterView v-slot="{ Component, route }">

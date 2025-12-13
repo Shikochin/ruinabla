@@ -59,30 +59,15 @@ posts.get('/', async (c) => {
   ).all()
 
   // Calculate reading time for each post from R2 content
-  const postsWithReadingTime = await Promise.all(
-    results.map(async (post) => {
-      let readingMinutes = 1 // default
-      try {
-        const object = await c.env.RUINABLA_BUCKET.get(`posts/${post.slug}.md`)
-        if (object) {
-          const content = await object.text()
-          readingMinutes = calculateReadingTime(content)
-        }
-      } catch (e) {
-        console.error(`Failed to calculate reading time for ${post.slug}:`, e)
-      }
+  // Use stored readingMinutes and summary directly
+  const processedResults = results.map((post) => ({
+    ...post,
+    tags: post.tags ? JSON.parse(post.tags as string) : [],
+    pinned: Boolean(post.pinned),
+    hide: Boolean(post.hide),
+  }))
 
-      return {
-        ...post,
-        tags: post.tags ? JSON.parse(post.tags as string) : [],
-        pinned: Boolean(post.pinned),
-        hide: Boolean(post.hide),
-        readingMinutes,
-      }
-    }),
-  )
-
-  return c.json(postsWithReadingTime)
+  return c.json(processedResults)
 })
 
 // POST /api/posts - Create or update a post (requires admin)
@@ -236,10 +221,8 @@ posts.get('/:slug', async (c) => {
 })
 
 // DELETE /api/posts/:slug - Delete a post
-posts.delete('/:slug', async (c) => {
+posts.delete('/:slug', requireAuth, requireRole('admin'), async (c) => {
   const slug = decodeURIComponent(c.req.param('slug')).trim()
-
-  // TODO: Add authentication check here
 
   try {
     await c.env.RUINABLA_DB.prepare('DELETE FROM posts WHERE slug = ?').bind(slug).run()

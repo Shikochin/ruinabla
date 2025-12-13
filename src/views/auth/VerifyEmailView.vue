@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
 
 const route = useRoute()
 const router = useRouter()
@@ -63,7 +64,8 @@ onMounted(async () => {
 async function resendVerification() {
   // You would need to get the email from somewhere
   // For now, just show a message
-  alert('请返回注册页面重新发送验证邮件')
+  const toast = useToastStore()
+  toast.info('请返回注册页面重新发送验证邮件')
 }
 </script>
 

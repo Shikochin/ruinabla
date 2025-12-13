@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
 
 interface FetchOptions extends RequestInit {
   params?: Record<string, string>
@@ -42,6 +43,8 @@ export async function http(url: string, options: FetchOptions = {}) {
 
   // Handle 401 Unauthorized
   if (response.status === 401 && !options.skipInterceptor) {
+    const toast = useToastStore()
+    toast.error('Session expired. Please login again.')
     await auth.logout()
     window.location.href = '/login'
     return Promise.reject(new Error('Session expired'))

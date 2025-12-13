@@ -5,6 +5,7 @@ import FriendLink from '@/components/FriendLink.vue'
 import GiscusComment from '@/components/GiscusComment.vue'
 import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
 
 // 定义接口
 interface Friend {
@@ -22,6 +23,7 @@ useHead({
 
 // 状态管理
 const authStore = useAuthStore()
+const toast = useToastStore()
 const friends = ref<Friend[]>([])
 const isLoading = ref(true)
 const showModal = ref(false)
@@ -91,12 +93,13 @@ const submitForm = async () => {
     if (res.ok) {
       showModal.value = false
       await fetchFriends()
+      toast.success(isEditing.value ? '信号参数已调整' : '新坐标建立成功')
     } else {
-      alert('信号发射失败')
+      toast.error('信号发射失败')
     }
   } catch (e) {
     console.error(e)
-    alert('连接断开')
+    toast.error('连接断开')
   }
 }
 
@@ -115,10 +118,11 @@ const deleteFriend = async (id: string) => {
 
     if (res.ok) {
       friends.value = friends.value.filter((f) => f.id !== id)
+      toast.success('灯塔已熄灭')
     }
   } catch (e) {
     console.error(e)
-    alert('删除失败')
+    toast.error('删除失败')
   }
 }
 
@@ -183,11 +187,11 @@ onMounted(() => {
       <h3>加入光束网络</h3>
       <p>如果你也建立了自己的灯塔，欢迎交换光束。</p>
       <pre class="code-block"><code>{
-      "name": "Your Name",
-      "url": "https://your-site.com",
-      "avatar": "https://your-site.com/avatar.png",
-      "desc": "A short description of your site."
-      }</code></pre>
+            "name": "Your Name",
+            "url": "https://your-site.com",
+            "avatar": "https://your-site.com/avatar.png",
+            "desc": "A short description of your site."
+            }</code></pre>
       <p>
         请通过 <a href="mailto:i@shikoch.in">Email</a>，评论区或
         <a href="https://github.com/Shikochin/ruinabla/issues" target="_blank">GitHub Issues</a>

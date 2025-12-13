@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
 import { useRouter } from 'vue-router'
 import PasswordConfirmModal from '@/components/PasswordConfirmModal.vue'
 import QRCode from 'qrcode'
@@ -8,6 +9,7 @@ import { formatTimestamp } from '@/utils/temporal'
 
 const router = useRouter()
 const auth = useAuthStore()
+const toast = useToastStore()
 
 // TOTP
 const totpSecret = ref('')
@@ -24,10 +26,6 @@ const passkeyName = ref('')
 
 // Password confirmation
 const showPasswordModal = ref(false)
-
-// Messages
-const message = ref('')
-const error = ref('')
 
 onMounted(async () => {
   if (!auth.isAuthenticated) {
@@ -59,9 +57,11 @@ async function enableTOTP() {
 
     totpQRCode.value = await QRCode.toDataURL(totpUri.value)
 
-    message.value = '使用您的认证器应用扫描二维码'
+    totpQRCode.value = await QRCode.toDataURL(totpUri.value)
+
+    toast.info('使用您的认证器应用扫描二维码')
   } catch (e) {
-    error.value = (e as Error).message
+    toast.error((e as Error).message)
   }
 }
 
@@ -84,12 +84,14 @@ async function verifyAndEnableTOTP() {
 
     isTOTPEnabled.value = true
     showBackupCodes.value = true
-    message.value = 'TOTP 已启用! 保存您的备份码。'
+    isTOTPEnabled.value = true
+    showBackupCodes.value = true
+    toast.success('TOTP 已启用! 保存您的备份码。')
     totpSecret.value = ''
     totpUri.value = ''
     totpVerifyCode.value = ''
   } catch (e) {
-    error.value = (e as Error).message
+    toast.error((e as Error).message)
   }
 }
 
@@ -115,10 +117,10 @@ async function handleDisableTOTPConfirm(password: string) {
     }
 
     isTOTPEnabled.value = false
-    message.value = 'TOTP 已禁用'
+    toast.success('TOTP 已禁用')
     showPasswordModal.value = false
   } catch (e) {
-    error.value = (e as Error).message
+    toast.error((e as Error).message)
     showPasswordModal.value = false
   }
 }
@@ -140,7 +142,7 @@ async function loadPasskeys() {
 
 async function registerPasskey() {
   if (!passkeyName.value.trim()) {
-    error.value = '请输入您的 Passkey 名称'
+    toast.error('请输入您的 Passkey 名称')
     return
   }
 
@@ -159,7 +161,7 @@ async function registerPasskey() {
     }
 
     if (!window.PublicKeyCredential) {
-      error.value = '您的浏览器不支持 WebAuthn'
+      toast.error('您的浏览器不支持 WebAuthn')
       return
     }
 
@@ -224,14 +226,14 @@ async function registerPasskey() {
       throw new Error(result.error || 'Failed to register passkey')
     }
 
-    message.value = 'Passkey 添加成功！'
+    toast.success('Passkey 添加成功！')
     passkeyName.value = ''
     await loadPasskeys()
   } catch (e) {
     if ((e as Error).name === 'NotAllowedError') {
-      error.value = 'Passkey 添加被取消'
+      toast.info('Passkey 添加被取消')
     } else {
-      error.value = (e as Error).message
+      toast.error((e as Error).message)
     }
   }
 }
@@ -252,9 +254,9 @@ async function deletePasskey(id: string) {
     }
 
     await loadPasskeys()
-    message.value = 'Passkey 已删除'
+    toast.success('Passkey 已删除')
   } catch (e) {
-    error.value = (e as Error).message
+    toast.error((e as Error).message)
   }
 }
 </script>
@@ -265,9 +267,6 @@ async function deletePasskey(id: string) {
       <h1>安全设置</h1>
       <p class="subtitle">管理您的认证方式</p>
     </div>
-
-    <div v-if="message" class="message success">{{ message }}</div>
-    <div v-if="error" class="message error">{{ error }}</div>
 
     <!-- TOTP Section -->
     <section class="settings-section paper-panel">
@@ -445,24 +444,6 @@ async function deletePasskey(id: string) {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.message {
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-}
-
-.message.success {
-  background: rgba(184, 187, 38, 0.1);
-  border: 1px solid rgba(184, 187, 38, 0.3);
-  color: #b8bb26;
-}
-
-.message.error {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid rgba(255, 68, 68, 0.3);
-  color: #ff4444;
 }
 
 .success-text {

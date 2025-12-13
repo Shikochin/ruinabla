@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
 import { useHead } from '@unhead/vue'
 
 const router = useRouter()
@@ -56,12 +57,15 @@ async function resendVerification() {
     })
 
     if (res.ok) {
-      alert('验证邮件已重新发送！')
+      const toast = useToastStore()
+      toast.success('验证邮件已重新发送！')
     } else {
-      alert('发送失败，请稍后重试')
+      const toast = useToastStore()
+      toast.error('发送失败，请稍后重试')
     }
   } catch {
-    alert('网络错误，请稍后重试')
+    const toast = useToastStore()
+    toast.error('网络错误，请稍后重试')
   }
 }
 </script>
