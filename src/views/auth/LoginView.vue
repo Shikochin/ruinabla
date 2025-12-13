@@ -9,6 +9,7 @@ const auth = useAuthStore()
 
 const email = ref('')
 const password = ref('')
+const rememberMe = ref(false)
 const totpCode = ref('')
 const show2FAOptions = ref(false)
 const pendingUserId = ref('')
@@ -29,7 +30,7 @@ useHead({
 })
 
 async function handlePasswordLogin() {
-  const result = await auth.login(email.value, password.value)
+  const result = await auth.login(email.value, password.value, rememberMe.value)
   if (result.success && result.requires2FA) {
     pendingUserId.value = result.userId!
     show2FAOptions.value = true
@@ -58,7 +59,7 @@ async function handlePasswordLogin() {
 }
 
 async function verifyWithTOTP() {
-  const result = await auth.verifyTOTP(pendingUserId.value, totpCode.value)
+  const result = await auth.verifyTOTP(pendingUserId.value, totpCode.value, rememberMe.value)
   if (result.success) {
     router.push('/')
   }
@@ -282,6 +283,13 @@ async function loginWithPasskey() {
             autocomplete="current-password"
             placeholder="••••••••"
           />
+        </div>
+
+        <div class="field-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" v-model="rememberMe" />
+            <span>记住此设备</span>
+          </label>
         </div>
 
         <div class="forgot-password-link">
@@ -581,6 +589,29 @@ button:disabled {
 
 .auth-links a:hover {
   color: var(--ruins-accent);
+}
+
+.field-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.9rem;
+  color: var(--ruins-text);
+}
+
+.checkbox-label input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--ruins-accent);
 }
 
 @media (max-width: 640px) {

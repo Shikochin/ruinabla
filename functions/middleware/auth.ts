@@ -60,7 +60,7 @@ export function requireRole(...roles: string[]) {
 export async function createSession(
   db: D1Database,
   userId: string,
-  durationDays: number = 7,
+  durationDays: number = 14,
 ): Promise<string> {
   const sessionId = generateId(32)
   const expiresAt = Math.floor(Date.now() / 1000) + durationDays * 24 * 60 * 60

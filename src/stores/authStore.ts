@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { http } from '@/utils/http'
 
 interface User {
   id: string
@@ -30,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
 
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await http('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -54,15 +55,15 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Login
-  async function login(email: string, password: string) {
+  async function login(email: string, password: string, remember: boolean = false) {
     loading.value = true
     error.value = null
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await http('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, remember }),
       })
 
       const data = await res.json()
@@ -97,15 +98,15 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Verify TOTP
-  async function verifyTOTP(userId: string, totpCode: string) {
+  async function verifyTOTP(userId: string, totpCode: string, remember: boolean = false) {
     loading.value = true
     error.value = null
 
     try {
-      const res = await fetch('/api/auth/verify-totp', {
+      const res = await http('/api/auth/verify-totp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, totpCode }),
+        body: JSON.stringify({ userId, totpCode, remember }),
       })
 
       const data = await res.json()
@@ -135,11 +136,9 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       if (sessionId.value) {
-        await fetch('/api/auth/logout', {
+        await http('/api/auth/logout', {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${sessionId.value}`,
-          },
+          skipInterceptor: true,
         })
       }
     } catch (e) {
@@ -159,11 +158,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (!sessionId.value) return
 
     try {
-      const res = await fetch('/api/auth/me', {
-        headers: {
-          Authorization: `Bearer ${sessionId.value}`,
-        },
-      })
+      const res = await http('/api/auth/me')
 
       if (!res.ok) {
         // Session expired
@@ -191,7 +186,7 @@ export const useAuthStore = defineStore('auth', () => {
         return false
       }
 
-      const res = await fetch('/api/totp/check', {
+      const res = await http('/api/totp/check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.value.id }),

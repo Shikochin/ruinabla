@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
+import { http } from '@/utils/http'
 
 export interface Post {
   slug: string
@@ -23,7 +24,7 @@ export const usePostStore = defineStore('Post', () => {
   const fetchPosts = async () => {
     if (loaded.value) return
     try {
-      const res = await fetch('/api/posts')
+      const res = await http('/api/posts')
       if (!res.ok) throw new Error('Failed to fetch posts')
       const data = await res.json()
       posts.value = data
@@ -38,7 +39,7 @@ export const usePostStore = defineStore('Post', () => {
     if (post?.content) return
 
     try {
-      const res = await fetch(`/api/posts/${slug}`)
+      const res = await http(`/api/posts/${slug}`)
       if (!res.ok) throw new Error('Failed to fetch post content')
       const data = await res.json()
 

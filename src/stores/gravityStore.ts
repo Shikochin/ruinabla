@@ -100,6 +100,7 @@ export const useGravityStore = defineStore('gravity', () => {
   function unregisterSubtree(root: HTMLElement) {
     for (let i = bodies.length - 1; i >= 0; i--) {
       const body = bodies[i]
+      if (!body) continue
       if (!body.el.isConnected || root.contains(body.el)) {
         body.el.style.transform = ''
         bodies.splice(i, 1)

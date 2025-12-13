@@ -4,6 +4,7 @@ import { usePostStore, type Post } from '@/stores/postStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
 import { getCurrentDate } from '@/utils/temporal'
+import { http } from '@/utils/http'
 import MDEditor from '@/components/MDEditor.vue'
 
 const auth = useAuthStore()
@@ -117,11 +118,10 @@ const savePost = async () => {
       tags: form.value.tags, // Already array
     }
 
-    const res = await fetch('/api/posts', {
+    const res = await http('/api/posts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: auth.getAuthHeader(),
       },
       body: JSON.stringify(payload),
     })
@@ -153,11 +153,8 @@ const deletePost = async (slug: string) => {
   if (!confirm(`Delete post ${slug}?`)) return
 
   try {
-    const res = await fetch(`/api/posts/${slug}`, {
+    const res = await http(`/api/posts/${slug}`, {
       method: 'DELETE',
-      headers: {
-        Authorization: auth.getAuthHeader(),
-      },
     })
     if (!res.ok) throw new Error('Failed to delete')
     await store.fetchPosts()

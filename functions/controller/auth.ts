@@ -7,6 +7,7 @@ import { createResendClient, sendVerificationEmail, sendPasswordResetEmail } fro
 type Bindings = {
   RUINABLA_DB: D1Database
   RESEND_API_KEY: string
+  ENVIRONMENT?: string
 }
 
 const auth = new Hono<{ Bindings: Bindings }>()
@@ -83,7 +84,41 @@ auth.post('/register', async (c) => {
 
 // Login
 auth.post('/login', async (c) => {
-  const { email, password } = await c.req.json()
+  const { email, password, remember } = await c.req.json()
+
+  // Test User for Development
+  if (email === 'test@test.com' && password === 'testtest') {
+    // Allow if explicit 'development' env OR locally if host is localhost (fallback)
+    const isDev =
+      c.env.ENVIRONMENT === 'development' ||
+      new URL(c.req.url).hostname === 'localhost' ||
+      new URL(c.req.url).hostname === '127.0.0.1'
+
+    if (isDev) {
+      // Ensure test user exists
+      const testId = 'test-user-id'
+      await c.env.RUINABLA_DB.prepare(
+        `INSERT INTO users (id, email, password_hash, email_verified, role)
+               VALUES (?, ?, ?, ?, ?)
+               ON CONFLICT(id) DO UPDATE SET role = ?, email_verified = ?`,
+      )
+        .bind(testId, 'test@example.com', 'n/a', true, 'admin', 'admin', true)
+        .run()
+
+      // Create session with 30 seconds expiry (30 / 86400 days)
+      const sessionId = await createSession(c.env.RUINABLA_DB, testId, 30 / 86400)
+
+      return c.json({
+        success: true,
+        sessionId,
+        user: {
+          id: testId,
+          email: 'test@example.com',
+          role: 'admin',
+        },
+      })
+    }
+  }
 
   if (!email || !password) {
     return c.json({ error: 'Email and password are required' }, 400)
@@ -128,7 +163,8 @@ auth.post('/login', async (c) => {
   }
 
   // No 2FA set up, create session directly
-  const sessionId = await createSession(c.env.RUINABLA_DB, user.id as string)
+  const durationDays = remember ? 365 : 31
+  const sessionId = await createSession(c.env.RUINABLA_DB, user.id as string, durationDays)
 
   return c.json({
     success: true,
@@ -143,7 +179,7 @@ auth.post('/login', async (c) => {
 
 // Verify TOTP and complete login
 auth.post('/verify-totp', async (c) => {
-  const { userId, totpCode } = await c.req.json()
+  const { userId, totpCode, remember } = await c.req.json()
 
   if (!userId || !totpCode) {
     return c.json({ error: 'User ID and TOTP code are required' }, 400)
@@ -189,7 +225,8 @@ auth.post('/verify-totp', async (c) => {
   }
 
   // Create session
-  const sessionId = await createSession(c.env.RUINABLA_DB, userId)
+  const durationDays = remember ? 14 : 1
+  const sessionId = await createSession(c.env.RUINABLA_DB, userId, durationDays)
 
   return c.json({
     success: true,
