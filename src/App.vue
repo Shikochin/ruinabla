@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import RuinLayout from '@/components/layout/RuinLayout.vue'
 import ToastContainer from '@/components/ui/ToastContainer.vue'
+import GlobalSearch from '@/components/GlobalSearch.vue'
 
 const route = useRoute()
 const transitionName = ref('')
@@ -41,6 +42,7 @@ useHead({
 </script>
 
 <template>
+  <GlobalSearch />
   <ToastContainer />
   <!-- Conditionally render layout: editor gets no wrapper -->
   <template v-if="route.name === 'editor'">
