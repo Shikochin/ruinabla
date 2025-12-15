@@ -4,10 +4,11 @@ import { useRouter } from 'vue-router'
 import Fuse, { type FuseResult } from 'fuse.js'
 import { usePostStore, type Post } from '@/stores/postStore'
 
+import { useSearch } from '@/composables/useSearch'
+
 const router = useRouter()
 const store = usePostStore()
-
-const isOpen = ref(false)
+const { isOpen, openSearch: openSearchState, closeSearch: closeSearchState } = useSearch()
 const searchQuery = ref('')
 const searchInput = ref<HTMLInputElement | null>(null)
 const searchResultItems = ref<HTMLElement[]>([])
@@ -53,7 +54,7 @@ watch(searchQuery, (query) => {
 })
 
 const openSearch = () => {
-  isOpen.value = true
+  openSearchState()
   searchQuery.value = ''
   results.value = []
   selectedIndex.value = 0
@@ -77,7 +78,7 @@ const closeSearch = () => {
   document.body.style.width = ''
   window.scrollTo(0, parseInt(scrollY || '0') * -1)
 
-  isOpen.value = false
+  closeSearchState()
 }
 
 const navigateToResult = (result: FuseResult<Post>) => {
@@ -133,6 +134,21 @@ onUnmounted(() => {
   document.body.style.position = ''
   document.body.style.top = ''
   document.body.style.width = ''
+})
+
+// Watch global state to handle external opening
+watch(isOpen, (val) => {
+  if (val) {
+    // If opened externally (e.g. header button), ensure we run setup
+    if (!document.body.style.position) {
+      openSearch()
+    }
+  } else {
+    // If closed externally
+    if (document.body.style.position) {
+      closeSearch()
+    }
+  }
 })
 
 // Expose open method for external buttons

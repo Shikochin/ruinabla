@@ -3,7 +3,9 @@ import { ref, onMounted } from 'vue'
 import { useThemeStore } from '@/stores/themeStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useDevStore } from '@/stores/devStore'
+import { useSearch } from '@/composables/useSearch'
 
+const { openSearch } = useSearch()
 const devStore = useDevStore()
 const themeStore = useThemeStore()
 const auth = useAuthStore()
@@ -60,9 +62,12 @@ onMounted(() => {
               : 'Dark'
         "
       >
-        <span v-if="themeStore.themeMode === 'auto'">⛅︎</span>
-        <span v-else-if="themeStore.themeMode === 'light'">☀</span>
-        <span v-else>☾</span>
+        <span v-if="themeStore.themeMode === 'auto'">⛅</span>
+        <span v-else-if="themeStore.themeMode === 'light'">🌞</span>
+        <span v-else>🌛</span>
+      </button>
+      <button class="theme-toggle" @click="openSearch" title="Search">
+        <span>🔍</span>
       </button>
 
       <!-- User menu -->
