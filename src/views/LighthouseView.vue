@@ -21,6 +21,13 @@ useHead({
   meta: [{ name: 'description', content: '光束信号 - Friends and links' }],
 })
 
+const code = `{
+      "name": "Your Name",
+      "url": "https://your-site.com",
+      "avatar": "https://your-site.com/avatar.png",
+      "desc": "A short description of your site."
+}`
+
 // 状态管理
 const authStore = useAuthStore()
 const toast = useToastStore()
@@ -77,29 +84,54 @@ const openEditModal = (friend: Friend) => {
 const submitForm = async () => {
   if (!authStore.sessionId) return
 
-  const endpoint = isEditing.value ? `/api/friends/${form.id}` : '/api/friends'
-  const method = isEditing.value ? 'PUT' : 'POST'
+  const isEdit = isEditing.value
+  const endpoint = isEdit ? `/api/friends/${form.id}` : '/api/friends'
+  const method = isEdit ? 'PUT' : 'POST'
+
+  // Snapshot for rollback
+  const previousFriends = [...friends.value]
+
+  // Optimistic Update
+  const tempId = isEdit ? form.id : `temp-${Date.now()}`
+  const optimisticFriend: Friend = { ...form, id: tempId }
+
+  if (isEdit) {
+    const index = friends.value.findIndex((f) => f.id === form.id)
+    if (index !== -1) friends.value[index] = optimisticFriend
+  } else {
+    friends.value.push(optimisticFriend)
+  }
+
+  // Close modal immediately
+  showModal.value = false
+  toast.success(isEdit ? '信号参数已调整' : '光束发射中...') // Optimistic feedback
 
   try {
     const res = await fetch(endpoint, {
       method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${authStore.sessionId}`, // 直接使用 Store 中的 SessionID
+        Authorization: `Bearer ${authStore.sessionId}`,
       },
       body: JSON.stringify(form),
     })
 
     if (res.ok) {
-      showModal.value = false
-      await fetchFriends()
-      toast.success(isEditing.value ? '信号参数已调整' : '新坐标建立成功')
+      const data = await res.json()
+      // Replace optimistic data with real server data (important for new items to get real ID)
+      const index = friends.value.findIndex((f) => f.id === tempId)
+      if (index !== -1) {
+        friends.value[index] = data
+      }
+      if (!isEdit) toast.success('新坐标建立成功') // Confirmation for add
     } else {
-      toast.error('信号发射失败')
+      throw new Error('Failed to save')
     }
   } catch (e) {
     console.error(e)
-    toast.error('连接断开')
+    friends.value = previousFriends // Rollback
+    toast.error('连接断开，撤回操作')
+    showModal.value = true // Re-open modal so user doesn't lose data
   }
 }
 
@@ -107,6 +139,13 @@ const submitForm = async () => {
 const deleteFriend = async (id: string) => {
   if (!confirm('确定要熄灭这座灯塔吗？')) return
   if (!authStore.sessionId) return
+
+  // Snapshot
+  const previousFriends = [...friends.value]
+
+  // Optimistic Update
+  friends.value = friends.value.filter((f) => f.id !== id)
+  toast.info('灯塔已熄灭') // Immediate feedback
 
   try {
     const res = await fetch(`/api/friends/${id}`, {
@@ -116,13 +155,14 @@ const deleteFriend = async (id: string) => {
       },
     })
 
-    if (res.ok) {
-      friends.value = friends.value.filter((f) => f.id !== id)
-      toast.success('灯塔已熄灭')
+    if (!res.ok) {
+      throw new Error('Delete failed')
     }
+    // Success - nothing more to do
   } catch (e) {
     console.error(e)
-    toast.error('删除失败')
+    friends.value = previousFriends // Rollback
+    toast.error('删除失败，信号已恢复')
   }
 }
 
@@ -186,12 +226,7 @@ onMounted(() => {
     <section class="join paper-panel">
       <h3>加入光束网络</h3>
       <p>如果你也建立了自己的灯塔，欢迎交换光束。</p>
-      <pre class="code-block"><code>{
-            "name": "Your Name",
-            "url": "https://your-site.com",
-            "avatar": "https://your-site.com/avatar.png",
-            "desc": "A short description of your site."
-            }</code></pre>
+      <pre class="code-block"><code>{{ code }}</code></pre>
       <p>
         请通过 <a href="mailto:i@shikoch.in">Email</a>，评论区或
         <a href="https://github.com/Shikochin/ruinabla/issues" target="_blank">GitHub Issues</a>
@@ -437,11 +472,14 @@ onMounted(() => {
 .code-block {
   margin: 16px 0;
   padding: 16px;
-  background: transparent;
   border: 1px solid var(--ruins-border);
   font-family: var(--font-mono);
   font-size: 0.85rem;
   overflow-x: auto;
+
+  code {
+    background: light-dark(#fdfefe, #080807);
+  }
 }
 
 :root.light .code-block {

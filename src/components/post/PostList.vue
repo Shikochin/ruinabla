@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toRef } from 'vue'
-import type { Post } from '@/stores/postStore'
+import { usePostStore, type Post } from '@/stores/postStore'
 import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 
 const props = withDefaults(
@@ -14,6 +14,20 @@ const props = withDefaults(
 )
 
 const entries = toRef(props, 'entries')
+
+const store = usePostStore()
+const hoverTimers: Record<string, number | undefined> = {}
+
+const onHoverStart = (slug: string) => {
+  hoverTimers[slug] = window.setTimeout(() => {
+    store.fetchPostContent(slug)
+  }, 500)
+}
+
+const onHoverEnd = (slug: string) => {
+  clearTimeout(hoverTimers[slug])
+  delete hoverTimers[slug]
+}
 </script>
 
 <template>
@@ -58,7 +72,11 @@ const entries = toRef(props, 'entries')
             <span class="timeline__dot"></span>
           </div>
           <div class="timeline__content">
-            <RouterLink :to="`/posts/${entry.slug}`">
+            <RouterLink
+              :to="`/posts/${entry.slug}`"
+              @mouseenter="onHoverStart(entry.slug)"
+              @mouseleave="onHoverEnd(entry.slug)"
+            >
               <h4>
                 {{ entry.title }}
               </h4>

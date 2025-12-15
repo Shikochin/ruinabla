@@ -12,8 +12,15 @@ import { useHead } from '@unhead/vue'
 
 const store = usePostStore()
 
-onMounted(() => {
-  store.fetchPosts()
+onMounted(async () => {
+  await store.fetchPosts()
+
+  // Preload top articles content for instant navigation
+  const preloadSlugs = new Set<string>()
+  if (store.featuredEntry) preloadSlugs.add(store.featuredEntry.slug)
+  store.recentlyRecovered.forEach((p) => preloadSlugs.add(p.slug))
+
+  preloadSlugs.forEach((slug) => store.fetchPostContent(slug))
 })
 
 useHead({
