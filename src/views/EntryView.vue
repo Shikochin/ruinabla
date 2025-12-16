@@ -5,6 +5,7 @@ import { useFancybox } from '@/composables/useFancybox'
 import { renderMarkdown } from '@/utils/markdown'
 
 import { usePostStore } from '@/stores/postStore'
+import { useAuthStore } from '@/stores/authStore'
 import GiscusComment from '@/components/GiscusComment.vue'
 
 import { useHead } from '@unhead/vue'
@@ -15,6 +16,9 @@ import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 
 const route = useRoute()
 const store = usePostStore()
+const authStore = useAuthStore()
+
+const isAdmin = computed(() => authStore.isAdmin)
 
 const isLoading = ref(true)
 
@@ -160,6 +164,10 @@ useHead({
         read /
         <RouterLink :to="`/categories/${entry.category}`">
           <strong>{{ entry.category }}</strong>
+        </RouterLink>
+        <br />
+        <RouterLink v-if="entry && isAdmin" :to="{ path: '/editor', query: { slug: entry.slug } }">
+          <span>✎</span> 编辑此文
         </RouterLink>
       </p>
       <h1 class="entry__title">
@@ -370,6 +378,12 @@ useHead({
 
 .eyebrow a:hover {
   color: var(--ruins-accent-strong);
+}
+
+.edit-btn:hover {
+  border-color: var(--ruins-accent);
+  color: var(--ruins-accent);
+  background: rgba(255, 255, 255, 0.05);
 }
 </style>
 

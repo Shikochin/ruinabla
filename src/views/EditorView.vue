@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRoute, RouterLink } from 'vue-router'
 import { usePostStore, type Post } from '@/stores/postStore'
-import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
 import { useToastStore } from '@/stores/toastStore'
 import { getCurrentDate } from '@/utils/temporal'
@@ -9,7 +9,6 @@ import { http } from '@/utils/http'
 import EditorSidebar from '@/components/editor/EditorSidebar.vue'
 import EditorForm from '@/components/editor/EditorForm.vue'
 
-const auth = useAuthStore()
 const themeStore = useThemeStore()
 const store = usePostStore()
 const toast = useToastStore()
@@ -31,12 +30,31 @@ const form = ref({
   content: '',
 })
 
-onMounted(() => {
-  store.fetchPosts()
+const route = useRoute()
+
+onMounted(async () => {
+  await store.fetchPosts()
+
   // Restore sidebar state
   const saved = localStorage.getItem('editor-sidebar-collapsed')
   if (saved === 'true') {
     sidebarCollapsed.value = true
+  }
+
+  // Check for deep link
+  const slug = route.query.slug
+  if (slug && typeof slug === 'string') {
+    const post = store.posts.find((p) => p.slug === slug)
+    if (post) {
+      startEdit(post)
+    } else {
+      // If not in list (maybe new or not fetched yet), try fetching detail
+      // This part depends on if store.posts contains all posts or just summaries.
+      // Assuming store.posts is populated by fetchPosts above.
+      // If still not found, we might want to try fetching specifically or show error.
+      // For now, let's just toast if not found in list.
+      toast.error(`Post ${slug} not found`)
+    }
   }
 })
 
@@ -167,9 +185,9 @@ const deletePost = async () => {
           class="theme-toggle"
           :title="`当前: ${themeStore.themeMode}`"
         >
-          <span v-if="themeStore.themeMode === 'dark'">☽</span>
-          <span v-else-if="themeStore.themeMode === 'light'">☀</span>
-          <span v-else>⛅︎</span>
+          <span v-if="themeStore.themeMode === 'auto'">⛅</span>
+          <span v-else-if="themeStore.themeMode === 'light'">🌞</span>
+          <span v-else>🌛</span>
         </button>
 
         <RouterLink to="/settings" class="nav-link">设置</RouterLink>
@@ -273,6 +291,7 @@ const deletePost = async () => {
   font-size: 0.85rem;
   transition: all 0.2s ease;
   border: 0;
+  background-color: transparent;
 }
 
 .theme-toggle:hover {
