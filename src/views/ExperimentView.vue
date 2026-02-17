@@ -6,15 +6,6 @@ import { useGravityStore } from '@/stores/gravityStore'
 const devStore = useDevStore()
 const gravity = useGravityStore()
 
-function handleGravityToggle(event: Event) {
-  const target = event.target as HTMLInputElement
-  if (target.checked) {
-    gravity.enable()
-  } else {
-    gravity.disable()
-  }
-}
-
 onMounted(() => {
   gravity.initEnvironment()
 })
@@ -31,15 +22,35 @@ onMounted(() => {
         </li>
       </ul> -->
       <div class="tool-list">
-        <h2>Utilities</h2>
+        <div class="list-header">
+          <span class="marker"></span>
+          <span class="label">设备运行日志</span>
+        </div>
         <ul class="link-list">
           <li>
             <RouterLink to="/tools/image" class="tool-link">
-              <span class="icon">🖼️</span>
-              <span class="text">
-                <strong>Image Processor</strong>
-                <small>Resize, Stretch, Convert</small>
-              </span>
+              <div class="card-bg-decor"></div>
+              <div class="scanline"></div>
+
+              <div class="tool-meta-top">
+                <span class="uid">UID: IMG_PROC_01</span>
+                <span class="status">状态: 不稳定</span>
+              </div>
+
+              <div class="tool-content">
+                <div class="icon-box">
+                  <span class="icon">🖼️</span>
+                </div>
+                <div class="text">
+                  <strong class="title">图像处理器</strong>
+                  <span class="desc">宽体普京</span>
+                </div>
+              </div>
+
+              <div class="card-decor top-left"></div>
+              <div class="card-decor top-right"></div>
+              <div class="card-decor bottom-left"></div>
+              <div class="card-decor bottom-right"></div>
             </RouterLink>
           </li>
         </ul>
@@ -54,15 +65,13 @@ onMounted(() => {
           {{ gravity.permissionError }}
         </p>
       </div> -->
-      <button class="btn" @click="devStore.setIsDev(false)">Disable Dev Mode</button>
+      <button class="btn" @click="devStore.setIsDev(false)">禁用开发模式</button>
     </div>
 
     <div v-else>
-      <p>How did you get here?</p>
-      <p>
-        If you are a developer, you can enable the experiment mode by clicking the button below.
-      </p>
-      <button class="btn" @click="devStore.setIsDev(true)">Enable Dev Mode</button>
+      <p>你是怎么找到这里的？</p>
+      <p>如果你是开发者，点击下方按钮以开启实验功能。</p>
+      <button class="btn" @click="devStore.setIsDev(true)">启用开发模式</button>
     </div>
   </div>
 </template>
@@ -92,57 +101,187 @@ onMounted(() => {
 }
 
 .tool-list {
-  margin-top: 32px;
+  margin-top: 48px;
 }
 
-.tool-list h2 {
-  font-size: 1.2rem;
-  margin-bottom: 16px;
-  color: var(--ruins-text);
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
   border-bottom: 1px solid var(--ruins-border);
   padding-bottom: 8px;
+}
+
+.list-header .marker {
+  width: 4px;
+  height: 16px;
+  background: var(--ruins-accent);
+}
+
+.list-header .label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--ruins-muted);
 }
 
 .link-list {
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
 }
 
 .tool-link {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
+  flex-direction: column;
+  padding: 24px;
+  background: rgba(var(--ruins-accent-rgb, 255, 255, 255), 0.02);
   border: 1px solid var(--ruins-border);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.card-bg-decor {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 2px 2px, var(--ruins-border) 1px, transparent 0);
+  background-size: 24px 24px;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(var(--ruins-accent-rgb, 255, 255, 255), 0.1);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.tool-link:hover .scanline {
+  animation: scanline 2s linear infinite;
+  opacity: 1;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.tool-meta-top {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  margin-bottom: 20px;
+  color: var(--ruins-muted);
+  letter-spacing: 0.1em;
+}
+
+.tool-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  z-index: 1;
+}
+
+.icon-box {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ruins-border);
+  background: rgba(var(--ruins-accent-rgb, 255, 255, 255), 0.03);
+  font-size: 1.5rem;
   transition: all 0.3s ease;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--ruins-accent-strong);
+  transition: all 0.3s ease;
+}
+
+.desc {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ruins-muted);
+  letter-spacing: 0.05em;
 }
 
 .tool-link:hover {
   border-color: var(--ruins-accent);
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
+  background: rgba(var(--ruins-accent-rgb, 255, 255, 255), 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.tool-link .icon {
-  font-size: 2rem;
+.tool-link:hover .icon-box {
+  border-color: var(--ruins-accent);
+  background: rgba(var(--ruins-accent-rgb, 255, 255, 255), 0.08);
 }
 
-.tool-link .text {
-  display: flex;
-  flex-direction: column;
+.card-decor {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--ruins-accent);
+  opacity: 0.3;
+  transition: all 0.3s ease;
 }
 
-.tool-link strong {
-  color: var(--ruins-accent-strong);
-  font-family: var(--font-serif);
+.card-decor.top-left {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
 }
 
-.tool-link small {
-  color: var(--ruins-muted);
-  font-size: 0.8rem;
+.card-decor.top-right {
+  top: -1px;
+  right: -1px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.card-decor.bottom-left {
+  bottom: -1px;
+  left: -1px;
+  border-right: none;
+  border-top: none;
+}
+
+.card-decor.bottom-right {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+.tool-link:hover .card-decor {
+  opacity: 1;
+  width: 15px;
+  height: 15px;
 }
 </style>

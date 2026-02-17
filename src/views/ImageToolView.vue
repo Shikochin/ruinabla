@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick, onUnmounted } from 'vue'
+import { ref, watch, computed, nextTick, onUnmounted } from 'vue'
 import { parseGIF, decompressFrames } from 'gifuct-js'
 import GIF from 'gif.js'
 
@@ -23,10 +23,33 @@ interface GifFrame {
 }
 
 const isAnimatedGif = ref<boolean>(false)
+const isCopying = ref(false)
+
+// Check for Clipboard API support for the currently selected format
+const canCopy = computed(() => {
+  try {
+    const clipboardItem = window.ClipboardItem
+    if (clipboardItem && typeof clipboardItem.supports === 'function') {
+      return clipboardItem.supports(format.value)
+    }
+    // Fallback: browser has ClipboardItem but no .supports (older Safari/Chrome)
+    // Most browsers at least support PNG
+    return !!window.ClipboardItem && format.value === 'image/png'
+  } catch {
+    return false
+  }
+})
+
 const gifBlob = ref<Blob | null>(null)
 const gifFrames = ref<GifFrame[]>([])
 const gifCompositedFrames = ref<HTMLCanvasElement[]>([]) // Pre-rendered full frames
 const animationId = ref<number | null>(null)
+const gifSpeed = ref<number>(1.0)
+
+// Wobble Mode state
+const isWobbleMode = ref<boolean>(false)
+const wobbleSpeed = ref<number>(1.0)
+const wobblePhase = ref<number>(0)
 
 // Settings
 const width = ref<number>(0)
@@ -40,7 +63,7 @@ const formats = [
   { value: 'image/jpeg', label: 'JPEG' },
   { value: 'image/png', label: 'PNG' },
   { value: 'image/webp', label: 'WebP' },
-  { value: 'image/gif', label: 'GIF (Animated)' },
+  { value: 'image/gif', label: 'GIF' },
 ]
 
 // Computed preview URL for animated GIF
@@ -55,6 +78,25 @@ watch(gifBlob, (newBlob) => {
     gifPreviewUrl.value = URL.createObjectURL(newBlob)
   } else {
     gifPreviewUrl.value = ''
+  }
+})
+
+// Watch for Wobble Mode activation
+watch(isWobbleMode, (active) => {
+  if (active) {
+    format.value = 'image/gif'
+    // Reset phase
+    wobblePhase.value = 0
+    // Start animation if it's a static image (GIFs already have an animation loop)
+    if (!isAnimatedGif.value && originalImage.value) {
+      startWobbleAnimation()
+    }
+  } else {
+    // If we were in wobble mode and it's a static image, stop and re-render static
+    if (!isAnimatedGif.value) {
+      stopGifAnimation()
+      renderCanvas()
+    }
   }
 })
 
@@ -78,6 +120,17 @@ function handleDrop(event: DragEvent) {
 }
 
 function processFile(file: File) {
+  // Reset existing state immediately to prevent ghosting
+  stopGifAnimation()
+  originalImage.value = null
+  gifFrames.value = []
+  gifCompositedFrames.value = []
+  isAnimatedGif.value = false
+  if (gifBlob.value && gifPreviewUrl.value) {
+    URL.revokeObjectURL(gifPreviewUrl.value)
+  }
+  gifBlob.value = null
+
   fileName.value = file.name || 'artwork'
   fileSize.value = file.size
 
@@ -211,16 +264,50 @@ function startGifAnimation() {
   stopGifAnimation()
 
   let frameIndex = 0
-  let lastFrameTime = 0
+  let lastTimestamp = performance.now()
+  let accumulator = 0
 
   const animate = (timestamp: number) => {
     if (!canvas.value || gifCompositedFrames.value.length === 0) return
 
-    const frame = gifFrames.value[frameIndex]
-    if (!frame) return
-    const delay = frame.delay || 100
+    const deltaTime = timestamp - lastTimestamp
+    lastTimestamp = timestamp
 
-    if (timestamp - lastFrameTime >= delay) {
+    // Accumulate time scaled by gifSpeed
+    accumulator += deltaTime * gifSpeed.value
+
+    // Update wobble phase if active
+    if (isWobbleMode.value) {
+      wobblePhase.value += (deltaTime / 1000) * Math.PI * 2 * wobbleSpeed.value
+    }
+
+    let frameUpdated = false
+    const frameCount = gifCompositedFrames.value.length
+
+    // Skip frames if necessary to keep up with high playback speed
+    // Limit safety: don't process more than 100 frames in a single tick to avoid UI freeze
+    let safetyCounter = 0
+    while (safetyCounter < 100) {
+      const frame = gifFrames.value[frameIndex]
+      const delay = frame?.delay || 100
+
+      if (accumulator >= delay) {
+        accumulator -= delay
+        frameIndex = (frameIndex + 1) % frameCount
+        frameUpdated = true
+        safetyCounter++
+
+        // If we've completed a full loop and still have excess time, cap it to avoid infinite loops with 0 delays
+        if (safetyCounter >= frameCount && accumulator > delay) {
+          accumulator = accumulator % (delay * frameCount || 100)
+          break
+        }
+      } else {
+        break
+      }
+    }
+
+    if (frameUpdated) {
       const ctx = canvas.value.getContext('2d')
       if (ctx) {
         canvas.value.width = width.value
@@ -228,13 +315,45 @@ function startGifAnimation() {
         // Draw pre-rendered composited frame scaled to target dimensions
         const composited = gifCompositedFrames.value[frameIndex]
         if (composited) {
-          ctx.drawImage(composited, 0, 0, width.value, height.value)
+          let currentWidth = width.value
+          let currentHeight = height.value
+
+          if (isWobbleMode.value) {
+            const normalizedPhase = wobblePhase.value % (Math.PI * 2)
+            if (normalizedPhase < Math.PI) {
+              currentWidth = width.value * (0.7 + Math.abs(Math.sin(normalizedPhase)) * 0.6)
+            } else {
+              currentHeight = height.value * (0.7 + Math.abs(Math.sin(normalizedPhase)) * 0.6)
+            }
+          }
+
+          const xOffset = (width.value - currentWidth) / 2
+          const yOffset = (height.value - currentHeight) / 2
+          ctx.drawImage(composited, xOffset, yOffset, currentWidth, currentHeight)
         }
       }
-
-      frameIndex = (frameIndex + 1) % gifCompositedFrames.value.length
-      lastFrameTime = timestamp
     }
+
+    animationId.value = requestAnimationFrame(animate)
+  }
+
+  animationId.value = requestAnimationFrame(animate)
+}
+
+function startWobbleAnimation() {
+  stopGifAnimation()
+
+  let lastTimestamp = performance.now()
+
+  const animate = (timestamp: number) => {
+    if (!canvas.value || !originalImage.value) return
+
+    const deltaTime = timestamp - lastTimestamp
+    lastTimestamp = timestamp
+
+    wobblePhase.value += (deltaTime / 1000) * Math.PI * 2 * wobbleSpeed.value
+
+    renderCanvas()
 
     animationId.value = requestAnimationFrame(animate)
   }
@@ -258,7 +377,10 @@ async function downloadImage() {
   // For static image download, canvas is required
   if (!canvas.value && !(isAnimatedGif.value && format.value === 'image/gif')) return
 
-  if (format.value === 'image/gif' && isAnimatedGif.value && gifFrames.value.length > 1) {
+  if (
+    isWobbleMode.value ||
+    (format.value === 'image/gif' && isAnimatedGif.value && gifFrames.value.length > 1)
+  ) {
     // Generate animated GIF
     const gif = new GIF({
       workers: 2,
@@ -268,69 +390,93 @@ async function downloadImage() {
       workerScript: '/node_modules/gif.js/dist/gif.worker.js',
     })
 
-    // Create buffer canvas for proper frame composition
-    const bufferCanvas = document.createElement('canvas')
-    const originalWidth = gifFrames.value[0]?.dims.width || width.value
-    const originalHeight = gifFrames.value[0]?.dims.height || height.value
-    bufferCanvas.width = originalWidth
-    bufferCanvas.height = originalHeight
-    const bufferCtx = bufferCanvas.getContext('2d')
+    if (isWobbleMode.value) {
+      // WOBBLE MODE EXPORT: Generate one full cycle (Horizontal + Vertical)
+      const framesToGenerate = 60
+      const cycleTime = 2000 / wobbleSpeed.value // Full cycle is 2*PI
+      const frameDelay = cycleTime / framesToGenerate
 
-    if (!bufferCtx) return
+      const gifDuration = isAnimatedGif.value
+        ? gifFrames.value.reduce((acc, f) => acc + (f.delay || 100), 0)
+        : 0
 
-    // Initialize with transparent background
-    bufferCtx.clearRect(0, 0, originalWidth, originalHeight)
+      let exportAccumulator = 0
+      for (let i = 0; i < framesToGenerate; i++) {
+        exportAccumulator += frameDelay
 
-    // Render each frame with proper composition
-    for (let i = 0; i < gifFrames.value.length; i++) {
-      const frame = gifFrames.value[i]
-      if (!frame) continue
+        // Minimum safe GIF delay is ~20ms
+        if (exportAccumulator >= 20 || i === framesToGenerate - 1) {
+          const phase = (i / framesToGenerate) * Math.PI * 2
+          let currentWidth = width.value
+          let currentHeight = height.value
 
-      // Handle disposal of the PREVIOUS frame
-      if (i > 0) {
-        const prevFrame = gifFrames.value[i - 1]
-        if (prevFrame?.disposalType === 2) {
-          bufferCtx.clearRect(
-            prevFrame.dims.left,
-            prevFrame.dims.top,
-            prevFrame.dims.width,
-            prevFrame.dims.height,
-          )
+          if (phase < Math.PI) {
+            currentWidth = width.value * (0.7 + Math.abs(Math.sin(phase)) * 0.6)
+          } else {
+            currentHeight = height.value * (0.7 + Math.abs(Math.sin(phase)) * 0.6)
+          }
+
+          const xOffset = (width.value - currentWidth) / 2
+          const yOffset = (height.value - currentHeight) / 2
+
+          const outputCanvas = document.createElement('canvas')
+          outputCanvas.width = width.value
+          outputCanvas.height = height.value
+          const outputCtx = outputCanvas.getContext('2d')
+          if (outputCtx) {
+            outputCtx.fillStyle = '#000000'
+            outputCtx.fillRect(0, 0, width.value, height.value)
+
+            let source: HTMLImageElement | HTMLCanvasElement | null = originalImage.value
+
+            if (isAnimatedGif.value && gifCompositedFrames.value.length > 0) {
+              // Sample the GIF based on time
+              const currentTime = (i * frameDelay * gifSpeed.value) % (gifDuration || 1)
+              let elapsed = 0
+              let frameIdx = 0
+              for (let j = 0; j < gifFrames.value.length; j++) {
+                const d = gifFrames.value[j]?.delay || 100
+                if (elapsed + d > currentTime) {
+                  frameIdx = j
+                  break
+                }
+                elapsed += d
+              }
+              source = gifCompositedFrames.value[frameIdx] || null
+            }
+
+            if (source) {
+              outputCtx.drawImage(source, xOffset, yOffset, currentWidth, currentHeight)
+              gif.addFrame(outputCanvas, { delay: Math.round(exportAccumulator) })
+              exportAccumulator = 0
+            }
+          }
         }
       }
+    } else {
+      // REGULAR GIF EXPORT (Existing speed-sync logic)
+      let exportAccumulator = 0
+      for (let i = 0; i < gifCompositedFrames.value.length; i++) {
+        const composited = gifCompositedFrames.value[i]
+        const frameData = gifFrames.value[i]
+        if (!composited || !frameData) continue
 
-      // Draw current frame patch using drawImage for proper alpha compositing
-      // (putImageData replaces pixels directly, including transparent ones = corruption)
-      const patchCanvas = document.createElement('canvas')
-      patchCanvas.width = frame.dims.width
-      patchCanvas.height = frame.dims.height
-      const patchCtx = patchCanvas.getContext('2d')
-      if (patchCtx) {
-        const imageData = new ImageData(
-          new Uint8ClampedArray(frame.patch),
-          frame.dims.width,
-          frame.dims.height,
-        )
-        patchCtx.putImageData(imageData, 0, 0)
-        bufferCtx.drawImage(patchCanvas, frame.dims.left, frame.dims.top)
-      }
+        const targetDelay = (frameData.delay || 100) / gifSpeed.value
+        exportAccumulator += targetDelay
 
-      // Scale to output canvas
-      const outputCanvas = document.createElement('canvas')
-      outputCanvas.width = width.value
-      outputCanvas.height = height.value
-      const outputCtx = outputCanvas.getContext('2d')
-      if (outputCtx) {
-        // Fill with black background
-        outputCtx.fillStyle = '#000000'
-        outputCtx.fillRect(0, 0, width.value, height.value)
-        outputCtx.drawImage(bufferCanvas, 0, 0, width.value, height.value)
-        gif.addFrame(outputCanvas, { delay: frame.delay || 100 })
-      }
-
-      // Reset buffer on loop back to start
-      if (i === gifFrames.value.length - 1) {
-        bufferCtx.clearRect(0, 0, originalWidth, originalHeight)
+        if (exportAccumulator >= 20 || i === gifCompositedFrames.value.length - 1) {
+          const outputCanvas = document.createElement('canvas')
+          outputCanvas.width = width.value
+          outputCanvas.height = height.value
+          const outputCtx = outputCanvas.getContext('2d')
+          if (outputCtx) {
+            outputCtx.fillStyle = '#000000'
+            outputCtx.fillRect(0, 0, width.value, height.value)
+            outputCtx.drawImage(composited, 0, 0, width.value, height.value)
+            gif.addFrame(outputCanvas, { delay: Math.round(exportAccumulator) })
+            exportAccumulator = 0
+          }
+        }
       }
     }
 
@@ -351,6 +497,38 @@ async function downloadImage() {
     link.download = `${fileName.value}_processed.${ext}`
     link.href = dataUrl
     link.click()
+  }
+}
+
+async function copyImage() {
+  if (!canvas.value) return
+
+  try {
+    // 核心改动：不要在 write 之前 await blob
+    // Safari 要求在用户触发的瞬间就构造出 ClipboardItem
+    const item = new ClipboardItem({
+      // 这里的 key 建议强制写死 'image/png'，因为 Safari 对其他格式支持有限
+      'image/png': new Promise<Blob>((resolve, reject) => {
+        canvas.value!.toBlob((blob) => {
+          if (blob) {
+            resolve(blob)
+          } else {
+            reject(new Error('Canvas to Blob failed'))
+          }
+        }, 'image/png') // 建议优先使用 image/png，兼容性最好
+      }),
+    })
+
+    await navigator.clipboard.write([item])
+
+    // 成功反馈
+    isCopying.value = true
+    setTimeout(() => {
+      isCopying.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('Failed to copy image to clipboard:', err)
+    // 可以在这里提示用户：“您的浏览器版本过低或不支持该功能”
   }
 }
 
@@ -407,30 +585,34 @@ const renderCanvas = throttle(() => {
   canvas.value.width = width.value
   canvas.value.height = height.value
 
+  // Calculate dynamic dimensions if in wobble mode
+  let currentWidth = width.value
+  let currentHeight = height.value
+
+  if (isWobbleMode.value) {
+    const normalizedPhase = wobblePhase.value % (Math.PI * 2)
+    if (normalizedPhase < Math.PI) {
+      currentWidth = width.value * (0.7 + Math.abs(Math.sin(normalizedPhase)) * 0.6)
+    } else {
+      currentHeight = height.value * (0.7 + Math.abs(Math.sin(normalizedPhase)) * 0.6)
+    }
+  }
+
+  const xOffset = (width.value - currentWidth) / 2
+  const yOffset = (height.value - currentHeight) / 2
+
   // For animated GIFs, render first frame for size calculation
   // For static images, render normally
-  if (isAnimatedGif.value && gifFrames.value.length > 0) {
-    const firstFrame = gifFrames.value[0]
-    if (firstFrame) {
-      // Create buffer for first frame
-      const bufferCanvas = document.createElement('canvas')
-      bufferCanvas.width = firstFrame.dims.width
-      bufferCanvas.height = firstFrame.dims.height
-      const bufferCtx = bufferCanvas.getContext('2d')
-
-      if (bufferCtx) {
-        const imageData = new ImageData(
-          new Uint8ClampedArray(firstFrame.patch),
-          firstFrame.dims.width,
-          firstFrame.dims.height,
-        )
-        bufferCtx.putImageData(imageData, 0, 0)
-        ctx.drawImage(bufferCanvas, 0, 0, width.value, height.value)
-      }
+  if (isAnimatedGif.value && gifCompositedFrames.value.length > 0) {
+    // During animation, frameIndex is managed by startGifAnimation
+    // But renderCanvas might be called independently (e.g. resize)
+    const source = gifCompositedFrames.value[0] // Default to first frame for static render
+    if (source) {
+      ctx.drawImage(source, xOffset, yOffset, currentWidth, currentHeight)
     }
   } else {
     // Regular static image rendering
-    ctx.drawImage(originalImage.value, 0, 0, width.value, height.value)
+    ctx.drawImage(originalImage.value, xOffset, yOffset, currentWidth, currentHeight)
   }
 
   updateSize()
@@ -482,11 +664,11 @@ function onHeightChange() {
 <template>
   <div class="paper-panel image-tool">
     <div class="tool-header">
-      <div>
-        <p class="eyebrow">UTILITIES // Wide-Putin Generator</p>
+      <p class="eyebrow">Wide-Putin Generator</p>
+      <div class="title-row">
         <h1>宽体普京生成器</h1>
+        <div v-if="originalImage" class="status-badge">SYSTEM OPERATIONAL</div>
       </div>
-      <div v-if="originalImage" class="status-badge">SYSTEM ACTIVE</div>
     </div>
 
     <div class="tool-layout">
@@ -510,12 +692,12 @@ function onHeightChange() {
           />
           <div class="upload-content">
             <span class="icon" v-if="!originalImage">⊕</span>
-            <span class="text" v-if="!originalImage">DROP IMAGE HERE OR CLICK</span>
+            <span class="text" v-if="!originalImage">拖放图像至此处或点击上传</span>
 
             <div v-else class="file-meta">
               <span class="filename">{{ fileName }}</span>
               <span class="filesize">{{ formatBytes(fileSize) }}</span>
-              <button class="btn-text">REPLACE FILE</button>
+              <button class="btn-text">更换文件</button>
             </div>
           </div>
           <div class="corner-decor top-left"></div>
@@ -523,15 +705,16 @@ function onHeightChange() {
         </div>
 
         <div v-if="originalImage" class="settings-group">
-          <div class="group-header">DIMENSIONS</div>
+          <div class="group-header">尺寸设置</div>
           <div class="dimension-control">
             <div class="input-header">
-              <label>WIDTH</label>
+              <label>宽度</label>
               <input
                 type="number"
                 v-model.number="width"
                 @input="onWidthChange"
                 class="ruin-input-mono small"
+                :disabled="isWobbleMode"
               />
             </div>
             <input
@@ -541,17 +724,19 @@ function onHeightChange() {
               v-model.number="width"
               @input="onWidthChange"
               class="ruin-range"
+              :disabled="isWobbleMode"
             />
           </div>
 
           <div class="dimension-control">
             <div class="input-header">
-              <label>HEIGHT</label>
+              <label>高度</label>
               <input
                 type="number"
                 v-model.number="height"
                 @input="onHeightChange"
                 class="ruin-input-mono small"
+                :disabled="isWobbleMode"
               />
             </div>
             <input
@@ -561,18 +746,74 @@ function onHeightChange() {
               v-model.number="height"
               @input="onHeightChange"
               class="ruin-range"
+              :disabled="isWobbleMode"
             />
           </div>
 
           <label class="checkbox-field">
-            <input type="checkbox" v-model="keepAspectRatio" />
+            <input type="checkbox" v-model="keepAspectRatio" :disabled="isWobbleMode" />
             <span class="checkmark"></span>
-            <span class="label-text">LOCK ASPECT RATIO</span>
+            <span class="label-text">锁定宽高比</span>
           </label>
+
+          <div class="special-action" style="margin-top: 24px">
+            <button
+              class="btn secondary full-width"
+              :class="{ active: isWobbleMode }"
+              @click="isWobbleMode = !isWobbleMode"
+            >
+              <span class="btn-content">{{ isWobbleMode ? '停止跃动' : '开启跃动模式' }}</span>
+              <span class="btn-decor"></span>
+            </button>
+          </div>
+
+          <div v-if="isWobbleMode" class="dimension-control" style="margin-top: 16px">
+            <div class="input-header">
+              <label>跃动速度</label>
+              <input
+                type="number"
+                min="0.1"
+                max="10.0"
+                step="0.1"
+                v-model.number="wobbleSpeed"
+                class="ruin-input-mono small"
+              />
+            </div>
+            <input
+              type="range"
+              min="0.1"
+              max="10.0"
+              step="0.1"
+              v-model.number="wobbleSpeed"
+              class="ruin-range"
+            />
+          </div>
+
+          <div v-if="isAnimatedGif" class="dimension-control" style="margin-top: 24px">
+            <div class="input-header">
+              <label>播放速度</label>
+              <input
+                type="number"
+                min="0.1"
+                max="100.0"
+                step="0.1"
+                v-model.number="gifSpeed"
+                class="ruin-input-mono small"
+              />
+            </div>
+            <input
+              type="range"
+              min="0.1"
+              max="100.0"
+              step="0.1"
+              v-model.number="gifSpeed"
+              class="ruin-range"
+            />
+          </div>
         </div>
 
         <div v-if="originalImage" class="settings-group">
-          <div class="group-header">OUTPUT FORMAT</div>
+          <div class="group-header">输出格式</div>
           <select v-model="format" class="ruin-select">
             <option v-for="fmt in formats" :key="fmt.value" :value="fmt.value">
               {{ fmt.label }}
@@ -580,9 +821,16 @@ function onHeightChange() {
           </select>
 
           <div class="range-field" v-if="format !== 'image/png'">
-            <div class="range-header">
-              <label>QUALITY</label>
-              <span class="value">{{ Math.round(quality * 100) }}%</span>
+            <div class="input-header">
+              <label>质量</label>
+              <input
+                type="number"
+                min="0.1"
+                max="1.0"
+                step="0.05"
+                v-model.number="quality"
+                class="ruin-input-mono small"
+              />
             </div>
             <input
               type="range"
@@ -597,16 +845,22 @@ function onHeightChange() {
 
         <div v-if="originalImage" class="action-footer">
           <div class="output-stats">
-            <span class="label">EST. SIZE</span>
+            <span class="label">预估大小</span>
             <span class="value" :class="outputSize < fileSize ? 'optimized' : 'warning'">
               {{ formatBytes(outputSize) }}
               <small>({{ Math.round((outputSize / fileSize) * 100) }}%)</small>
             </span>
           </div>
-          <button class="btn primary full-width" @click="downloadImage">
-            <span class="btn-content">INITIALIZE DOWNLOAD</span>
-            <span class="btn-decor"></span>
-          </button>
+          <div class="action-buttons">
+            <button class="btn primary" @click="downloadImage">
+              <span class="btn-content">下载</span>
+              <span class="btn-decor"></span>
+            </button>
+            <button v-if="canCopy" class="btn secondary" @click="copyImage" :disabled="isCopying">
+              <span class="btn-content">{{ isCopying ? '已复制' : '复制' }}</span>
+              <span class="btn-decor"></span>
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -620,11 +874,11 @@ function onHeightChange() {
             <!-- Empty state -->
             <div v-else class="empty-state">
               <span class="crosshair">✜</span>
-              <span>NO SIGNAL</span>
+              <span>无信号</span>
             </div>
           </div>
           <!-- HUD Elements -->
-          <div class="hud-corner top-left">VIEWPORT_01</div>
+          <div class="hud-corner top-left">视口_01</div>
           <div class="hud-corner bottom-right" v-if="originalImage">
             {{ width }} × {{ height }} PX
           </div>
@@ -638,18 +892,12 @@ function onHeightChange() {
 <style scoped>
 .image-tool {
   padding: 40px;
-  /* max-width: 1400px; */
-  /* Wider layout */
-  /* margin: 0 auto; */
   min-height: 80vh;
   display: flex;
   flex-direction: column;
 }
 
 .tool-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   margin-bottom: 40px;
   border-bottom: 1px solid var(--ruins-border);
   padding-bottom: 20px;
@@ -662,6 +910,13 @@ function onHeightChange() {
   border: 1px solid var(--ruins-success);
   padding: 4px 8px;
   letter-spacing: 0.1em;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
 }
 
 .tool-layout {
@@ -968,6 +1223,26 @@ function onHeightChange() {
   color: var(--ruins-warning);
 }
 
+.action-footer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.action-buttons .btn {
+  flex: 1;
+}
+
+.action-buttons .btn.primary {
+  flex: 2;
+}
+
 .full-width {
   width: 100%;
   justify-content: center;
@@ -986,7 +1261,7 @@ function onHeightChange() {
 
 /* Preview Area */
 .preview-area {
-  background: #1a1a1a;
+  background: var(--ruins-bg);
   position: relative;
   border: 1px solid var(--ruins-border);
   display: flex;
@@ -997,15 +1272,15 @@ function onHeightChange() {
 .grid-bg {
   position: absolute;
   inset: 0;
-  /* Checkerboard pattern */
+  /* Theme-aware checkerboard pattern */
   background-image: conic-gradient(
-    #262626 90deg,
-    #1f1f1f 90deg 180deg,
-    #262626 180deg 270deg,
-    #1f1f1f 270deg
+    var(--ruins-grid-color) 90deg,
+    transparent 90deg 180deg,
+    var(--ruins-grid-color) 180deg 270deg,
+    transparent 270deg
   );
   background-size: 20px 20px;
-  opacity: 0.5;
+  opacity: 1;
   pointer-events: none;
 }
 
@@ -1048,7 +1323,7 @@ function onHeightChange() {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--ruins-border);
+  color: var(--ruins-muted);
   font-family: var(--font-mono);
   gap: 16px;
   letter-spacing: 0.2em;
@@ -1063,7 +1338,7 @@ function onHeightChange() {
   position: absolute;
   font-family: var(--font-mono);
   font-size: 0.6rem;
-  color: var(--ruins-border);
+  color: var(--ruins-muted);
   padding: 8px;
   pointer-events: none;
 }
