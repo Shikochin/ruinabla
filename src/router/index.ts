@@ -40,6 +40,12 @@ const router = createRouter({
       meta: { title: '实验 - Rui∇abla', index: 4 },
     },
     {
+      path: '/tools/image',
+      name: 'image-tool',
+      component: () => import('@/views/ImageToolView.vue'),
+      meta: { title: '图像处理 - Rui∇abla', index: 5 },
+    },
+    {
       path: '/posts/:slug(.*)',
       name: 'posts',
       component: () => import('@/views/EntryView.vue'),

@@ -119,7 +119,10 @@ const handleKeydown = (e: KeyboardEvent) => {
     } else if (e.key === 'Enter') {
       e.preventDefault()
       if (results.value.length > 0) {
-        navigateToResult(results.value[selectedIndex.value])
+        const result = results.value[selectedIndex.value]
+        if (result) {
+          navigateToResult(result)
+        }
       }
     }
   }
