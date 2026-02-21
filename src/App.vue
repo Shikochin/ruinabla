@@ -22,9 +22,15 @@ watch(
 )
 
 import { useHead } from '@unhead/vue'
+import { useLocaleStore } from '@/stores/locale'
+
+const localeStore = useLocaleStore()
 
 useHead({
   titleTemplate: (title) => (title ? `${title} - Rui∇abla` : 'Rui∇abla'),
+  htmlAttrs: {
+    lang: () => localeStore.currentLocale,
+  },
   meta: [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
