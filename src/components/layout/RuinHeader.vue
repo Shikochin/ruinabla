@@ -12,6 +12,7 @@ const themeStore = useThemeStore()
 const auth = useAuthStore()
 
 const showUserMenu = ref(false)
+const isMobileMenuOpen = ref(false)
 
 function toggleUserMenu() {
   showUserMenu.value = !showUserMenu.value
@@ -21,11 +22,35 @@ function closeUserMenu() {
   showUserMenu.value = false
 }
 
+function toggleMobileMenu() {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+  if (isMobileMenuOpen.value) {
+    document.body.style.overflow = 'hidden'
+    document.body.classList.add('mobile-menu-open')
+  } else {
+    document.body.style.overflow = ''
+    document.body.classList.remove('mobile-menu-open')
+  }
+}
+
+function closeMobileMenu() {
+  isMobileMenuOpen.value = false
+  document.body.style.overflow = ''
+  document.body.classList.remove('mobile-menu-open')
+}
+
 // Close menu when clicking outside
 function handleClickOutside(event: MouseEvent) {
   const target = event.target as HTMLElement
   if (!target.closest('.user-menu-container')) {
     closeUserMenu()
+  }
+  if (
+    isMobileMenuOpen.value &&
+    !target.closest('.ruins-nav') &&
+    !target.closest('.hamburger-btn')
+  ) {
+    closeMobileMenu()
   }
 }
 
@@ -38,63 +63,79 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="ruins-header paper-panel">
+  <header class="ruins-header paper-panel" :class="{ 'is-mobile-open': isMobileMenuOpen }">
     <div class="brand">
-      <RouterLink to="/">
+      <RouterLink to="/" @click="closeMobileMenu">
         <strong class="brand__logo">Rui<span id="nabla">∇</span>abla</strong>
         <span class="brand__eyebrow">LOST ADDICTION.</span>
       </RouterLink>
     </div>
-    <nav class="ruins-nav">
-      <RouterLink to="/">{{ $t('nav.beacon') }}</RouterLink>
-      <RouterLink to="/chronicle">{{ $t('nav.chronicle') }}</RouterLink>
-      <RouterLink to="/lighthouse">{{ $t('nav.lighthouse') }}</RouterLink>
-      <RouterLink to="/about">{{ $t('nav.embers') }}</RouterLink>
-      <RouterLink to="/experiment" v-if="devStore.isDev">{{ $t('nav.experiment') }}</RouterLink>
-
-      <button
-        class="theme-toggle"
-        @click="themeStore.toggleTheme"
-        :title="
-          themeStore.themeMode === 'auto'
-            ? 'Auto'
-            : themeStore.themeMode === 'light'
-              ? 'Light'
-              : 'Dark'
-        "
-      >
-        <span v-if="themeStore.themeMode === 'auto'">⛅</span>
-        <span v-else-if="themeStore.themeMode === 'light'">🌞</span>
-        <span v-else>🌛</span>
+    <div class="header-actions-mobile">
+      <button class="hamburger-btn" @click="toggleMobileMenu" aria-label="Toggle menu">
+        <span class="hamburger-box">
+          <span class="hamburger-inner" :class="{ 'is-active': isMobileMenuOpen }"></span>
+        </span>
       </button>
-      <button class="theme-toggle" @click="openSearch" :title="$t('common.loading')">
-        <span>🔍</span>
-      </button>
+    </div>
 
-      <LocaleSwitcher />
-
-      <!-- User menu -->
-      <div class="user-menu-container" v-if="auth.isAuthenticated">
-        <button class="user-button" @click.stop="toggleUserMenu">
-          {{ auth.user?.email?.split('@')[0] }}
-        </button>
-
-        <Transition name="dropdown">
-          <div v-if="showUserMenu" class="user-dropdown">
-            <RouterLink to="/settings" @click="closeUserMenu" class="dropdown-item">
-              <span class="icon">⚙️</span>
-              <span>{{ $t('common.settings') }}</span>
-            </RouterLink>
-            <RouterLink to="/editor" @click="closeUserMenu" class="dropdown-item">
-              <span class="icon">✏️</span>
-              <span>{{ $t('nav.editor') }}</span>
-            </RouterLink>
-          </div>
-        </Transition>
+    <nav class="ruins-nav" :class="{ 'is-open': isMobileMenuOpen }">
+      <div class="nav-links">
+        <RouterLink to="/" @click="closeMobileMenu">{{ $t('nav.beacon') }}</RouterLink>
+        <RouterLink to="/chronicle" @click="closeMobileMenu">{{ $t('nav.chronicle') }}</RouterLink>
+        <RouterLink to="/lighthouse" @click="closeMobileMenu">{{
+          $t('nav.lighthouse')
+        }}</RouterLink>
+        <RouterLink to="/about" @click="closeMobileMenu">{{ $t('nav.embers') }}</RouterLink>
+        <RouterLink to="/experiment" v-if="devStore.isDev" @click="closeMobileMenu"
+          >{{ $t('nav.experiment') }}
+        </RouterLink>
       </div>
 
-      <!-- Login button for unauthenticated users -->
-      <RouterLink to="/login" v-else class="login-button"> {{ $t('common.login') }} </RouterLink>
+      <div class="nav-actions">
+        <button
+          class="theme-toggle"
+          @click="themeStore.toggleTheme"
+          :title="
+            themeStore.themeMode === 'auto'
+              ? 'Auto'
+              : themeStore.themeMode === 'light'
+                ? 'Light'
+                : 'Dark'
+          "
+        >
+          <span v-if="themeStore.themeMode === 'auto'">⛅</span>
+          <span v-else-if="themeStore.themeMode === 'light'">🌞</span>
+          <span v-else>🌛</span>
+        </button>
+        <button class="theme-toggle" @click="openSearch" :title="$t('common.loading')">
+          <span>🔍</span>
+        </button>
+
+        <LocaleSwitcher />
+
+        <!-- User menu -->
+        <div class="user-menu-container" v-if="auth.isAuthenticated">
+          <button class="user-button" @click.stop="toggleUserMenu">
+            {{ auth.user?.email?.split('@')[0] }}
+          </button>
+
+          <Transition name="dropdown">
+            <div v-if="showUserMenu" class="user-dropdown">
+              <RouterLink to="/settings" @click="closeUserMenu" class="dropdown-item">
+                <span class="icon">⚙️</span>
+                <span>{{ $t('common.settings') }}</span>
+              </RouterLink>
+              <RouterLink to="/editor" @click="closeUserMenu" class="dropdown-item">
+                <span class="icon">✏️</span>
+                <span>{{ $t('nav.editor') }}</span>
+              </RouterLink>
+            </div>
+          </Transition>
+        </div>
+
+        <!-- Login button for unauthenticated users -->
+        <RouterLink to="/login" v-else class="login-button"> {{ $t('common.login') }} </RouterLink>
+      </div>
     </nav>
   </header>
 </template>
@@ -286,26 +327,178 @@ onMounted(() => {
   padding-left: 2px;
 }
 
+.header-actions-mobile {
+  display: none;
+}
+
+.hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+}
+
+.hamburger-box {
+  width: 24px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.hamburger-inner {
+  width: 100%;
+  height: 2px;
+  background-color: var(--ruins-text);
+  transition: all 0.3s ease;
+}
+
+.hamburger-inner::before,
+.hamburger-inner::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: var(--ruins-text);
+  transition: all 0.3s ease;
+  left: 0;
+}
+
+.hamburger-inner::before {
+  top: 0;
+}
+
+.hamburger-inner::after {
+  bottom: 0;
+}
+
+.hamburger-inner.is-active {
+  background-color: transparent;
+}
+
+.hamburger-inner.is-active::before {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger-inner.is-active::after {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
 @media (max-width: 768px) {
   .ruins-header {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 24px;
-    text-align: center;
-    padding-bottom: 24px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding: 16px 20px;
+    position: relative;
+    z-index: 1000;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease;
   }
 
-  .ruins-nav {
-    font-size: 1rem;
-    gap: 24px;
-  }
-
-  .brand a {
-    align-items: center;
+  .ruins-header.is-mobile-open {
+    background: var(--ruins-bg);
+    border-bottom-color: transparent;
   }
 
   .brand__logo {
+    font-size: 2rem;
+  }
+
+  #nabla {
     font-size: 2.5rem;
+  }
+
+  .brand__eyebrow {
+    font-size: 0.65rem;
+  }
+
+  .header-actions-mobile {
+    display: block;
+  }
+
+  .hamburger-btn {
+    display: block;
+  }
+
+  .ruins-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--ruins-bg);
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 2rem;
+    gap: 2rem;
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 1000;
+  }
+
+  .ruins-nav.is-open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .nav-links a {
+    font-size: 1.5rem;
+  }
+
+  .nav-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .user-dropdown {
+    position: static;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  .user-menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-button {
+    font-size: 1.1rem;
+    padding: 8px 16px;
   }
 }
 </style>

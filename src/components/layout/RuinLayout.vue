@@ -136,5 +136,13 @@ function backToTop() {
   .ruins-layout {
     padding: 20px 0 40px;
   }
+
+  .ruins-container {
+    padding: 0 20px;
+  }
+}
+
+:global(body.mobile-menu-open #delta) {
+  display: none !important;
 }
 </style>
