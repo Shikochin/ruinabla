@@ -9,6 +9,9 @@ import { http } from '@/utils/http'
 import EditorSidebar from '@/components/editor/EditorSidebar.vue'
 import EditorForm from '@/components/editor/EditorForm.vue'
 
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const themeStore = useThemeStore()
 const store = usePostStore()
 const toast = useToastStore()
@@ -53,7 +56,7 @@ onMounted(async () => {
       // Assuming store.posts is populated by fetchPosts above.
       // If still not found, we might want to try fetching specifically or show error.
       // For now, let's just toast if not found in list.
-      toast.error(`Post ${slug} not found`)
+      toast.error(t('entry.notFound'))
     }
   }
 })
@@ -110,7 +113,7 @@ const cancelEdit = () => {
 }
 
 const savePost = async () => {
-  toast.info('Saving...')
+  toast.info(t('editor.messages.saving'))
   try {
     const payload = {
       ...form.value,
@@ -130,7 +133,7 @@ const savePost = async () => {
       throw new Error(err.error || 'Failed to save')
     }
 
-    toast.success('Saved successfully!')
+    toast.success(t('editor.messages.saved'))
     await store.fetchPosts() // Refresh list
 
     if (isNew.value) {
@@ -146,7 +149,7 @@ const savePost = async () => {
 const deletePost = async () => {
   if (!editingPost.value) return
   const slug = editingPost.value.slug
-  if (!confirm(`Delete post ${slug}?`)) return
+  if (!confirm(t('editor.messages.deleting', { slug }))) return
 
   try {
     const res = await http(`/api/posts/${slug}`, {
@@ -169,28 +172,24 @@ const deletePost = async () => {
         <button
           class="sidebar-toggle"
           @click="toggleSidebar"
-          :title="sidebarCollapsed ? '展开侧边栏' : '收起侧边栏'"
+          :title="sidebarCollapsed ? $t('editor.sidebar.expand') : $t('editor.sidebar.collapse')"
         >
           <span v-if="sidebarCollapsed">☰</span>
           <span v-else>✕</span>
         </button>
         <RouterLink to="/" class="nav-logo">Rui∇abla</RouterLink>
-        <RouterLink to="/chronicle" class="nav-link">年轮</RouterLink>
-        <RouterLink to="/lighthouse" class="nav-link">灯塔</RouterLink>
-        <RouterLink to="/about" class="nav-link">余烬</RouterLink>
+        <RouterLink to="/chronicle" class="nav-link">{{ $t('chronicle.title') }}</RouterLink>
+        <RouterLink to="/lighthouse" class="nav-link">{{ $t('lighthouse.title') }}</RouterLink>
+        <RouterLink to="/about" class="nav-link">{{ $t('about.title') }}</RouterLink>
       </div>
       <div class="nav-right">
-        <button
-          @click="themeStore.toggleTheme"
-          class="theme-toggle"
-          :title="`当前: ${themeStore.themeMode}`"
-        >
+        <button @click="themeStore.toggleTheme" class="theme-toggle" :title="$t('common.settings')">
           <span v-if="themeStore.themeMode === 'auto'">⛅</span>
           <span v-else-if="themeStore.themeMode === 'light'">🌞</span>
           <span v-else>🌛</span>
         </button>
 
-        <RouterLink to="/settings" class="nav-link">设置</RouterLink>
+        <RouterLink to="/settings" class="nav-link">{{ $t('common.settings') }}</RouterLink>
       </div>
     </nav>
 
@@ -208,14 +207,14 @@ const deletePost = async () => {
         v-if="editingPost"
         v-model="form"
         :is-new="isNew"
-        :title-label="isNew ? '新文章' : editingPost.title"
+        :title-label="isNew ? $t('editor.newPost') : editingPost.title"
         @save="savePost"
         @cancel="cancelEdit"
         @delete="deletePost"
       />
 
       <div class="empty-state" v-else>
-        <p>Select a post to edit or create a new one.</p>
+        <p>{{ $t('editor.form.placeholder.selectPost') }}</p>
       </div>
     </div>
   </div>

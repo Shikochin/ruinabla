@@ -2,9 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const token = route.params.token as string
 const newPassword = ref('')
@@ -16,7 +18,7 @@ const success = ref(false)
 const errorMessage = ref('')
 
 useHead({
-  title: '重置密码',
+  title: t('auth.resetPassword.title'),
 })
 
 onMounted(async () => {
@@ -26,7 +28,7 @@ onMounted(async () => {
     tokenValid.value = true
   } else {
     tokenValid.value = false
-    errorMessage.value = '无效的重置链接'
+    errorMessage.value = t('auth.resetPassword.invalidToken')
   }
   validating.value = false
 })
@@ -36,13 +38,13 @@ async function handleSubmit() {
 
   // Validate passwords match
   if (newPassword.value !== confirmPassword.value) {
-    errorMessage.value = '两次输入的密码不一致'
+    errorMessage.value = t('auth.resetPassword.mismatch')
     return
   }
 
   // Validate password strength
   if (newPassword.value.length < 8) {
-    errorMessage.value = '密码长度至少需要 8 个字符'
+    errorMessage.value = t('auth.resetPassword.tooShort')
     return
   }
 
@@ -67,10 +69,10 @@ async function handleSubmit() {
         router.push('/login')
       }, 2000)
     } else {
-      errorMessage.value = data.error || '密码重置失败'
+      errorMessage.value = data.error || t('auth.resetPassword.error')
     }
   } catch (error) {
-    errorMessage.value = '网络错误，请稍后重试'
+    errorMessage.value = t('auth.resetPassword.networkError')
     console.error(error)
   } finally {
     loading.value = false
@@ -84,63 +86,67 @@ async function handleSubmit() {
       <!-- Validating Token -->
       <div v-if="validating" class="status-section">
         <div class="spinner"></div>
-        <p>正在验证链接...</p>
+        <p>{{ $t('auth.resetPassword.validating') }}</p>
       </div>
 
       <!-- Invalid Token -->
       <div v-else-if="!tokenValid" class="status-section error">
         <div class="icon">✗</div>
-        <h1>无效的重置链接</h1>
+        <h1>{{ $t('auth.resetPassword.invalidToken') }}</h1>
         <p>{{ errorMessage }}</p>
-        <button @click="router.push('/forgot-password')" class="action-btn">重新申请重置</button>
+        <button @click="router.push('/forgot-password')" class="action-btn">
+          {{ $t('auth.resetPassword.requestNew') }}
+        </button>
       </div>
 
       <!-- Success -->
       <div v-else-if="success" class="status-section success">
         <div class="icon">✓</div>
-        <h1>密码重置成功！</h1>
-        <p>您现在可以使用新密码登录了</p>
-        <p class="redirect-hint">正在跳转到登录页...</p>
+        <h1>{{ $t('auth.resetPassword.successTitle') }}</h1>
+        <p>{{ $t('auth.resetPassword.successSubtitle') }}</p>
+        <p class="redirect-hint">{{ $t('auth.resetPassword.redirecting') }}</p>
       </div>
 
       <!-- Reset Form -->
       <div v-else>
-        <h1>重置密码</h1>
-        <p class="subtitle">请输入您的新密码</p>
+        <h1>{{ $t('auth.resetPassword.title') }}</h1>
+        <p class="subtitle">{{ $t('auth.resetPassword.subtitle') }}</p>
 
         <form @submit.prevent="handleSubmit" class="reset-form">
           <div class="field">
-            <label for="newPassword">新密码</label>
+            <label for="newPassword">{{ $t('auth.resetPassword.newPassword') }}</label>
             <input
               id="newPassword"
               v-model="newPassword"
               type="password"
               required
-              placeholder="至少 8 个字符"
+              :placeholder="$t('auth.resetPassword.passwordHint')"
               minlength="8"
               :disabled="loading"
             />
           </div>
 
           <div class="field">
-            <label for="confirmPassword">确认新密码</label>
+            <label for="confirmPassword">{{ $t('auth.resetPassword.confirmNew') }}</label>
             <input
               id="confirmPassword"
               v-model="confirmPassword"
               type="password"
               required
-              placeholder="再次输入新密码"
+              :placeholder="$t('auth.resetPassword.confirmNew')"
               minlength="8"
               :disabled="loading"
             />
           </div>
 
           <div class="password-hint">
-            <p>密码要求：</p>
+            <p>{{ $t('auth.resetPassword.requirementTitle') }}</p>
             <ul>
-              <li :class="{ met: newPassword.length >= 8 }">至少 8 个字符</li>
+              <li :class="{ met: newPassword.length >= 8 }">
+                {{ $t('auth.resetPassword.reqLength') }}
+              </li>
               <li :class="{ met: newPassword === confirmPassword && newPassword.length > 0 }">
-                两次输入一致
+                {{ $t('auth.resetPassword.reqMatch') }}
               </li>
             </ul>
           </div>
@@ -150,12 +156,14 @@ async function handleSubmit() {
           </div>
 
           <button type="submit" class="primary" :disabled="loading">
-            {{ loading ? '重置中...' : '重置密码' }}
+            {{
+              loading ? $t('auth.resetPassword.resetting') : $t('auth.resetPassword.resetButton')
+            }}
           </button>
         </form>
 
         <div class="links">
-          <RouterLink to="/login">返回登录</RouterLink>
+          <RouterLink to="/login">{{ $t('auth.resetPassword.requestNew') }}</RouterLink>
         </div>
       </div>
     </div>

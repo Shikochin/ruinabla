@@ -1,0 +1,344 @@
+{
+  "common": {
+    "about": "About",
+    "home": "Home",
+    "login": "Login",
+    "logout": "Logout",
+    "settings": "Settings",
+    "language": "Language",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "loading": "Loading...",
+    "readMore": "Read More",
+    "expandAll": "Expand All",
+    "minutes": "Minutes",
+    "search": "Search...",
+    "download": "Download",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "nav": {
+    "beacon": "Beacon",
+    "chronicle": "Chronicle",
+    "lighthouse": "Lighthouse",
+    "embers": "Embers",
+    "experiment": "Experiment",
+    "editor": "Editor"
+  },
+  "editor": {
+    "title": "Editor",
+    "newPost": "New Post",
+    "editPost": "Edit Post",
+    "posts": "Posts",
+    "sidebar": {
+      "expand": "Expand Sidebar",
+      "collapse": "Collapse Sidebar"
+    },
+    "form": {
+      "slug": "Slug",
+      "title": "Title",
+      "date": "Date",
+      "category": "Category",
+      "tags": "Tags",
+      "summary": "Summary",
+      "pinned": "Pinned",
+      "hide": "Hide",
+      "placeholder": {
+        "tags": "Press Enter to create tag",
+        "summary": "Post summary (leave empty to auto-generate)",
+        "selectPost": "Select a post to edit or create a new one."
+      }
+    },
+    "messages": {
+      "saving": "Saving...",
+      "saved": "Saved successfully!",
+      "deleting": "Delete post {slug}?",
+      "deleted": "Deleted"
+    }
+  },
+  "experiment": {
+    "title": "Copy the Obelisk",
+    "logLabel": "Device Runtime Log",
+    "status": "Status: {status}",
+    "unstable": "Unstable",
+    "imageProcessor": "Image Processor",
+    "widePutin": "Wide Putin",
+    "disableDev": "Disable Dev Mode",
+    "enableDev": "Enable Dev Mode",
+    "howFound": "How did you find this place?",
+    "devHint": "If you are a developer, click the button below to enable experimental features.",
+    "gravityMode": "Gravity Mode (Mobile Only)",
+    "tool": {
+      "statusOperational": "SYSTEM OPERATIONAL",
+      "upload": "Drag & drop image here or click to upload",
+      "changeFile": "Change File",
+      "dimensionSettings": "Dimension Settings",
+      "width": "Width",
+      "height": "Height",
+      "lockAspectRatio": "Lock Aspect Ratio",
+      "stopWobble": "Stop Wobble",
+      "startWobble": "Start Wobble Mode",
+      "wobbleSpeed": "Wobble Speed",
+      "playSpeed": "Playback Speed",
+      "outputFormat": "Output Format",
+      "quality": "Quality",
+      "estimatedSize": "Estimated Size",
+      "noSignal": "NO SIGNAL",
+      "viewport": "VIEWPORT_01"
+    }
+  },
+  "home": {
+    "recentBeacon": "Recent Beacon",
+    "frequentWords": "Frequent Words",
+    "frequentWordsDesc": "High-frequency words in ruins",
+    "recombinedBeacons": "Recombined Beacons",
+    "readingTime": "{n} MINS READ",
+    "description": "Records of Light and Dust. A personal blog by Shikochin."
+  },
+  "about": {
+    "title": "About Me",
+    "description": "About me - About Shikochin",
+    "eyebrow": "Embers",
+    "contact": "Contact Me",
+    "whyRuins": "Why Ruins?",
+    "ruinsDesc": "What is said originates from what is thought, and what is thought is also transformed into what is said, yet it has never been fully described; I still hope these words can occupy a place and become ruins. Reality is often unsatisfactory, and beautiful words should not be bound; they survive in the ruins and flourish with the ruins themselves.",
+    "bio": "<strong>Nishimiya Shiko</strong>, also known as Shikochin. {age} years old, living in China, a high school student. Creating ruins to leave some of my thoughts and daily life. I started messing with personal blogs in 2021, and they never turned out as expected, but I've learned a lot from it."
+  },
+  "lighthouse": {
+    "title": "Lighthouse",
+    "description": "Beam Signal - Friends and links",
+    "subtitle": "Beam Signal",
+    "newBeacon": "Establish New Coordinate",
+    "lead": "In these ruins, signals from afar are occasionally received. They are lighthouses established by other survivors, pointing in different directions.",
+    "joinNetwork": "Join the Beam Network",
+    "joinDesc": "If you have also established your own lighthouse, you are welcome to exchange beams.",
+    "adjustSignal": "Adjust Signal Parameters",
+    "emitSignal": "Emit Signal",
+    "form": {
+      "name": "Name",
+      "url": "Address (URL)",
+      "avatar": "Avatar (URL)",
+      "desc": "Description",
+      "placeholders": {
+        "name": "Site Name",
+        "avatar": "Avatar Image URL",
+        "desc": "Short description"
+      }
+    },
+    "messages": {
+      "confirmDelete": "Are you sure you want to extinguish this lighthouse?",
+      "signalAdjusted": "Signal parameters adjusted",
+      "emitting": "Beam emitting...",
+      "established": "New coordinate established successfully",
+      "connectionLost": "Connection lost, rolling back operation",
+      "extinguished": "Lighthouse extinguished",
+      "deleteFailed": "Delete failed, signal restored"
+    }
+  },
+  "chronicle": {
+    "title": "Chronicle",
+    "description": "Time Coordinates of Ruins - Archive of posts",
+    "subtitle": "Time Coordinates of Ruins",
+    "eyebrow": "Chronicle Record",
+    "range": "From {first} To {last}",
+    "metrics": {
+      "posts": "Posts",
+      "avgReading": "Avg. Reading",
+      "tags": "Tags"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Repeat the Error",
+      "eyebrow": "Login to continue",
+      "usePasskey": "Login with Passkey",
+      "orUsePassword": "Or login with password",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember this device",
+      "forgotPassword": "Forgot password?",
+      "loggingIn": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "registerNow": "Register",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "••••••••",
+      "totpPlaceholder": "000000",
+      "title2fa": "Two-Step Verification",
+      "subtitle2fa": "Choose a verification method to continue",
+      "totpTitle": "Authenticator App",
+      "totpDesc": "Use the 6-digit code generated by your authenticator app",
+      "totpLabel": "TOTP Code",
+      "verify": "Verify",
+      "passkeyTitle": "Passkey",
+      "passkeyDesc": "Use your biometric or security key",
+      "usePasskeyVerify": "Verify with Passkey",
+      "noPasskey": "You haven't set up a Passkey yet",
+      "passkeyFailed": "Passkey verification failed",
+      "messages": {
+        "failed": "Login failed",
+        "noCredential": "No credential returned",
+        "passkeyOptionsFailed": "Failed to get passkey options"
+      }
+    },
+    "register": {
+      "title": "Find a Place to Stay",
+      "eyebrow": "Create Account",
+      "confirmPassword": "Confirm Password",
+      "passwordHint": "At least 8 characters",
+      "creatingAccount": "Creating account...",
+      "register": "Register",
+      "hasAccount": "Already have an account?",
+      "loginNow": "Login",
+      "successTitle": "Registration Success!",
+      "successSubtitle": "We have sent a verification email to {email}",
+      "successInstructions": "Please check your inbox (including spam folder) and click the link in the email to complete verification.",
+      "resendEmail": "Resend Verification Email",
+      "alreadyVerified": "Already verified? Login now",
+      "errors": {
+        "passwordTooShort": "Password must be at least 8 characters",
+        "passwordMismatch": "Passwords do not match"
+      },
+      "messages": {
+        "failed": "Registration failed",
+        "resendSuccess": "Verification email resent!",
+        "resendFailed": "Failed to send, please try again later",
+        "networkError": "Network error, please try again later"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your email address and we'll send you a password reset link",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "sending": "Sending...",
+      "sendLink": "Send Reset Link",
+      "backToLogin": "Back to Login",
+      "noAccount": "Don't have an account? Register",
+      "emailSent": "Email Sent",
+      "emailSentDesc": "If that email is registered, you will receive a password reset link. Please check your inbox (including spam folder).",
+      "error": "Failed to send reset email",
+      "networkError": "Network error, please try again later"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Please enter your new password",
+      "validating": "Validating link...",
+      "invalidToken": "Invalid reset link",
+      "requestNew": "Request a new link",
+      "successTitle": "Password Reset Success!",
+      "successSubtitle": "You can now log in with your new password",
+      "redirecting": "Redirecting to login page...",
+      "newPassword": "New Password",
+      "confirmNew": "Confirm New Password",
+      "passwordHint": "At least 8 characters",
+      "mismatch": "Passwords do not match",
+      "tooShort": "Password must be at least 8 characters",
+      "requirementTitle": "Password Requirements:",
+      "reqLength": "At least 8 characters",
+      "reqMatch": "Passwords match",
+      "resetting": "Resetting...",
+      "resetButton": "Reset Password",
+      "error": "Password reset failed",
+      "networkError": "Network error, please try again later"
+    },
+    "security": {
+      "title": "Security Settings",
+      "subtitle": "Manage your authentication methods",
+      "totp": {
+        "title": "Two-Factor Authentication (TOTP)",
+        "description": "Add extra security to your account",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "buttonEnable": "Enable TOTP",
+        "buttonDisable": "Disable Two-Factor Authentication",
+        "setupTitle": "Setup Instructions",
+        "step1": "Open your authenticator app (Google Authenticator, Authy, etc.)",
+        "step2": "Scan this QR code or manually enter the key",
+        "step3": "Enter the 6-digit verification code",
+        "secret": "Secret",
+        "uri": "Link",
+        "verifyLabel": "Verification Code",
+        "verifyButton": "Verify & Enable",
+        "backupTitle": "Backup Codes",
+        "backupDesc": "Save these codes in a safe place, they will only be shown once. If you lose access to your authenticator, you can use them.",
+        "success": "✓ Two-Factor Authentication enabled",
+        "messages": {
+          "scanQR": "Scan the QR code with your authenticator app",
+          "enableSuccess": "TOTP enabled! Please save your backup codes.",
+          "disableSuccess": "TOTP disabled",
+          "confirmDisableTitle": "Confirm Disabling Two-Factor Auth",
+          "confirmDisableDesc": "Please enter your password to confirm disabling two-factor authentication. This will reduce your account's security.",
+          "confirmDisableAction": "Disable TOTP",
+          "failedEnable": "Failed to enable TOTP",
+          "failedDisable": "Failed to disable TOTP",
+          "invalidCode": "Invalid code"
+        }
+      },
+      "passkeys": {
+        "title": "Passkeys",
+        "description": "Secure login with biological authentication",
+        "count": "{n} Passkeys",
+        "nameLabel": "Passkey Name",
+        "namePlaceholder": "My Passkey",
+        "addButton": "Add Passkey",
+        "createdAt": "Created at",
+        "delete": "Delete",
+        "confirmDelete": "Delete this Passkey?",
+        "messages": {
+          "registerFailed": "Failed to register Passkey",
+          "registerOptionsFailed": "Failed to get registration options",
+          "unsupported": "Your browser does not support WebAuthn",
+          "creationFailed": "Failed to create credential",
+          "addSuccess": "Passkey added successfully!",
+          "cancelled": "Passkey addition cancelled",
+          "deleteFailed": "Failed to delete Passkey",
+          "deleteSuccess": "Passkey deleted"
+        }
+      }
+    },
+    "verifyEmail": {
+      "title": "Verify Email",
+      "verifying": "Verifying...",
+      "verifyingDesc": "Please wait, we are verifying your email",
+      "successTitle": "Verification Successful!",
+      "successDesc": "Your email has been successfully verified",
+      "successHint": "Redirecting to security settings, we recommend setting up two-factor authentication...",
+      "expiredTitle": "Verification Link Expired",
+      "expiredDesc": "This verification link has exceeded its validity period (1 hour)",
+      "failedTitle": "Verification Failed",
+      "backToRegister": "Back to Register",
+      "backToLogin": "Go to Login",
+      "resendEmail": "Resend Verification Email",
+      "resendHint": "Please return to the registration page to resend the verification email",
+      "invalidLink": "Invalid verification link",
+      "genericError": "Verification failed",
+      "networkError": "Network error, please try again later"
+    }
+  },
+  "entry": {
+    "notFound": "Beacon Not Found",
+    "notFoundDesc": "This beacon might be lost or does not exist.",
+    "back": "Back to Ruins Beacon",
+    "edit": "Edit this post",
+    "aiSummary": "AI Generated Summary",
+    "license": "Licensed by",
+    "licenseBy": "Licensed by {license}",
+    "minutesRead": "{n} min{s} read",
+    "errors": {
+      "render": "Error rendering content"
+    },
+    "notFoundTitle": "No corresponding beacon found",
+    "notFoundText": "It might be buried in sand. Return to the beacon to reposition."
+  },
+  "category": {
+    "title": "Category: {name}",
+    "empty": "No posts in this category yet"
+  },
+  "tag": {
+    "title": "Tag: {name}",
+    "empty": "No posts found with this tag"
+  }
+}

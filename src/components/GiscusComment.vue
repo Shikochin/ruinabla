@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Giscus from '@giscus/vue'
+import SectionHeader from '@/components/ui/SectionHeader.vue'
 import { useThemeStore } from '@/stores/themeStore'
 
 const themeStore = useThemeStore()
@@ -16,7 +17,7 @@ const giscusTheme = computed(() => {
 
 <template>
   <section id="comments" class="paper-panel">
-    <p class="eyebrow">评论</p>
+    <SectionHeader eyebrow="评论" />
     <Giscus
       repo="Shikochin/ruin"
       repo-id="R_kgDOL7BWOw"
@@ -39,10 +40,6 @@ const giscusTheme = computed(() => {
   padding: 40px;
   margin-top: 40px;
   border-top: 2px solid var(--ruins-border);
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
 }
 
 .giscus-container :deep(.giscus) {

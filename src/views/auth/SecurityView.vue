@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import PasswordConfirmModal from '@/components/PasswordConfirmModal.vue'
 import QRCode from 'qrcode'
 import { formatTimestamp } from '@/utils/temporal'
@@ -10,6 +11,7 @@ import { formatTimestamp } from '@/utils/temporal'
 const router = useRouter()
 const auth = useAuthStore()
 const toast = useToastStore()
+const { t } = useI18n()
 
 // TOTP
 const totpSecret = ref('')
@@ -48,7 +50,7 @@ async function enableTOTP() {
     const data = await res.json()
 
     if (!res.ok) {
-      throw new Error(data.error || 'Failed to enable TOTP')
+      throw new Error(data.error || t('auth.security.totp.messages.failedEnable'))
     }
 
     totpSecret.value = data.secret
@@ -59,7 +61,7 @@ async function enableTOTP() {
 
     totpQRCode.value = await QRCode.toDataURL(totpUri.value)
 
-    toast.info('使用您的认证器应用扫描二维码')
+    toast.info(t('auth.security.totp.messages.scanQR'))
   } catch (e) {
     toast.error((e as Error).message)
   }
@@ -79,14 +81,12 @@ async function verifyAndEnableTOTP() {
     const data = await res.json()
 
     if (!res.ok) {
-      throw new Error(data.error || 'Invalid code')
+      throw new Error(data.error || t('auth.security.totp.messages.invalidCode'))
     }
 
     isTOTPEnabled.value = true
     showBackupCodes.value = true
-    isTOTPEnabled.value = true
-    showBackupCodes.value = true
-    toast.success('TOTP 已启用! 保存您的备份码。')
+    toast.success(t('auth.security.totp.messages.enableSuccess'))
     totpSecret.value = ''
     totpUri.value = ''
     totpVerifyCode.value = ''
@@ -113,11 +113,11 @@ async function handleDisableTOTPConfirm(password: string) {
     const data = await res.json()
 
     if (!res.ok) {
-      throw new Error(data.error || 'Failed to disable TOTP')
+      throw new Error(data.error || t('auth.security.totp.messages.failedDisable'))
     }
 
     isTOTPEnabled.value = false
-    toast.success('TOTP 已禁用')
+    toast.success(t('auth.security.totp.messages.disableSuccess'))
     showPasswordModal.value = false
   } catch (e) {
     toast.error((e as Error).message)
@@ -142,7 +142,7 @@ async function loadPasskeys() {
 
 async function registerPasskey() {
   if (!passkeyName.value.trim()) {
-    toast.error('请输入您的 Passkey 名称')
+    toast.error(t('auth.security.passkeys.nameLabel'))
     return
   }
 
@@ -157,11 +157,11 @@ async function registerPasskey() {
     const options = await optionsRes.json()
 
     if (!optionsRes.ok) {
-      throw new Error(options.error || 'Failed to get registration options')
+      throw new Error(options.error || t('auth.security.passkeys.messages.registerOptionsFailed'))
     }
 
     if (!window.PublicKeyCredential) {
-      toast.error('您的浏览器不支持 WebAuthn')
+      toast.error(t('auth.security.passkeys.messages.unsupported'))
       return
     }
 
@@ -184,7 +184,7 @@ async function registerPasskey() {
     })) as PublicKeyCredential | null
 
     if (!credential) {
-      throw new Error('Failed to create credential')
+      throw new Error(t('auth.security.passkeys.messages.creationFailed'))
     }
 
     const bufferToBase64url = (buffer: ArrayBuffer) => {
@@ -223,15 +223,15 @@ async function registerPasskey() {
     const result = await registerRes.json()
 
     if (!registerRes.ok) {
-      throw new Error(result.error || 'Failed to register passkey')
+      throw new Error(result.error || t('auth.security.passkeys.messages.registerFailed'))
     }
 
-    toast.success('Passkey 添加成功！')
+    toast.success(t('auth.security.passkeys.messages.addSuccess'))
     passkeyName.value = ''
     await loadPasskeys()
   } catch (e) {
     if ((e as Error).name === 'NotAllowedError') {
-      toast.info('Passkey 添加被取消')
+      toast.info(t('auth.security.passkeys.messages.cancelled'))
     } else {
       toast.error((e as Error).message)
     }
@@ -239,7 +239,7 @@ async function registerPasskey() {
 }
 
 async function deletePasskey(id: string) {
-  if (!confirm('删除此 Passkey？')) return
+  if (!confirm(t('auth.security.passkeys.confirmDelete'))) return
 
   try {
     const res = await fetch(`/api/passkey/${id}`, {
@@ -250,11 +250,11 @@ async function deletePasskey(id: string) {
     })
 
     if (!res.ok) {
-      throw new Error('Failed to delete passkey')
+      throw new Error(t('auth.security.passkeys.messages.deleteFailed'))
     }
 
     await loadPasskeys()
-    toast.success('Passkey 已删除')
+    toast.success(t('auth.security.passkeys.messages.deleteSuccess'))
   } catch (e) {
     toast.error((e as Error).message)
   }
@@ -264,39 +264,43 @@ async function deletePasskey(id: string) {
 <template>
   <div class="security-view">
     <div class="page-header">
-      <h1>安全设置</h1>
-      <p class="subtitle">管理您的认证方式</p>
+      <h1>{{ $t('auth.security.title') }}</h1>
+      <p class="subtitle">{{ $t('auth.security.subtitle') }}</p>
     </div>
 
     <!-- TOTP Section -->
     <section class="settings-section paper-panel">
       <div class="section-header">
         <div>
-          <h2>双因素验证 (TOTP)</h2>
-          <p class="section-desc">为您的账户添加额外的安全性</p>
+          <h2>{{ $t('auth.security.totp.title') }}</h2>
+          <p class="section-desc">{{ $t('auth.security.totp.description') }}</p>
         </div>
-        <div v-if="isTOTPEnabled" class="status-badge enabled">已启用</div>
-        <div v-else class="status-badge">未启用</div>
+        <div v-if="isTOTPEnabled" class="status-badge enabled">
+          {{ $t('auth.security.totp.enabled') }}
+        </div>
+        <div v-else class="status-badge">{{ $t('auth.security.totp.disabled') }}</div>
       </div>
 
       <div v-if="!isTOTPEnabled && !totpSecret" class="section-content">
-        <button @click="enableTOTP" class="primary">启用 TOTP</button>
+        <button @click="enableTOTP" class="primary">
+          {{ $t('auth.security.totp.buttonEnable') }}
+        </button>
       </div>
 
       <div v-if="totpSecret && !isTOTPEnabled" class="section-content totp-setup">
-        <h3>设置说明</h3>
+        <h3>{{ $t('auth.security.totp.setupTitle') }}</h3>
         <ol>
-          <li>打开您的认证器应用（Google Authenticator，Authy 等）</li>
-          <li>扫描此二维码或手动输入密钥</li>
-          <li>输入 6 位验证码</li>
+          <li>{{ $t('auth.security.totp.step1') }}</li>
+          <li>{{ $t('auth.security.totp.step2') }}</li>
+          <li>{{ $t('auth.security.totp.step3') }}</li>
         </ol>
 
         <div class="qr-code">
           <p class="secret-code">
-            密钥: <code>{{ totpSecret }}</code>
+            {{ $t('auth.security.totp.secret') }}: <code>{{ totpSecret }}</code>
           </p>
           <p>
-            链接：<a :href="totpUri" target="_blank"
+            {{ $t('auth.security.totp.uri') }}：<a :href="totpUri" target="_blank"
               ><small>{{ totpUri }}</small></a
             >
           </p>
@@ -304,7 +308,7 @@ async function deletePasskey(id: string) {
         </div>
 
         <div class="field">
-          <label>验证代码</label>
+          <label>{{ $t('auth.security.totp.verifyLabel') }}</label>
           <input
             v-model="totpVerifyCode"
             type="text"
@@ -314,21 +318,25 @@ async function deletePasskey(id: string) {
           />
         </div>
 
-        <button @click="verifyAndEnableTOTP" class="primary">验证并启用</button>
+        <button @click="verifyAndEnableTOTP" class="primary">
+          {{ $t('auth.security.totp.verifyButton') }}
+        </button>
       </div>
 
       <div v-if="isTOTPEnabled" class="section-content">
         <div v-if="backupCodes.length && showBackupCodes" class="backup-codes">
-          <h3>备份码</h3>
+          <h3>{{ $t('auth.security.totp.backupTitle') }}</h3>
           <p>
-            将这些代码保存在安全的地方，它们只会显示一次。如果您无法访问您的认证器，可以使用它们。
+            {{ $t('auth.security.totp.backupDesc') }}
           </p>
           <ul>
             <li v-for="code in backupCodes" :key="code">{{ code }}</li>
           </ul>
         </div>
-        <p class="success-text">✓ 双因素验证已启用</p>
-        <button @click="disableTOTP" class="danger">关闭两步验证</button>
+        <p class="success-text">{{ $t('auth.security.totp.success') }}</p>
+        <button @click="disableTOTP" class="danger">
+          {{ $t('auth.security.totp.buttonDisable') }}
+        </button>
       </div>
     </section>
 
@@ -336,10 +344,12 @@ async function deletePasskey(id: string) {
     <section class="settings-section paper-panel">
       <div class="section-header">
         <div>
-          <h2>Passkeys</h2>
-          <p class="section-desc">使用生物认证安全登录</p>
+          <h2>{{ $t('auth.security.passkeys.title') }}</h2>
+          <p class="section-desc">{{ $t('auth.security.passkeys.description') }}</p>
         </div>
-        <div v-if="passkeys.length" class="status-badge enabled">{{ passkeys.length }} 个密钥</div>
+        <div v-if="passkeys.length" class="status-badge enabled">
+          {{ $t('auth.security.passkeys.count', { n: passkeys.length }) }}
+        </div>
       </div>
 
       <div class="section-content">
@@ -347,27 +357,37 @@ async function deletePasskey(id: string) {
           <div v-for="passkey in passkeys" :key="passkey.id" class="passkey-item">
             <div class="passkey-info">
               <strong>{{ passkey.name }}</strong>
-              <small>创建于: {{ formatTimestamp(passkey.created_at) }}</small>
+              <small
+                >{{ $t('auth.security.passkeys.createdAt') }}:
+                {{ formatTimestamp(passkey.created_at) }}</small
+              >
             </div>
-            <button @click="deletePasskey(passkey.id)" class="danger-link">删除</button>
+            <button @click="deletePasskey(passkey.id)" class="danger-link">
+              {{ $t('auth.security.passkeys.delete') }}
+            </button>
           </div>
         </div>
 
         <div class="field">
-          <label>Passkey 名称</label>
-          <input v-model="passkeyName" placeholder="My Passkey" />
+          <label>{{ $t('auth.security.passkeys.nameLabel') }}</label>
+          <input
+            v-model="passkeyName"
+            :placeholder="$t('auth.security.passkeys.namePlaceholder')"
+          />
         </div>
 
-        <button @click="registerPasskey" class="primary">添加 Passkey</button>
+        <button @click="registerPasskey" class="primary">
+          {{ $t('auth.security.passkeys.addButton') }}
+        </button>
       </div>
     </section>
 
     <!-- Password Confirmation Modal -->
     <PasswordConfirmModal
       :show="showPasswordModal"
-      title="确认关闭两步验证"
-      description="请输入您的密码以确认关闭两步验证。这将降低您账户的安全性。"
-      action-text="关闭 TOTP"
+      :title="$t('auth.security.totp.messages.confirmDisableTitle')"
+      :description="$t('auth.security.totp.messages.confirmDisableDesc')"
+      :action-text="$t('auth.security.totp.messages.confirmDisableAction')"
       @confirm="handleDisableTOTPConfirm"
       @cancel="showPasswordModal = false"
     />

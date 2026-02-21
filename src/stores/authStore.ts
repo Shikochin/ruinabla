@@ -1,6 +1,9 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { http } from '@/utils/http'
+import i18n from '@/i18n'
+
+const { t } = i18n.global as any
 
 interface User {
   id: string
@@ -40,7 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await res.json()
 
       if (!res.ok) {
-        throw new Error(data.error || 'Registration failed')
+        throw new Error(data.error || t('auth.register.messages.failed'))
       }
 
       // Registration successful - email verification required
@@ -69,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await res.json()
 
       if (!res.ok) {
-        error.value = data.error || 'Login failed'
+        error.value = data.error || t('auth.login.messages.failed')
         return { success: false }
       }
 
@@ -112,7 +115,7 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await res.json()
 
       if (!res.ok) {
-        throw new Error(data.error || 'TOTP verification failed')
+        throw new Error(data.error || t('auth.security.totp.messages.verifyFailed'))
       }
 
       // Save session

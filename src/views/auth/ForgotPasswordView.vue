@@ -2,15 +2,17 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
+const { t } = useI18n()
 const email = ref('')
 const loading = ref(false)
 const success = ref(false)
 const errorMessage = ref('')
 
 useHead({
-  title: '忘记密码',
+  title: t('auth.forgotPassword.title'),
 })
 
 async function handleSubmit() {
@@ -29,10 +31,10 @@ async function handleSubmit() {
     if (res.ok) {
       success.value = true
     } else {
-      errorMessage.value = data.error || '发送重置邮件失败'
+      errorMessage.value = data.error || t('auth.forgotPassword.error')
     }
   } catch (error) {
-    errorMessage.value = '网络错误，请稍后重试'
+    errorMessage.value = t('auth.forgotPassword.networkError')
     console.error(error)
   } finally {
     loading.value = false
@@ -44,18 +46,18 @@ async function handleSubmit() {
   <div class="forgot-container">
     <div class="forgot-panel paper-panel">
       <div v-if="!success">
-        <h1>忘记密码</h1>
-        <p class="subtitle">输入您的邮箱地址，我们将发送密码重置链接</p>
+        <h1>{{ $t('auth.forgotPassword.title') }}</h1>
+        <p class="subtitle">{{ $t('auth.forgotPassword.subtitle') }}</p>
 
         <form @submit.prevent="handleSubmit" class="forgot-form">
           <div class="field">
-            <label for="email">邮箱</label>
+            <label for="email">{{ $t('auth.forgotPassword.email') }}</label>
             <input
               id="email"
               v-model="email"
               type="email"
               required
-              placeholder="your@email.com"
+              :placeholder="$t('auth.forgotPassword.emailPlaceholder')"
               :disabled="loading"
             />
           </div>
@@ -65,24 +67,25 @@ async function handleSubmit() {
           </div>
 
           <button type="submit" class="primary" :disabled="loading">
-            {{ loading ? '发送中...' : '发送重置链接' }}
+            {{ loading ? $t('auth.forgotPassword.sending') : $t('auth.forgotPassword.sendLink') }}
           </button>
         </form>
 
         <div class="links">
-          <RouterLink to="/login">返回登录</RouterLink>
-          <RouterLink to="/register">没有账号？注册</RouterLink>
+          <RouterLink to="/login">{{ $t('auth.forgotPassword.backToLogin') }}</RouterLink>
+          <RouterLink to="/register">{{ $t('auth.forgotPassword.noAccount') }}</RouterLink>
         </div>
       </div>
 
       <div v-else class="success-section">
         <div class="icon">✓</div>
-        <h1>邮件已发送</h1>
+        <h1>{{ $t('auth.forgotPassword.emailSent') }}</h1>
         <p>
-          如果该邮箱已注册，您将收到密码重置链接。<br />
-          请检查您的收件箱（包括垃圾邮件文件夹）
+          {{ $t('auth.forgotPassword.emailSentDesc') }}
         </p>
-        <button @click="router.push('/login')" class="action-btn">返回登录</button>
+        <button @click="router.push('/login')" class="action-btn">
+          {{ $t('auth.forgotPassword.backToLogin') }}
+        </button>
       </div>
     </div>
   </div>

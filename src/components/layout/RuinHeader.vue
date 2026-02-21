@@ -4,6 +4,7 @@ import { useThemeStore } from '@/stores/themeStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useDevStore } from '@/stores/devStore'
 import { useSearch } from '@/composables/useSearch'
+import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 
 const { openSearch } = useSearch()
 const devStore = useDevStore()
@@ -45,11 +46,11 @@ onMounted(() => {
       </RouterLink>
     </div>
     <nav class="ruins-nav">
-      <RouterLink to="/">信标</RouterLink>
-      <RouterLink to="/chronicle">年轮</RouterLink>
-      <RouterLink to="/lighthouse">灯塔</RouterLink>
-      <RouterLink to="/about">余烬</RouterLink>
-      <RouterLink to="/experiment" v-if="devStore.isDev">实验</RouterLink>
+      <RouterLink to="/">{{ $t('nav.beacon') }}</RouterLink>
+      <RouterLink to="/chronicle">{{ $t('nav.chronicle') }}</RouterLink>
+      <RouterLink to="/lighthouse">{{ $t('nav.lighthouse') }}</RouterLink>
+      <RouterLink to="/about">{{ $t('nav.embers') }}</RouterLink>
+      <RouterLink to="/experiment" v-if="devStore.isDev">{{ $t('nav.experiment') }}</RouterLink>
 
       <button
         class="theme-toggle"
@@ -66,9 +67,11 @@ onMounted(() => {
         <span v-else-if="themeStore.themeMode === 'light'">🌞</span>
         <span v-else>🌛</span>
       </button>
-      <button class="theme-toggle" @click="openSearch" title="Search">
+      <button class="theme-toggle" @click="openSearch" :title="$t('common.loading')">
         <span>🔍</span>
       </button>
+
+      <LocaleSwitcher />
 
       <!-- User menu -->
       <div class="user-menu-container" v-if="auth.isAuthenticated">
@@ -80,18 +83,18 @@ onMounted(() => {
           <div v-if="showUserMenu" class="user-dropdown">
             <RouterLink to="/settings" @click="closeUserMenu" class="dropdown-item">
               <span class="icon">⚙️</span>
-              <span>设置</span>
+              <span>{{ $t('common.settings') }}</span>
             </RouterLink>
             <RouterLink to="/editor" @click="closeUserMenu" class="dropdown-item">
               <span class="icon">✏️</span>
-              <span>编辑器</span>
+              <span>{{ $t('nav.editor') }}</span>
             </RouterLink>
           </div>
         </Transition>
       </div>
 
       <!-- Login button for unauthenticated users -->
-      <RouterLink to="/login" v-else class="login-button"> 登录 </RouterLink>
+      <RouterLink to="/login" v-else class="login-button"> {{ $t('common.login') }} </RouterLink>
     </nav>
   </header>
 </template>
@@ -120,7 +123,7 @@ onMounted(() => {
 
 .ruins-nav {
   display: flex;
-  gap: 32px;
+  gap: 20px;
   align-items: center;
   /* Align toggle button vertically */
   font-family: var(--font-serif);
@@ -183,7 +186,7 @@ onMounted(() => {
   cursor: pointer;
   font-family: var(--font-sans);
   font-size: 0.9rem;
-  padding: 6px 14px;
+  padding: 4px 12px;
   border-radius: 6px;
   transition: all 0.2s ease;
 }

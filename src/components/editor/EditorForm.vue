@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import MDEditor from '@/components/MDEditor.vue'
-import type { Post } from '@/stores/postStore'
+import { useI18n } from 'vue-i18n'
+
+const { locale } = useI18n()
 
 const form = defineModel<{
   slug: string
@@ -16,7 +18,7 @@ const form = defineModel<{
   content: string
 }>({ required: true })
 
-const props = defineProps<{
+defineProps<{
   isNew: boolean
   titleLabel: string
 }>()
@@ -57,32 +59,34 @@ const handleBackspace = () => {
     <div class="editor-header">
       <h3>{{ titleLabel }}</h3>
       <div class="actions">
-        <button @click="emit('save')" class="primary">保存</button>
-        <button @click="emit('cancel')">关闭</button>
-        <button v-if="!isNew" @click="emit('delete')" class="danger">删除</button>
+        <button @click="emit('save')" class="primary">{{ $t('common.save') }}</button>
+        <button @click="emit('cancel')">{{ $t('common.close') }}</button>
+        <button v-if="!isNew" @click="emit('delete')" class="danger">
+          {{ $t('common.delete') }}
+        </button>
       </div>
     </div>
 
     <div class="form-grid">
       <div class="field">
-        <label>Slug</label>
+        <label>{{ $t('editor.form.slug') }}</label>
         <input v-model="form.slug" :disabled="!isNew" />
       </div>
       <div class="field">
-        <label>标题</label>
+        <label>{{ $t('editor.form.title') }}</label>
         <input v-model="form.title" />
       </div>
       <div class="field">
-        <label>日期</label>
+        <label>{{ $t('editor.form.date') }}</label>
         <input type="date" v-model="form.date" />
       </div>
       <div class="field">
-        <label>分类</label>
+        <label>{{ $t('editor.form.category') }}</label>
         <input v-model="form.category" />
       </div>
       <div class="field full">
         <div class="field-label-row">
-          <label>标签</label>
+          <label>{{ $t('editor.form.tags') }}</label>
         </div>
         <div class="tags-input-container" @click="tagInput?.focus()">
           <div class="tag-chip" v-for="(tag, index) in form.tags" :key="tag">
@@ -94,7 +98,7 @@ const handleBackspace = () => {
             v-model="newTagInput"
             @keydown.enter.prevent="addTag"
             @keydown.backspace="handleBackspace"
-            placeholder="按 Enter 创建标签"
+            :placeholder="$t('editor.form.placeholder.tags')"
             class="tag-input-field"
             :disabled="form.tags.length >= MAX_TAGS"
           />
@@ -104,22 +108,28 @@ const handleBackspace = () => {
         </div>
       </div>
       <div class="field full">
-        <label>摘要</label>
+        <label>{{ $t('editor.form.summary') }}</label>
         <textarea
           v-model="form.summary"
           class="summary-input"
-          placeholder="文章摘要（留空则自动生成）"
+          :placeholder="$t('editor.form.placeholder.summary')"
         ></textarea>
       </div>
       <div class="field checkboxes">
-        <label><input type="checkbox" v-model="form.pinned" /> 置顶</label>
-        <label><input type="checkbox" v-model="form.hide" /> 隐藏</label>
+        <label
+          ><input type="checkbox" v-model="form.pinned" /> {{ $t('editor.form.pinned') }}</label
+        >
+        <label><input type="checkbox" v-model="form.hide" /> {{ $t('editor.form.hide') }}</label>
       </div>
     </div>
 
     <div class="content-editor">
       <label>Content (Markdown)</label>
-      <MDEditor v-model="form.content" @save="emit('save')" language="zh-CN" />
+      <MDEditor
+        v-model="form.content"
+        @save="emit('save')"
+        :language="locale as 'zh-CN' | 'en-US'"
+      />
     </div>
   </div>
 </template>

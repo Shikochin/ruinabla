@@ -11,8 +11,11 @@ import GiscusComment from '@/components/GiscusComment.vue'
 import { useHead } from '@unhead/vue'
 
 import { useCodeCopy } from '@/composables/useCodeCopy'
+import { useI18n } from 'vue-i18n'
 
 import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const store = usePostStore()
@@ -95,19 +98,19 @@ watch(
 
 // SEO configuration
 useHead({
-  title: computed(() => entry.value?.title || 'Not Found'),
+  title: computed(() => entry.value?.title || t('entry.notFound')),
   meta: [
     {
       name: 'description',
-      content: computed(() => entry.value?.summary || 'Entry not found'),
+      content: computed(() => entry.value?.summary || t('entry.notFoundDesc')),
     },
     {
       property: 'og:title',
-      content: computed(() => entry.value?.title || 'Not Found'),
+      content: computed(() => entry.value?.title || t('entry.notFound')),
     },
     {
       property: 'og:description',
-      content: computed(() => entry.value?.summary || 'Entry not found'),
+      content: computed(() => entry.value?.summary || t('entry.notFoundDesc')),
     },
     {
       property: 'og:type',
@@ -158,16 +161,22 @@ useHead({
 
     <!-- Actual Content -->
     <section v-else-if="entry" class="entry paper-panel">
-      <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
+      <RouterLink to="/" class="entry__back">&larr; {{ $t('entry.back') }}</RouterLink>
       <p class="eyebrow">
-        {{ entry.date }} / {{ entry.readingMinutes }} min{{ entry.readingMinutes > 1 ? 's' : '' }}
-        read /
+        {{ entry.date }} /
+        {{
+          $t('entry.minutesRead', {
+            n: entry.readingMinutes,
+            s: entry.readingMinutes > 1 ? 's' : '',
+          })
+        }}
+        /
         <RouterLink :to="`/categories/${entry.category}`">
           <strong>{{ entry.category }}</strong>
         </RouterLink>
         <br />
         <RouterLink v-if="entry && isAdmin" :to="{ path: '/editor', query: { slug: entry.slug } }">
-          <span>✎</span> 编辑此文
+          <span>✎</span> {{ $t('entry.edit') }}
         </RouterLink>
       </p>
       <h1 class="entry__title">
@@ -175,7 +184,7 @@ useHead({
       </h1>
 
       <div class="entry__summary-wrapper" v-if="entry.summary">
-        <div class="entry__ai-label"><span>∇</span> AI Generated Summary</div>
+        <div class="entry__ai-label"><span>∇</span> {{ $t('entry.aiSummary') }}</div>
         <div class="entry__excerpt">{{ entry.summary }}</div>
       </div>
       <div class="entry__content" v-html="renderedContent"></div>
@@ -188,7 +197,7 @@ useHead({
           </RouterLink>
         </div>
         <div class="entry__license">
-          Licensed by
+          {{ $t('entry.license') }}
           <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
         </div>
       </div>
@@ -198,9 +207,9 @@ useHead({
 
     <!-- Not Found State -->
     <section v-if="!entry && !isLoading" class="entry paper-panel">
-      <h1>未找到对应的信标</h1>
-      <p>可能被风沙掩埋了。返回信标重新定位吧。</p>
-      <RouterLink to="/" class="entry__back">&larr; 返回废墟信标</RouterLink>
+      <h1>{{ $t('entry.notFoundTitle') }}</h1>
+      <p>{{ $t('entry.notFoundText') }}</p>
+      <RouterLink to="/" class="entry__back">&larr; {{ $t('entry.back') }}</RouterLink>
     </section>
   </div>
 </template>

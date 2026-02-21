@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { Temporal } from 'temporal-polyfill'
 import { Octokit } from '@octokit/core'
+import SectionHeader from '@/components/ui/SectionHeader.vue'
 import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 
 // vite exposes env vars if it starts with VITE
@@ -152,19 +153,17 @@ onMounted(() => {
 
 <template>
   <div class="comments-list paper-panel">
-    <header>
-      <div>
-        <p class="eyebrow">动态</p>
-        <h3>最近的讨论</h3>
-      </div>
-      <a
-        href="https://github.com/Shikochin/ruin/discussions"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        查看全部 &rarr;
-      </a>
-    </header>
+    <SectionHeader eyebrow="动态" title="最近的讨论">
+      <template #actions>
+        <a
+          href="https://github.com/Shikochin/ruin/discussions"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          查看全部 &rarr;
+        </a>
+      </template>
+    </SectionHeader>
 
     <div v-if="loading">
       <ul>
@@ -232,33 +231,6 @@ onMounted(() => {
   padding: 32px;
   background: transparent;
   border: 1px solid var(--ruins-border);
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  border-bottom: 1px solid var(--ruins-border);
-  padding-bottom: 16px;
-  margin-bottom: 24px;
-}
-
-h3 {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
-}
-
-header a {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ruins-muted);
 }
 
 ul {

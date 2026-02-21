@@ -6,11 +6,14 @@ import PostCard from '@/components/post/PostCard.vue'
 import PostCardSkeleton from '@/components/post/PostCardSkeleton.vue'
 import PostList from '@/components/post/PostList.vue'
 import RecentComments from '@/components/RecentComments.vue'
+import SectionHeader from '@/components/ui/SectionHeader.vue'
 import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import { usePostStore } from '@/stores/postStore'
 import { useHead } from '@unhead/vue'
+import { useI18n } from 'vue-i18n'
 
 const store = usePostStore()
+const { t } = useI18n()
 
 onMounted(async () => {
   await store.fetchPosts()
@@ -28,7 +31,7 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: 'Records of Light and Dust. A personal blog by Shikochin.',
+      content: t('home.description'),
     },
   ],
 })
@@ -67,24 +70,19 @@ const tagPairs = computed(() =>
     </section>
 
     <section class="hero paper-panel" v-else-if="featuredEntry">
-      <div class="hero__eyebrow">近日信标 · {{ featuredEntry.date }}</div>
+      <div class="hero__eyebrow">{{ $t('home.recentBeacon') }} · {{ featuredEntry.date }}</div>
       <RouterLink :to="`/posts/${featuredEntry.slug}`" class="title">
         <h1>{{ featuredEntry.title }}</h1>
       </RouterLink>
       <p>{{ featuredEntry.summary }}</p>
       <div class="hero__meta">
-        <span
-          >{{ featuredEntry.readingMinutes }} MIN{{
-            featuredEntry.readingMinutes > 1 ? 'S' : ''
-          }}
-          READ</span
-        >
+        <span>{{ $t('home.readingTime', { n: featuredEntry.readingMinutes }) }}</span>
         <RouterLink v-if="featuredEntry.tags.length" :to="`/tags/${featuredEntry.tags[0]}`"
           >#{{ featuredEntry.tags[0] }}
         </RouterLink>
       </div>
       <RouterLink :to="`/posts/${featuredEntry.slug}`" class="hero__cta">
-        前往阅读全文 &rarr;
+        {{ $t('common.readMore') }} &rarr;
       </RouterLink>
     </section>
 
@@ -106,8 +104,7 @@ const tagPairs = computed(() =>
       <RecentComments />
 
       <div class="tag-cloud paper-panel">
-        <p class="eyebrow">常现词</p>
-        <h3>废墟里的高频词</h3>
+        <SectionHeader :eyebrow="$t('home.frequentWords')" :title="$t('home.frequentWordsDesc')" />
         <div class="tag-cloud__items" v-if="!loaded">
           <SkeletonPlaceholder
             v-for="i in 8"
@@ -132,13 +129,11 @@ const tagPairs = computed(() =>
     </section>
 
     <section class="timeline-section">
-      <header class="timeline-section__header">
-        <div>
-          <p class="eyebrow">CRISPR-Cas9</p>
-          <h3>重组信标</h3>
-        </div>
-        <RouterLink to="/chronicle">展开全部 &rarr;</RouterLink>
-      </header>
+      <SectionHeader :eyebrow="$t('home.recombinedBeacons')" :title="$t('nav.beacon')">
+        <template #actions>
+          <RouterLink to="/chronicle">{{ $t('common.expandAll') }} &rarr;</RouterLink>
+        </template>
+      </SectionHeader>
       <PostList style="border: 0" :entries="pickedUpPostsEntries" />
     </section>
   </div>
@@ -257,30 +252,8 @@ const tagPairs = computed(() =>
   border: 1px solid var(--ruins-border);
 }
 
-.signals__list header,
-.tag-cloud header {
-  margin-bottom: 24px;
-}
-
-.signals__list header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  border-bottom: 1px solid var(--ruins-border);
-  padding-bottom: 16px;
-  margin-bottom: 24px;
-}
-
-.signals__list header h3,
-.tag-cloud h3 {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-}
-
 .signals__list a,
-.tag-cloud a,
-.timeline-section__header a {
+.tag-cloud a {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -334,10 +307,6 @@ const tagPairs = computed(() =>
   gap: 16px;
 }
 
-.tag-cloud h3 {
-  margin: 0 0 8px;
-}
-
 .tag-cloud__items {
   display: flex;
   flex-wrap: wrap;
@@ -370,16 +339,8 @@ const tagPairs = computed(() =>
   margin-top: 32px;
 }
 
-.timeline-section__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.timeline-section__header h3 {
-  margin: 0;
+.timeline-section :deep(.section-header__title) {
   font-size: 1.8rem;
-  font-family: var(--font-serif);
 }
 
 .eyebrow {

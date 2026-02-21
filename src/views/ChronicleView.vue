@@ -2,11 +2,15 @@
 import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
+import PageHeader from '@/components/layout/PageHeader.vue'
 import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import PostList from '@/components/post/PostList.vue'
 import { usePostStore } from '@/stores/postStore'
+import { useHead } from '@unhead/vue'
+import { useI18n } from 'vue-i18n'
 
 const store = usePostStore()
+const { t } = useI18n()
 
 onMounted(() => {
   store.fetchPosts()
@@ -28,36 +32,38 @@ const firstDate = computed(() => {
 const lastDate = computed(() => postEntries.value[0]?.date ?? '')
 const distinctTags = computed(() => new Set(postEntries.value.flatMap((entry) => entry.tags)).size)
 
-import { useHead } from '@unhead/vue'
-
 useHead({
-  title: '年轮',
+  title: t('chronicle.title'),
   meta: [
     {
       name: 'description',
-      content: '废墟的时间坐标 - Archive of posts',
+      content: t('chronicle.description'),
     },
   ],
 })
 </script>
 
 <template>
-  <div>
-    <section class="chronicle paper-panel">
-      <p class="eyebrow">年轮记录</p>
-      <h1>废墟的时间坐标</h1>
-      <p class="hero-copy" v-if="!loaded">
-        从
-        <SkeletonPlaceholder width="100px" height="1em" style="display: inline-block" /> 到
-        <SkeletonPlaceholder width="100px" height="1em" style="display: inline-block" />
-      </p>
-      <p class="hero-copy" v-else>从 {{ firstDate }} 到 {{ lastDate }}</p>
+  <div class="chronicle-view">
+    <PageHeader :eyebrow="$t('chronicle.eyebrow')" :title="$t('chronicle.subtitle')">
+      <template #meta>
+        <template v-if="!loaded">
+          {{ $t('chronicle.range', { first: '...', last: '...' }).split('...')[0] }}
+          <SkeletonPlaceholder width="100px" height="1em" style="display: inline-block" />
+          {{ $t('chronicle.range', { first: '...', last: '...' }).split('...')[1] }}
+          <SkeletonPlaceholder width="100px" height="1em" style="display: inline-block" />
+          {{ $t('chronicle.range', { first: '...', last: '...' }).split('...')[2] }}
+        </template>
+        <template v-else>{{
+          $t('chronicle.range', { first: firstDate, last: lastDate })
+        }}</template>
+      </template>
 
       <div class="metrics">
         <article class="metric-card">
           <div class="metric-icon">📝</div>
           <div class="metric-content">
-            <span class="metric-label">文章篇数</span>
+            <span class="metric-label">{{ $t('chronicle.metrics.posts') }}</span>
             <strong class="metric-value" v-if="!loaded">
               <SkeletonPlaceholder width="40px" height="2rem" />
             </strong>
@@ -67,20 +73,20 @@ useHead({
         <article class="metric-card">
           <div class="metric-icon">⏱️</div>
           <div class="metric-content">
-            <span class="metric-label">平均阅读</span>
+            <span class="metric-label">{{ $t('chronicle.metrics.avgReading') }}</span>
             <div class="metric-with-unit">
               <strong class="metric-value" v-if="!loaded">
                 <SkeletonPlaceholder width="40px" height="2rem" />
               </strong>
               <strong class="metric-value" v-else>{{ averageReading }}</strong>
-              <span class="metric-unit">分钟</span>
+              <span class="metric-unit">{{ $t('common.minutes') }}</span>
             </div>
           </div>
         </article>
         <article class="metric-card">
           <div class="metric-icon">🏷️</div>
           <div class="metric-content">
-            <span class="metric-label">标签数</span>
+            <span class="metric-label">{{ $t('chronicle.metrics.tags') }}</span>
             <strong class="metric-value" v-if="!loaded">
               <SkeletonPlaceholder width="40px" height="2rem" />
             </strong>
@@ -88,28 +94,17 @@ useHead({
           </div>
         </article>
       </div>
-    </section>
+    </PageHeader>
 
     <PostList :entries="postEntries" :loading="!loaded" />
   </div>
 </template>
 
 <style scoped>
-.chronicle {
-  padding: 40px;
+.chronicle-view {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.chronicle h1 {
-  margin: 0;
-  font-size: clamp(2rem, 4vw, 2.6rem);
-}
-
-.hero-copy {
-  margin: 0;
+  gap: 32px;
 }
 
 .metrics {
@@ -195,11 +190,5 @@ useHead({
 
 .metric-card:hover .metric-fill {
   box-shadow: 0 0 12px rgba(var(--ruins-accent-rgb, 177, 98, 134), 0.8);
-}
-
-@media (max-width: 640px) {
-  .chronicle {
-    padding: 26px;
-  }
 }
 </style>

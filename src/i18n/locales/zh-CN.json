@@ -1,0 +1,344 @@
+{
+  "common": {
+    "about": "关于",
+    "home": "首页",
+    "login": "登录",
+    "logout": "退出登录",
+    "settings": "设置",
+    "language": "语言",
+    "cancel": "取消",
+    "confirm": "确定",
+    "edit": "编辑",
+    "delete": "删除",
+    "save": "保存",
+    "loading": "加载中...",
+    "readMore": "前往阅读全文",
+    "expandAll": "展开全部",
+    "minutes": "分钟",
+    "search": "搜索...",
+    "download": "下载",
+    "copy": "复制",
+    "copied": "已复制"
+  },
+  "nav": {
+    "beacon": "信标",
+    "chronicle": "年轮",
+    "lighthouse": "灯塔",
+    "embers": "余烬",
+    "experiment": "实验",
+    "editor": "编辑器"
+  },
+  "editor": {
+    "title": "编辑器",
+    "newPost": "新文章",
+    "editPost": "编辑文章",
+    "posts": "文章",
+    "sidebar": {
+      "expand": "展开侧边栏",
+      "collapse": "收起侧边栏"
+    },
+    "form": {
+      "slug": "Slug",
+      "title": "标题",
+      "date": "日期",
+      "category": "分类",
+      "tags": "标签",
+      "summary": "摘要",
+      "pinned": "置顶",
+      "hide": "隐藏",
+      "placeholder": {
+        "tags": "按 Enter 创建标签",
+        "summary": "文章摘要 (留空则自动生成)",
+        "selectPost": "选择文章进行编辑或创建新文章"
+      }
+    },
+    "messages": {
+      "saving": "保存中...",
+      "saved": "保存成功",
+      "deleting": "删除 post {slug}?",
+      "deleted": "已删除"
+    }
+  },
+  "experiment": {
+    "title": "临摹尖碑",
+    "logLabel": "设备运行日志",
+    "status": "状态: {status}",
+    "unstable": "不稳定",
+    "imageProcessor": "图像处理器",
+    "widePutin": "宽体普京",
+    "disableDev": "禁用开发模式",
+    "enableDev": "启用开发模式",
+    "howFound": "你是怎么找到这里的？",
+    "devHint": "如果你是开发者，点击下方按钮以开启实验功能。",
+    "gravityMode": "重力模式（仅移动端）",
+    "tool": {
+      "statusOperational": "系统运行中",
+      "upload": "拖放图像至此处或点击上传",
+      "changeFile": "更换文件",
+      "dimensionSettings": "尺寸设置",
+      "width": "宽度",
+      "height": "高度",
+      "lockAspectRatio": "锁定宽高比",
+      "stopWobble": "停止跃动",
+      "startWobble": "开启跃动模式",
+      "wobbleSpeed": "跃动速度",
+      "playSpeed": "播放速度",
+      "outputFormat": "输出格式",
+      "quality": "质量",
+      "estimatedSize": "预估大小",
+      "noSignal": "无信号",
+      "viewport": "视口_01"
+    }
+  },
+  "home": {
+    "recentBeacon": "近日信标",
+    "frequentWords": "常现词",
+    "frequentWordsDesc": "废墟里的高频词",
+    "recombinedBeacons": "重组信标",
+    "readingTime": "{n} 分钟阅读",
+    "description": "光与尘的记录。Shikochin 的个人博客。"
+  },
+  "about": {
+    "title": "关于我",
+    "description": "关于我 - About Shikochin",
+    "eyebrow": "余烬",
+    "contact": "联系我",
+    "whyRuins": "为什么叫遗迹？",
+    "ruinsDesc": "所言皆源于所思，所思亦化作所言，却未曾尽述全貌；仍希望这些言语能占据一席之地，成为遗迹。现实多有不尽人意，美丽的文字不应被束缚，它们在遗迹中得以生存，与遗迹自身共荣。",
+    "bio": "<strong>にしみや 缄</strong>，也可以叫 Shikochin，Nishimiya Chin。{age} 岁，居住在中国，是一个高中生。创造遗迹来留下一些自己的想法和生活琐碎。 2021 年开始折腾个人博客，每次都不尽如人意，虽然折腾不算在写博客的快乐之内，但依旧从中学习到了不少东西。"
+  },
+  "lighthouse": {
+    "title": "灯塔",
+    "description": "光束信号 - Friends and links",
+    "subtitle": "光束信号",
+    "newBeacon": "建立新坐标",
+    "lead": "在这片废墟中，偶尔能接收到来自远方的信号。它们是其他幸存者建立的灯塔，指引着不同的方向。",
+    "joinNetwork": "加入光束网络",
+    "joinDesc": "如果你也建立了自己的灯塔，欢迎交换光束。",
+    "adjustSignal": "调整信号参数",
+    "emitSignal": "发射信号",
+    "form": {
+      "name": "名称",
+      "url": "地址 (URL)",
+      "avatar": "头像 (URL)",
+      "desc": "描述",
+      "placeholders": {
+        "name": "站点名称",
+        "avatar": "头像图片 URL",
+        "desc": "简短的一句话描述"
+      }
+    },
+    "messages": {
+      "confirmDelete": "确定要熄灭这座灯塔吗？",
+      "signalAdjusted": "信号参数已调整",
+      "emitting": "光束发射中...",
+      "established": "新坐标建立成功",
+      "connectionLost": "连接断开，撤回操作",
+      "extinguished": "灯塔已熄灭",
+      "deleteFailed": "删除失败，信号已恢复"
+    }
+  },
+  "chronicle": {
+    "title": "年轮",
+    "description": "废墟的时间坐标 - Archive of posts",
+    "subtitle": "废墟的时间坐标",
+    "eyebrow": "年轮记录",
+    "range": "从 {first} 到 {last}",
+    "metrics": {
+      "posts": "文章篇数",
+      "avgReading": "平均阅读",
+      "tags": "标签数"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "重蹈覆辙",
+      "eyebrow": "登录以继续",
+      "usePasskey": "使用 Passkey 登录",
+      "orUsePassword": "或使用密码登录",
+      "email": "邮箱",
+      "password": "密码",
+      "rememberMe": "记住此设备",
+      "forgotPassword": "忘记密码？",
+      "loggingIn": "登录中...",
+      "noAccount": "没有账号？",
+      "registerNow": "注册",
+      "emailPlaceholder": "您的邮箱地址",
+      "passwordPlaceholder": "您的密码",
+      "totpPlaceholder": "6位验证码",
+      "title2fa": "第二步验证",
+      "subtitle2fa": "选择一种验证方式继续",
+      "totpTitle": "验证器应用",
+      "totpDesc": "使用您的认证器应用生成的6位代码",
+      "totpLabel": "TOTP 代码",
+      "verify": "验证",
+      "passkeyTitle": "Passkey",
+      "passkeyDesc": "使用您的生物识别或安全密钥",
+      "usePasskeyVerify": "使用 Passkey 验证",
+      "noPasskey": "您尚未设置 Passkey",
+      "passkeyFailed": "Passkey 验证失败",
+      "messages": {
+        "failed": "登录失败",
+        "noCredential": "未搜索到凭据",
+        "passkeyOptionsFailed": "获取 Passkey 选项失败"
+      }
+    },
+    "register": {
+      "title": "寻得安身之所",
+      "eyebrow": "创建账户",
+      "confirmPassword": "确认密码",
+      "passwordHint": "至少包含8个字符",
+      "creatingAccount": "创建账号...",
+      "register": "注册",
+      "hasAccount": "已有账号？",
+      "loginNow": "登录",
+      "successTitle": "注册成功！",
+      "successSubtitle": "我们已向 {email} 发送了验证邮件",
+      "successInstructions": "请检查您的收件箱（包括垃圾邮件文件夹），点击邮件中的链接完成验证。",
+      "resendEmail": "重新发送验证邮件",
+      "alreadyVerified": "已验证？前往登录",
+      "errors": {
+        "passwordTooShort": "密码必须至少包含8个字符",
+        "passwordMismatch": "密码不匹配"
+      },
+      "messages": {
+        "failed": "注册失败",
+        "resendSuccess": "验证邮件已重新发送！",
+        "resendFailed": "发送失败，请稍后重试",
+        "networkError": "网络错误，请稍后重试"
+      }
+    },
+    "forgotPassword": {
+      "title": "忘记密码",
+      "subtitle": "输入您的邮箱地址，我们将发送密码重置链接",
+      "email": "邮箱",
+      "emailPlaceholder": "您的邮箱地址",
+      "sending": "发送中...",
+      "sendLink": "发送重置链接",
+      "backToLogin": "返回登录",
+      "noAccount": "没有账号？注册",
+      "emailSent": "邮件已发送",
+      "emailSentDesc": "如果该邮箱已注册，您将收到密码重置链接。请检查您的收件箱（包括垃圾邮件文件夹）。",
+      "error": "发送重置邮件失败",
+      "networkError": "网络错误，请稍后重试"
+    },
+    "resetPassword": {
+      "title": "重置密码",
+      "subtitle": "请输入您的新密码",
+      "validating": "正在验证链接...",
+      "invalidToken": "无效的重置链接",
+      "requestNew": "重新申请重置",
+      "successTitle": "密码重置成功！",
+      "successSubtitle": "您现在可以使用新密码登录了",
+      "redirecting": "正在跳转到登录页...",
+      "newPassword": "新密码",
+      "confirmNew": "确认新密码",
+      "passwordHint": "至少 8 个字符",
+      "mismatch": "两次输入的密码不一致",
+      "tooShort": "密码长度至少需要 8 个字符",
+      "requirementTitle": "密码要求：",
+      "reqLength": "至少 8 个字符",
+      "reqMatch": "两次输入一致",
+      "resetting": "重置中...",
+      "resetButton": "重置密码",
+      "error": "密码重置失败",
+      "networkError": "网络错误，请稍后重试"
+    },
+    "security": {
+      "title": "安全设置",
+      "subtitle": "管理您的认证方式",
+      "totp": {
+        "title": "双因素验证 (TOTP)",
+        "description": "为您的账户添加额外的安全性",
+        "enabled": "已启用",
+        "disabled": "未启用",
+        "buttonEnable": "启用 TOTP",
+        "buttonDisable": "关闭两步验证",
+        "setupTitle": "设置说明",
+        "step1": "打开您的认证器应用（Google Authenticator，Authy 等）",
+        "step2": "扫描此二维码或手动输入密钥",
+        "step3": "输入 6 位验证码",
+        "secret": "密钥",
+        "uri": "链接",
+        "verifyLabel": "验证代码",
+        "verifyButton": "验证并启用",
+        "backupTitle": "备份码",
+        "backupDesc": "将这些代码保存在安全的地方，它们只会显示一次。如果您无法访问您的认证器，可以使用它们。",
+        "success": "✓ 双因素验证已启用",
+        "messages": {
+          "scanQR": "使用您的认证器应用扫描二维码",
+          "enableSuccess": "TOTP 已启用! 保存您的备份码。",
+          "disableSuccess": "TOTP 已禁用",
+          "confirmDisableTitle": "确认关闭两步验证",
+          "confirmDisableDesc": "请输入您的密码以确认关闭两步验证。这将降低您账户的安全性。",
+          "confirmDisableAction": "关闭 TOTP",
+          "failedEnable": "无法启用 TOTP",
+          "failedDisable": "无法禁用 TOTP",
+          "invalidCode": "验证码无效"
+        }
+      },
+      "passkeys": {
+        "title": "Passkeys",
+        "description": "使用生物认证安全登录",
+        "count": "{n} 个密钥",
+        "nameLabel": "Passkey 名称",
+        "namePlaceholder": "我的 Passkey",
+        "addButton": "添加 Passkey",
+        "createdAt": "创建于",
+        "delete": "删除",
+        "confirmDelete": "删除此 Passkey？",
+        "messages": {
+          "registerFailed": "无法注册 Passkey",
+          "registerOptionsFailed": "无法获取注册选项",
+          "unsupported": "您的浏览器不支持 WebAuthn",
+          "creationFailed": "创建凭据失败",
+          "addSuccess": "Passkey 添加成功！",
+          "cancelled": "Passkey 添加被取消",
+          "deleteFailed": "无法删除 Passkey",
+          "deleteSuccess": "Passkey 已删除"
+        }
+      }
+    },
+    "verifyEmail": {
+      "title": "验证邮箱",
+      "verifying": "正在验证...",
+      "verifyingDesc": "请稍候，我们正在验证您的邮箱",
+      "successTitle": "验证成功！",
+      "successDesc": "您的邮箱已成功验证",
+      "successHint": "正在跳转到安全设置，建议您设置两步验证...",
+      "expiredTitle": "验证链接已过期",
+      "expiredDesc": "此验证链接已超过有效期（1小时）",
+      "failedTitle": "验证失败",
+      "backToRegister": "返回注册",
+      "backToLogin": "前往登录",
+      "resendEmail": "重新发送验证邮件",
+      "resendHint": "请返回注册页面重新发送验证邮件",
+      "invalidLink": "无效的验证链接",
+      "genericError": "验证失败",
+      "networkError": "网络错误，请稍后重试"
+    }
+  },
+  "entry": {
+    "notFound": "未找到信标",
+    "notFoundDesc": "此信标可能已遗失或不存在。",
+    "back": "返回废墟信标",
+    "edit": "编辑此文",
+    "aiSummary": "AI 生成摘要",
+    "license": "授权协议",
+    "licenseBy": "受 {license} 协议保护",
+    "minutesRead": "{n} 分钟阅读",
+    "errors": {
+      "render": "渲染内容出错"
+    },
+    "notFoundTitle": "未找到对应的信标",
+    "notFoundText": "可能被风沙掩埋了。返回信标重新定位吧。"
+  },
+  "category": {
+    "title": "分类: {name}",
+    "empty": "此分类下暂无文章"
+  },
+  "tag": {
+    "title": "标签: {name}",
+    "empty": "没有找到带有此标签的文章"
+  }
+}

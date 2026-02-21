@@ -4,9 +4,11 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useHead } from '@unhead/vue'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
 const auth = useAuthStore()
+const { t } = useI18n()
 
 const email = ref('')
 const password = ref('')
@@ -16,7 +18,7 @@ const registrationComplete = ref(false)
 const registeredEmail = ref('')
 
 useHead({
-  title: '注册',
+  title: t('auth.register.register'),
 })
 
 onMounted(() => {
@@ -27,11 +29,11 @@ onMounted(() => {
 
 function validatePassword() {
   if (password.value.length < 8) {
-    passwordError.value = '密码必须至少包含8个字符'
+    passwordError.value = t('auth.register.errors.passwordTooShort')
     return false
   }
   if (password.value !== confirmPassword.value) {
-    passwordError.value = '密码不匹配'
+    passwordError.value = t('auth.register.errors.passwordMismatch')
     return false
   }
   passwordError.value = ''
@@ -58,14 +60,14 @@ async function resendVerification() {
 
     if (res.ok) {
       const toast = useToastStore()
-      toast.success('验证邮件已重新发送！')
+      toast.success(t('auth.register.messages.resendSuccess'))
     } else {
       const toast = useToastStore()
-      toast.error('发送失败，请稍后重试')
+      toast.error(t('auth.register.messages.resendFailed'))
     }
   } catch {
     const toast = useToastStore()
-    toast.error('网络错误，请稍后重试')
+    toast.error(t('auth.register.messages.networkError'))
   }
 }
 </script>
@@ -76,60 +78,64 @@ async function resendVerification() {
       <!-- Success Section -->
       <div v-if="registrationComplete" class="success-section">
         <div class="icon">✓</div>
-        <h1>注册成功！</h1>
+        <h1>{{ $t('auth.register.successTitle') }}</h1>
         <p class="subtitle">
-          我们已向 <strong>{{ registeredEmail }}</strong> 发送了验证邮件
+          {{ $t('auth.register.successSubtitle', { email: registeredEmail }) }}
         </p>
         <p class="instructions">
-          请检查您的收件箱（包括垃圾邮件文件夹），点击邮件中的链接完成验证。
+          {{ $t('auth.register.successInstructions') }}
         </p>
         <div class="actions">
-          <button @click="resendVerification" class="secondary">重新发送验证邮件</button>
-          <RouterLink to="/login" class="action-link"> 已验证？前往登录 </RouterLink>
+          <button @click="resendVerification" class="secondary">
+            {{ $t('auth.register.resendEmail') }}
+          </button>
+          <RouterLink to="/login" class="action-link">
+            {{ $t('auth.register.alreadyVerified') }}
+          </RouterLink>
         </div>
       </div>
 
       <!-- Registration Form -->
       <div v-else>
-        <h1>寻得安身之所</h1>
-        <p class="eyebrow">创建账户</p>
+        <h1>{{ $t('auth.register.title') }}</h1>
+        <p class="eyebrow">{{ $t('auth.register.eyebrow') }}</p>
 
         <form @submit.prevent="handleRegister" class="auth-form">
           <div class="field">
-            <label for="email">邮箱</label>
+            <label for="email">{{ $t('auth.login.email') }}</label>
             <input
               id="email"
               v-model="email"
               type="email"
               required
               autocomplete="email"
-              placeholder="your@email.com"
+              :placeholder="$t('auth.login.emailPlaceholder')"
             />
           </div>
 
           <div class="field">
-            <label for="password">密码</label>
+            <label for="password">{{ $t('auth.login.password') }}</label>
             <input
               id="password"
               v-model="password"
               type="password"
               required
               autocomplete="new-password"
-              placeholder="••••••••"
+              :placeholder="$t('auth.login.passwordPlaceholder')"
               @blur="validatePassword"
             />
-            <small>至少包含8个字符</small>
+            <small>{{ $t('auth.register.passwordHint') }}</small>
           </div>
 
           <div class="field">
-            <label for="confirm-password">确认密码</label>
+            <label for="confirm-password">{{ $t('auth.register.confirmPassword') }}</label>
             <input
               id="confirm-password"
               v-model="confirmPassword"
               type="password"
               required
               autocomplete="new-password"
-              placeholder="••••••••"
+              :placeholder="$t('auth.login.passwordPlaceholder')"
               @blur="validatePassword"
             />
           </div>
@@ -143,12 +149,15 @@ async function resendVerification() {
           </div>
 
           <button type="submit" class="primary" :disabled="auth.loading">
-            {{ auth.loading ? '创建账号...' : '注册' }}
+            {{ auth.loading ? $t('auth.register.creatingAccount') : $t('auth.register.register') }}
           </button>
         </form>
 
         <div class="auth-links">
-          <p>已有账号？ <RouterLink to="/login">登录</RouterLink></p>
+          <p>
+            {{ $t('auth.register.hasAccount') }}
+            <RouterLink to="/login">{{ $t('auth.register.loginNow') }} </RouterLink>
+          </p>
         </div>
       </div>
     </div>

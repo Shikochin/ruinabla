@@ -1,0 +1,347 @@
+{
+  "common": {
+    "about": "について",
+    "home": "ホーム",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "settings": "設定",
+    "language": "言語",
+    "cancel": "キャンセル",
+    "confirm": "確定",
+    "edit": "編集",
+    "delete": "削除",
+    "save": "保存",
+    "close": "閉じる",
+    "new": "新規",
+    "add": "追加",
+    "loading": "読み込み中...",
+    "readMore": "続きを読む",
+    "expandAll": "すべて展開",
+    "minutes": "分",
+    "search": "検索...",
+    "download": "ダウンロード",
+    "copy": "コピー",
+    "copied": "コピーしました"
+  },
+  "nav": {
+    "beacon": "ビーコン",
+    "chronicle": "年輪",
+    "lighthouse": "灯台",
+    "embers": "余燼",
+    "experiment": "実験",
+    "editor": "エディタ"
+  },
+  "editor": {
+    "title": "エディタ",
+    "newPost": "新規記事",
+    "editPost": "記事を編集",
+    "posts": "記事一覧",
+    "sidebar": {
+      "expand": "サイドバーを展開",
+      "collapse": "サイドバーを折りたたむ"
+    },
+    "form": {
+      "slug": "スラッグ",
+      "title": "タイトル",
+      "date": "日付",
+      "category": "カテゴリ",
+      "tags": "タグ",
+      "summary": "概要",
+      "pinned": "固定済み",
+      "hide": "非表示",
+      "placeholder": {
+        "tags": "Enterキーでタグを作成",
+        "summary": "記事の概要（空欄の場合は自動生成）",
+        "selectPost": "編集する記事を選択するか、新規作成してください"
+      }
+    },
+    "messages": {
+      "saving": "保存中...",
+      "saved": "保存に成功しました",
+      "deleting": "記事 {slug} を削除しますか？",
+      "deleted": "削除しました"
+    }
+  },
+  "experiment": {
+    "title": "オベリスクの模写",
+    "logLabel": "デバイス実行ログ",
+    "status": "ステータス: {status}",
+    "unstable": "不安定",
+    "imageProcessor": "画像プロセッサ",
+    "widePutin": "ワイド・プーチン",
+    "disableDev": "デバッグモードを无効化",
+    "enableDev": "デバッグモードを有効化",
+    "howFound": "ここをどうやって見つけたのですか？",
+    "devHint": "開発者の方であれば、下のボタンをクリックして実験機能を有効にしてください。",
+    "gravityMode": "重力モード（モバイル専用）",
+    "tool": {
+      "statusOperational": "システム稼働中",
+      "upload": "画像をドラッグ＆ドロップまたはクリックしてアップロード",
+      "changeFile": "ファイルを変更",
+      "dimensionSettings": "サイズ設定",
+      "width": "幅",
+      "height": "高さ",
+      "lockAspectRatio": "アスペクト比を固定",
+      "stopWobble": "躍動を停止",
+      "startWobble": "躍動モードを開始",
+      "wobbleSpeed": "躍動速度",
+      "playSpeed": "再生速度",
+      "outputFormat": "出力形式",
+      "quality": "品質",
+      "estimatedSize": "推定サイズ",
+      "noSignal": "信号なし",
+      "viewport": "ビューポート_01"
+    }
+  },
+  "home": {
+    "recentBeacon": "最近のビーコン",
+    "frequentWords": "頻出ワード",
+    "frequentWordsDesc": "廃墟の中の頻出ワード",
+    "recombinedBeacons": "再構成されたビーコン",
+    "readingTime": "読了まで {n} 分",
+    "description": "光と塵の記録。Shikochin の個人ブログ。"
+  },
+  "about": {
+    "title": "私について",
+    "description": "私について - About Shikochin",
+    "eyebrow": "余燼",
+    "contact": "コンタクト",
+    "whyRuins": "なぜ「遺跡」と呼ぶのか？",
+    "ruinsDesc": "語られることはすべて思考に由来し、思考もまた言葉となりますが、その全貌を語り尽くすことはできません。それでも、これらの言葉が遺跡として、どこかにその居場所を見つけられることを願っています。現実は思い通りにいかないことも多いですが、美しい言葉は縛られるべきではなく、それらは遺跡の中で生き続け、遺跡とともに繁栄していくのです。",
+    "bio": "<strong>にしみや 缄</strong>（にしみや かん）、Shikochin または Nishimiya Chin とも呼ばれます。{age} 歳、中国在住の高校生です。遺跡（ブログ）を作ることで、自分の考えや日常の断片を形にしています。2021 年から個人ブログの開発を始め、毎回思い通りにはいきませんが、試行錯誤自体がブログの楽しみに含まれていなくても、そこから多くのことを学んできました。"
+  },
+  "lighthouse": {
+    "title": "灯台",
+    "description": "光の信号 - 友達とリンク",
+    "subtitle": "光の信号",
+    "newBeacon": "新しい座標を確立",
+    "lead": "この廃墟の中でも、たまに遠くからの信号を受信することがあります。それらは他の生存者が建てた灯台であり、異なる方向を指し示しています。",
+    "joinNetwork": "ネットワークに参加",
+    "joinDesc": "あなたも自分の灯台を建てているなら、光を交換しましょう。",
+    "adjustSignal": "信号パラメータを調整",
+    "emitSignal": "信号を発射",
+    "form": {
+      "name": "名称",
+      "url": "アドレス (URL)",
+      "avatar": "アバター (URL)",
+      "desc": "説明",
+      "placeholders": {
+        "name": "サイト名",
+        "avatar": "アバター画像の URL",
+        "desc": "短い一行説明"
+      }
+    },
+    "messages": {
+      "confirmDelete": "この灯台を消灯してもよろしいですか？",
+      "signalAdjusted": "信号パラメータを調整しました",
+      "emitting": "信号発射中...",
+      "established": "新しい座標の確立に成功しました",
+      "connectionLost": "接続が切れました。操作を撤回します",
+      "extinguished": "灯台が消灯しました",
+      "deleteFailed": "削除に失敗しました。信号を復旧します"
+    }
+  },
+  "chronicle": {
+    "title": "年輪",
+    "description": "廃墟の時間座標 - 記事アーカイブ",
+    "subtitle": "廃墟の時間座標",
+    "eyebrow": "年輪の記録",
+    "range": "{first} から {last} まで",
+    "metrics": {
+      "posts": "記事数",
+      "avgReading": "平均読了時間",
+      "tags": "タグ数"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "過ちを繰り返す",
+      "eyebrow": "続行するにはログインしてください",
+      "usePasskey": "Passkey でログイン",
+      "orUsePassword": "またはパスワードでログイン",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "rememberMe": "このデバイスを記憶する",
+      "forgotPassword": "パスワードを忘れましたか？",
+      "loggingIn": "ログイン中...",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "registerNow": "会員登録",
+      "emailPlaceholder": "メールアドレス",
+      "passwordPlaceholder": "パスワード",
+      "totpPlaceholder": "6桁の認証コード",
+      "title2fa": "二段階認証",
+      "subtitle2fa": "認証方法を選択して続行",
+      "totpTitle": "認証アプリ",
+      "totpDesc": "認証アプリで生成された6桁のコードを使用します",
+      "totpLabel": "TOTP コード",
+      "verify": "検証",
+      "passkeyTitle": "Passkey",
+      "passkeyDesc": "生体認証またはセキュリティキーを使用します",
+      "usePasskeyVerify": "Passkey で検証",
+      "noPasskey": "Passkey が設定されていません",
+      "passkeyFailed": "Passkey 検証に失敗しました",
+      "messages": {
+        "failed": "ログインに失敗しました",
+        "noCredential": "認証情報が見つかりません",
+        "passkeyOptionsFailed": "Passkey オプションの取得に失敗しました"
+      }
+    },
+    "register": {
+      "title": "安住の地を見つける",
+      "eyebrow": "アカウント作成",
+      "confirmPassword": "パスワードの確認",
+      "passwordHint": "少なくとも8文字以上",
+      "creatingAccount": "アカウント作成中...",
+      "register": "会員登録",
+      "hasAccount": "既にアカウントをお持ちですか？",
+      "loginNow": "ログイン",
+      "successTitle": "登録に成功しました！",
+      "successSubtitle": "{email} 宛に確認メールを送信しました",
+      "successInstructions": "受信箱（迷惑メールフォルダも含む）を確認し、メール内のリンクをクリックして認証を完了させてください。",
+      "resendEmail": "確認メールを再送",
+      "alreadyVerified": "認証済みですか？ログインへ",
+      "errors": {
+        "passwordTooShort": "パスワードは少なくとも8文字以上である必要があります",
+        "passwordMismatch": "パスワードが一致しません"
+      },
+      "messages": {
+        "failed": "登録に失敗しました",
+        "resendSuccess": "確認メールを再送しました！",
+        "resendFailed": "送信に失敗しました。後でもう一度お試しください",
+        "networkError": "ネットワークエラー。後でもう一度お試しください"
+      }
+    },
+    "forgotPassword": {
+      "title": "パスワードを忘れた場合",
+      "subtitle": "メールアドレスを入力してください。パスワード再設定リンクを送信します。",
+      "email": "メールアドレス",
+      "emailPlaceholder": "メールアドレス",
+      "sending": "送信中...",
+      "sendLink": "再設定リンクを送信",
+      "backToLogin": "ログインに戻る",
+      "noAccount": "アカウントをお持ちでないですか？登録",
+      "emailSent": "メールを送信しました",
+      "emailSentDesc": "このメールアドレスが登録されている場合、再設定リンクが届きます。受信箱（迷惑メールフォルダも含む）を確認してください。",
+      "error": "再設定メールの送信に失敗しました",
+      "networkError": "ネットワークエラー。後でもう一度お試しください"
+    },
+    "resetPassword": {
+      "title": "パスワードを再設定",
+      "subtitle": "新しいパスワードを入力してください",
+      "validating": "リンクを検証中...",
+      "invalidToken": "無効な再設定リンク",
+      "requestNew": "新しく再設定を申請",
+      "successTitle": "パスワードの再設定に成功しました！",
+      "successSubtitle": "新しいパスワードでログインできるようになりました",
+      "redirecting": "ログインページへ移動中...",
+      "newPassword": "新パスワード",
+      "confirmNew": "新パスワードの確認",
+      "passwordHint": "少なくとも8文字以上",
+      "mismatch": "パスワードが一致しません",
+      "tooShort": "パスワードは少なくとも8文字以上必要です",
+      "requirementTitle": "パスワードの要件：",
+      "reqLength": "少なくとも8文字以上",
+      "reqMatch": "入力が一致していること",
+      "resetting": "再設定中...",
+      "resetButton": "パスワードを再設定",
+      "error": "パスワードの再設定に失敗しました",
+      "networkError": "ネットワークエラー。後でもう一度お試しください"
+    },
+    "security": {
+      "title": "セキュリティ設定",
+      "subtitle": "認証方法の管理",
+      "totp": {
+        "title": "二要素認証 (TOTP)",
+        "description": "アカウントのセキュリティを強化します",
+        "enabled": "有効",
+        "disabled": "無効",
+        "buttonEnable": "TOTP を有効にする",
+        "buttonDisable": "二段階認証をオフにする",
+        "setupTitle": "設定手順",
+        "step1": "認証アプリ（Google Authenticator, Authy など）を開きます",
+        "step2": "QR コードをスキャンするか、キーを手動で入力します",
+        "step3": "6桁の承認コードを入力します",
+        "secret": "キー",
+        "uri": "URL",
+        "verifyLabel": "認証コード",
+        "verifyButton": "認証して有効化",
+        "backupTitle": "バックアップコード",
+        "backupDesc": "これらのコードを安全な場所に保存してください。一度しか表示されません。認証アプリにアクセスできなくなった場合に使用できます。",
+        "success": "✓ 二要素認証が有効になりました",
+        "messages": {
+          "scanQR": "認証アプリで QR コードをスキャンしてください",
+          "enableSuccess": "TOTP が有効になりました！バックアップコードを保存してください。",
+          "disableSuccess": "TOTP が無効になりました",
+          "confirmDisableTitle": "二段階認証解除の確認",
+          "confirmDisableDesc": "二段階認証を解除するにはパスワードを入力してください。これによりアカウントのセキュリティが低下します。",
+          "confirmDisableAction": "TOTP を無効化",
+          "failedEnable": "TOTP を有効にできませんでした",
+          "failedDisable": "TOTP を無効にできませんでした",
+          "invalidCode": "認証コードが無効です"
+        }
+      },
+      "passkeys": {
+        "title": "Passkeys",
+        "description": "生体認証で安全にログイン",
+        "count": "{n} 個のキー",
+        "nameLabel": "Passkey 名",
+        "namePlaceholder": "私の Passkey",
+        "addButton": "Passkey を追加",
+        "createdAt": "作成日",
+        "delete": "削除",
+        "confirmDelete": "この Passkey を削除しますか？",
+        "messages": {
+          "registerFailed": "Passkey を登録できませんでした",
+          "registerOptionsFailed": "登録オプションを取得できませんでした",
+          "unsupported": "お使いのブラウザは WebAuthn をサポートしていません",
+          "creationFailed": "プロファイルの作成に失敗しました",
+          "addSuccess": "Passkey の追加に成功しました！",
+          "cancelled": "Passkey の追加がキャンセルされました",
+          "deleteFailed": "Passkey を削除できませんでした",
+          "deleteSuccess": "Passkey を削除しました"
+        }
+      }
+    },
+    "verifyEmail": {
+      "title": "メールアドレスの確認",
+      "verifying": "認証中...",
+      "verifyingDesc": "少々お待ちください。メールアドレスを認証しています。",
+      "successTitle": "認証に成功しました！",
+      "successDesc": "メールアドレスの認証が正常に完了しました",
+      "successHint": "セキュリティ設定へ移動しています。二段階認証の設定をお勧めします...",
+      "expiredTitle": "認証リンクの期限切れ",
+      "expiredDesc": "この認証リンクは有効期限（1時間）を過ぎています",
+      "failedTitle": "認証に失敗しました",
+      "backToRegister": "登録へ戻る",
+      "backToLogin": "ログインへ",
+      "resendEmail": "確認メールを再送",
+      "resendHint": "登録ページに戻って確認メールを再送してください",
+      "invalidLink": "無効な認証リンク",
+      "genericError": "認証に失敗しました",
+      "networkError": "ネットワークエラー。後でもう一度お試しください"
+    }
+  },
+  "entry": {
+    "notFound": "ビーコンが見つかりません",
+    "notFoundDesc": "このビーコンは失われたか、存在しません。",
+    "back": "遺跡のビーコンに戻る",
+    "edit": "この記事を編集",
+    "aiSummary": "AI 生成サマリー",
+    "license": "ライセンス契約",
+    "licenseBy": "{license} ライセンスの下で保護されています",
+    "minutesRead": "読了まで {n} 分",
+    "errors": {
+      "render": "コンテンツのレンダリング中にエラーが発生しました"
+    },
+    "notFoundTitle": "対応するビーコンが見つかりません",
+    "notFoundText": "砂嵐に埋もれてしまったようです。ビーコンに戻って再定位してください。"
+  },
+  "category": {
+    "title": "カテゴリ: {name}",
+    "empty": "このカテゴリにはまだ記事がありません"
+  },
+  "tag": {
+    "title": "タグ: {name}",
+    "empty": "このタグが付いた記事は見つかりませんでした"
+  }
+}

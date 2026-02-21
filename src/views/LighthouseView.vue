@@ -3,9 +3,11 @@ import { ref, onMounted, reactive, computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import FriendLink from '@/components/FriendLink.vue'
 import GiscusComment from '@/components/GiscusComment.vue'
+import PageHeader from '@/components/layout/PageHeader.vue'
 import SkeletonPlaceholder from '@/components/ui/SkeletonPlaceholder.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
+import { useI18n } from 'vue-i18n'
 
 // 定义接口
 interface Friend {
@@ -16,9 +18,11 @@ interface Friend {
   desc: string
 }
 
+const { t } = useI18n()
+
 useHead({
-  title: '灯塔',
-  meta: [{ name: 'description', content: '光束信号 - Friends and links' }],
+  title: t('lighthouse.title'),
+  meta: [{ name: 'description', content: t('lighthouse.description') }],
 })
 
 const code = `{
@@ -104,7 +108,9 @@ const submitForm = async () => {
 
   // Close modal immediately
   showModal.value = false
-  toast.success(isEdit ? '信号参数已调整' : '光束发射中...') // Optimistic feedback
+  toast.success(
+    isEdit ? t('lighthouse.messages.signalAdjusted') : t('lighthouse.messages.emitting'),
+  ) // Optimistic feedback
 
   try {
     const res = await fetch(endpoint, {
@@ -123,21 +129,21 @@ const submitForm = async () => {
       if (index !== -1) {
         friends.value[index] = data
       }
-      if (!isEdit) toast.success('新坐标建立成功') // Confirmation for add
+      if (!isEdit) toast.success(t('lighthouse.messages.established')) // Confirmation for add
     } else {
       throw new Error('Failed to save')
     }
   } catch (e) {
     console.error(e)
     friends.value = previousFriends // Rollback
-    toast.error('连接断开，撤回操作')
+    toast.error(t('lighthouse.messages.connectionLost'))
     showModal.value = true // Re-open modal so user doesn't lose data
   }
 }
 
 // 删除功能
 const deleteFriend = async (id: string) => {
-  if (!confirm('确定要熄灭这座灯塔吗？')) return
+  if (!confirm(t('lighthouse.messages.confirmDelete'))) return
   if (!authStore.sessionId) return
 
   // Snapshot
@@ -145,7 +151,7 @@ const deleteFriend = async (id: string) => {
 
   // Optimistic Update
   friends.value = friends.value.filter((f) => f.id !== id)
-  toast.info('灯塔已熄灭') // Immediate feedback
+  toast.info(t('lighthouse.messages.extinguished')) // Immediate feedback
 
   try {
     const res = await fetch(`/api/friends/${id}`, {
@@ -162,7 +168,7 @@ const deleteFriend = async (id: string) => {
   } catch (e) {
     console.error(e)
     friends.value = previousFriends // Rollback
-    toast.error('删除失败，信号已恢复')
+    toast.error(t('lighthouse.messages.deleteFailed'))
   }
 }
 
@@ -176,20 +182,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <section class="lighthouse paper-panel">
-      <div class="header-row">
-        <div>
-          <p class="eyebrow">灯塔</p>
-          <h1>光束信号</h1>
-        </div>
-        <button v-if="isAdmin" @click="openAddModal" class="admin-btn add-btn">
-          <span>+</span> 建立新坐标
+  <div class="lighthouse-view">
+    <PageHeader :eyebrow="$t('lighthouse.title')" :title="$t('lighthouse.subtitle')">
+      <template #actions>
+        <button v-if="isAdmin" @click="openAddModal" class="admin-btn">
+          <span>+</span> {{ $t('lighthouse.newBeacon') }}
         </button>
-      </div>
+      </template>
 
       <p class="lead">
-        在这片废墟中，偶尔能接收到来自远方的信号。它们是其他幸存者建立的灯塔，指引着不同的方向。
+        {{ $t('lighthouse.lead') }}
       </p>
 
       <div class="signal-grid">
@@ -212,25 +214,34 @@ onMounted(() => {
           <FriendLink v-bind="friend" />
 
           <div v-if="isAdmin" class="admin-overlay">
-            <button @click.prevent="openEditModal(friend)" class="icon-btn edit" title="调整">
+            <button
+              @click.prevent="openEditModal(friend)"
+              class="icon-btn edit"
+              :title="$t('common.edit')"
+            >
               ✎
             </button>
-            <button @click.prevent="deleteFriend(friend.id)" class="icon-btn delete" title="熄灭">
+            <button
+              @click.prevent="deleteFriend(friend.id)"
+              class="icon-btn delete"
+              :title="$t('lighthouse.messages.extinguished')"
+            >
               ×
             </button>
           </div>
         </div>
       </div>
-    </section>
+    </PageHeader>
 
     <section class="join paper-panel">
-      <h3>加入光束网络</h3>
-      <p>如果你也建立了自己的灯塔，欢迎交换光束。</p>
+      <h3>{{ $t('lighthouse.joinNetwork') }}</h3>
+      <p>{{ $t('lighthouse.joinDesc') }}</p>
       <pre class="code-block"><code>{{ code }}</code></pre>
       <p>
-        请通过 <a href="mailto:i@shikoch.in">Email</a>，评论区或
+        {{ $t('about.contact') }} <a href="mailto:i@shikoch.in">Email</a>,
+        {{ $t('common.about') }} or
         <a href="https://github.com/Shikochin/ruinabla/issues" target="_blank">GitHub Issues</a>
-        发送你的信号数据。
+        {{ $t('lighthouse.emitSignal') }}.
       </p>
     </section>
 
@@ -238,27 +249,33 @@ onMounted(() => {
 
     <div v-if="showModal" class="modal-backdrop" @click.self="showModal = false">
       <div class="modal-panel paper-panel">
-        <h3>{{ isEditing ? '调整信号参数' : '建立新坐标' }}</h3>
+        <h3>{{ isEditing ? $t('lighthouse.adjustSignal') : $t('lighthouse.newBeacon') }}</h3>
         <form @submit.prevent="submitForm">
           <div class="form-group">
-            <label>名称</label>
-            <input v-model="form.name" required placeholder="Site Name" />
+            <label>{{ $t('lighthouse.form.name') }}</label>
+            <input
+              v-model="form.name"
+              required
+              :placeholder="$t('lighthouse.form.placeholders.name')"
+            />
           </div>
           <div class="form-group">
-            <label>地址 (URL)</label>
+            <label>{{ $t('lighthouse.form.url') }}</label>
             <input v-model="form.url" required type="url" placeholder="https://..." />
           </div>
           <div class="form-group">
-            <label>头像 (URL)</label>
-            <input v-model="form.avatar" placeholder="Avatar Image URL" />
+            <label>{{ $t('lighthouse.form.avatar') }}</label>
+            <input v-model="form.avatar" :placeholder="$t('lighthouse.form.placeholders.avatar')" />
           </div>
           <div class="form-group">
-            <label>描述</label>
-            <input v-model="form.desc" placeholder="Short description" />
+            <label>{{ $t('lighthouse.form.desc') }}</label>
+            <input v-model="form.desc" :placeholder="$t('lighthouse.form.placeholders.desc')" />
           </div>
           <div class="modal-actions">
-            <button type="button" @click="showModal = false" class="btn-cancel">取消</button>
-            <button type="submit" class="btn-confirm">发射信号</button>
+            <button type="button" @click="showModal = false" class="btn-cancel">
+              {{ $t('common.cancel') }}
+            </button>
+            <button type="submit" class="btn-confirm">{{ $t('lighthouse.emitSignal') }}</button>
           </div>
         </form>
       </div>
@@ -267,22 +284,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.lighthouse,
 .join {
   padding: 40px;
   margin-bottom: 24px;
-}
-
-/* Header layout */
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.lighthouse h1 {
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
-  line-height: 1.3;
 }
 
 .lead {

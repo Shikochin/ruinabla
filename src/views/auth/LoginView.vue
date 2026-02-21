@@ -3,9 +3,11 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useHead } from '@unhead/vue'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
 const auth = useAuthStore()
+const { t } = useI18n()
 
 const email = ref('')
 const password = ref('')
@@ -26,7 +28,7 @@ onMounted(async () => {
 })
 
 useHead({
-  title: '登录',
+  title: t('auth.login.title'),
 })
 
 async function handlePasswordLogin() {
@@ -99,7 +101,7 @@ async function verifyWithPasskey() {
     })) as PublicKeyCredential | null
 
     if (!credential) {
-      throw new Error('No credential returned')
+      throw new Error(t('auth.login.messages.noCredential'))
     }
 
     // Convert to format for server
@@ -144,7 +146,7 @@ async function verifyWithPasskey() {
       localStorage.setItem('user', JSON.stringify(data.user))
       router.push('/')
     } else {
-      auth.error = data.error || 'Passkey verification failed'
+      auth.error = data.error || t('auth.login.passkeyFailed')
     }
   } catch (e) {
     auth.error = (e as Error).message
@@ -163,7 +165,7 @@ async function loginWithPasskey() {
     const options = await optionsRes.json()
 
     if (!optionsRes.ok) {
-      throw new Error(options.error || 'Failed to get passkey options')
+      throw new Error(options.error || t('auth.login.messages.passkeyOptionsFailed'))
     }
 
     // Decode challenge
@@ -188,7 +190,7 @@ async function loginWithPasskey() {
     })) as PublicKeyCredential | null
 
     if (!credential) {
-      throw new Error('No credential returned')
+      throw new Error(t('auth.login.messages.noCredential'))
     }
 
     const bufferToBase64url = (buffer: ArrayBuffer) => {
@@ -229,7 +231,7 @@ async function loginWithPasskey() {
       localStorage.setItem('user', JSON.stringify(data.user))
       router.push('/')
     } else {
-      auth.error = data.error || 'Passkey login failed'
+      auth.error = data.error || t('auth.login.passkeyFailed')
     }
   } catch (e) {
     auth.error = (e as Error).message
@@ -240,8 +242,8 @@ async function loginWithPasskey() {
 <template>
   <div class="auth-view">
     <div class="auth-card paper-panel">
-      <h1>重蹈覆辙</h1>
-      <p class="eyebrow">登录以继续</p>
+      <h1>{{ $t('auth.login.title') }}</h1>
+      <p class="eyebrow">{{ $t('auth.login.eyebrow') }}</p>
 
       <!-- Passkey login (quick access) -->
       <div v-if="!show2FAOptions" class="passkey-login">
@@ -251,49 +253,49 @@ async function loginWithPasskey() {
           class="passkey-btn"
           :disabled="auth.loading"
         >
-          🔑 使用 Passkey 登录
+          🔑 {{ $t('auth.login.usePasskey') }}
         </button>
 
         <div class="divider">
-          <span>或使用密码登录</span>
+          <span>{{ $t('auth.login.orUsePassword') }}</span>
         </div>
       </div>
 
       <!-- Password login form -->
       <form v-if="!show2FAOptions" @submit.prevent="handlePasswordLogin" class="auth-form">
         <div class="field">
-          <label for="email">邮箱</label>
+          <label for="email">{{ $t('auth.login.email') }}</label>
           <input
             id="email"
             v-model="email"
             type="email"
             required
             autocomplete="email"
-            placeholder="your@email.com"
+            :placeholder="$t('auth.login.emailPlaceholder')"
           />
         </div>
 
         <div class="field">
-          <label for="password">密码</label>
+          <label for="password">{{ $t('auth.login.password') }}</label>
           <input
             id="password"
             v-model="password"
             type="password"
             required
             autocomplete="current-password"
-            placeholder="••••••••"
+            :placeholder="$t('auth.login.passwordPlaceholder')"
           />
         </div>
 
         <div class="field-checkbox">
           <label class="checkbox-label">
             <input type="checkbox" v-model="rememberMe" />
-            <span>记住此设备</span>
+            <span>{{ $t('auth.login.rememberMe') }}</span>
           </label>
         </div>
 
         <div class="forgot-password-link">
-          <RouterLink to="/forgot-password">忘记密码？</RouterLink>
+          <RouterLink to="/forgot-password">{{ $t('auth.login.forgotPassword') }}</RouterLink>
         </div>
 
         <div v-if="auth.error" class="error-message">
@@ -301,50 +303,50 @@ async function loginWithPasskey() {
         </div>
 
         <button type="submit" class="primary" :disabled="auth.loading">
-          {{ auth.loading ? '登录中...' : '登录' }}
+          {{ auth.loading ? $t('auth.login.loggingIn') : $t('auth.login.verify') }}
         </button>
       </form>
 
       <!-- 2FA verification -->
       <div v-else class="two-fa-options">
-        <h2>第二步验证</h2>
-        <p class="subtitle">选择一种验证方式继续</p>
+        <h2>{{ $t('auth.login.title2fa') }}</h2>
+        <p class="subtitle">{{ $t('auth.login.subtitle2fa') }}</p>
 
         <div class="verification-methods">
           <!-- TOTP Option -->
           <div class="method-card paper-panel" v-if="isTOTPEnabled">
-            <h3>📱 验证器应用</h3>
-            <p>使用您的认证器应用生成的6位代码</p>
+            <h3>📱 {{ $t('auth.login.totpTitle') }}</h3>
+            <p>{{ $t('auth.login.totpDesc') }}</p>
             <div class="field">
-              <label for="totp">TOTP 代码</label>
+              <label for="totp">{{ $t('auth.login.totpLabel') }}</label>
               <input
                 id="totp"
                 v-model="totpCode"
                 type="text"
                 pattern="[0-9]{6}"
                 maxlength="6"
-                placeholder="000000"
+                :placeholder="$t('auth.login.totpPlaceholder')"
                 inputmode="numeric"
                 autocomplete="one-time-code"
               />
             </div>
             <button @click="verifyWithTOTP" class="primary" :disabled="!totpCode || auth.loading">
-              验证
+              {{ $t('auth.login.verify') }}
             </button>
           </div>
 
           <!-- Passkey Option -->
           <div v-if="hasPasskeys" class="method-card paper-panel">
-            <h3>🔑 Passkey</h3>
-            <p>使用您的生物识别或安全密钥</p>
+            <h3>🔑 {{ $t('auth.login.passkeyTitle') }}</h3>
+            <p>{{ $t('auth.login.passkeyDesc') }}</p>
             <button @click="verifyWithPasskey" class="primary" :disabled="auth.loading">
-              使用 Passkey 验证
+              {{ $t('auth.login.usePasskeyVerify') }}
             </button>
           </div>
 
           <div v-else class="method-card paper-panel disabled">
-            <h3>🔑 Passkey</h3>
-            <p>您尚未设置 Passkey</p>
+            <h3>🔑 {{ $t('auth.login.passkeyTitle') }}</h3>
+            <p>{{ $t('auth.login.noPasskey') }}</p>
           </div>
         </div>
 
@@ -354,7 +356,10 @@ async function loginWithPasskey() {
       </div>
 
       <div class="auth-links">
-        <p>没有账号？ <RouterLink to="/register">注册</RouterLink></p>
+        <p>
+          {{ $t('auth.login.noAccount') }}
+          <RouterLink to="/register">{{ $t('auth.login.registerNow') }} </RouterLink>
+        </p>
       </div>
     </div>
   </div>

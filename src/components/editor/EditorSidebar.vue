@@ -16,8 +16,8 @@ const emit = defineEmits<{
 <template>
   <div class="sidebar" :class="{ collapsed: sidebarCollapsed }">
     <div class="sidebar-header">
-      <h2>文章</h2>
-      <button @click="emit('new')" class="btn-new">新建</button>
+      <h2>{{ $t('editor.posts') }}</h2>
+      <button @click="emit('new')" class="btn-new">{{ $t('common.new') }}</button>
     </div>
     <ul class="post-list">
       <li

@@ -13,18 +13,18 @@ onMounted(() => {
 <template>
   <div class="paper-panel experiment">
     <div v-if="devStore.isDev">
-      <p class="eyebrow">实验</p>
-      <h1>临摹尖碑</h1>
+      <p class="eyebrow">{{ $t('experiment.experiment') }}</p>
+      <h1>{{ $t('experiment.title') }}</h1>
       <!-- <p>这是我的玩具们</p> -->
       <!-- <ul>
-        <li>
-          <RouterLink to="posts/typescript-syntax-showcase">TypeScript Syntax Showcase</RouterLink>
-        </li>
-      </ul> -->
+      <li>
+        <RouterLink to="posts/typescript-syntax-showcase">TypeScript Syntax Showcase</RouterLink>
+      </li>
+    </ul> -->
       <div class="tool-list">
         <div class="list-header">
           <span class="marker"></span>
-          <span class="label">设备运行日志</span>
+          <span class="label">{{ $t('experiment.logLabel') }}</span>
         </div>
         <ul class="link-list">
           <li>
@@ -34,7 +34,9 @@ onMounted(() => {
 
               <div class="tool-meta-top">
                 <span class="uid">UID: IMG_PROC_01</span>
-                <span class="status">状态: 不稳定</span>
+                <span class="status">{{
+                  $t('experiment.status', { status: $t('experiment.unstable') })
+                }}</span>
               </div>
 
               <div class="tool-content">
@@ -42,8 +44,8 @@ onMounted(() => {
                   <span class="icon">🖼️</span>
                 </div>
                 <div class="text">
-                  <strong class="title">图像处理器</strong>
-                  <span class="desc">宽体普京</span>
+                  <strong class="title">{{ $t('experiment.imageProcessor') }}</strong>
+                  <span class="desc">{{ $t('experiment.widePutin') }}</span>
                 </div>
               </div>
 
@@ -57,21 +59,23 @@ onMounted(() => {
       </div>
 
       <!-- <div v-if="gravity.isMobile && gravity.hasMotionSupport" class="gravity-toggle">
-        <label>
-          <input type="checkbox" :checked="gravity.enabled" @change="handleGravityToggle" />
-          <span>重力模式（仅移动端）</span>
-        </label>
-        <p v-if="gravity.permissionError" class="gravity-error">
-          {{ gravity.permissionError }}
-        </p>
-      </div> -->
-      <button class="btn" @click="devStore.setIsDev(false)">禁用开发模式</button>
+      <label>
+        <input type="checkbox" :checked="gravity.enabled" @change="handleGravityToggle" />
+        <span>{{ $t('experiment.gravityMode') }}</span>
+      </label>
+      <p v-if="gravity.permissionError" class="gravity-error">
+        {{ gravity.permissionError }}
+      </p>
+    </div> -->
+      <button class="btn" @click="devStore.setIsDev(false)">
+        {{ $t('experiment.disableDev') }}
+      </button>
     </div>
 
     <div v-else>
-      <p>你是怎么找到这里的？</p>
-      <p>如果你是开发者，点击下方按钮以开启实验功能。</p>
-      <button class="btn" @click="devStore.setIsDev(true)">启用开发模式</button>
+      <p>{{ $t('experiment.howFound') }}</p>
+      <p>{{ $t('experiment.devHint') }}</p>
+      <button class="btn" @click="devStore.setIsDev(true)">{{ $t('experiment.enableDev') }}</button>
     </div>
   </div>
 </template>

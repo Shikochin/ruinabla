@@ -4,23 +4,25 @@ import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
+const { t } = useI18n()
 
 const token = route.params.token as string
 const status = ref<'verifying' | 'success' | 'error' | 'expired'>('verifying')
 const errorMessage = ref('')
 
 useHead({
-  title: '验证邮箱',
+  title: t('auth.verifyEmail.title'),
 })
 
 onMounted(async () => {
   if (!token) {
     status.value = 'error'
-    errorMessage.value = '无效的验证链接'
+    errorMessage.value = t('auth.verifyEmail.invalidLink')
     return
   }
 
@@ -51,12 +53,12 @@ onMounted(async () => {
         status.value = 'expired'
       } else {
         status.value = 'error'
-        errorMessage.value = data.error || '验证失败'
+        errorMessage.value = data.error || t('auth.verifyEmail.genericError')
       }
     }
   } catch (error) {
     status.value = 'error'
-    errorMessage.value = '网络错误，请稍后重试'
+    errorMessage.value = t('auth.verifyEmail.networkError')
     console.error(error)
   }
 })
@@ -65,7 +67,7 @@ async function resendVerification() {
   // You would need to get the email from somewhere
   // For now, just show a message
   const toast = useToastStore()
-  toast.info('请返回注册页面重新发送验证邮件')
+  toast.info(t('auth.verifyEmail.resendHint'))
 }
 </script>
 
@@ -75,34 +77,40 @@ async function resendVerification() {
       <!-- Verifying -->
       <div v-if="status === 'verifying'" class="status-section">
         <div class="spinner"></div>
-        <h1>正在验证...</h1>
-        <p>请稍候，我们正在验证您的邮箱</p>
+        <h1>{{ $t('auth.verifyEmail.verifying') }}</h1>
+        <p>{{ $t('auth.verifyEmail.verifyingDesc') }}</p>
       </div>
 
       <!-- Success -->
       <div v-else-if="status === 'success'" class="status-section success">
         <div class="icon">✓</div>
-        <h1>验证成功！</h1>
-        <p>您的邮箱已成功验证</p>
-        <p class="redirect-hint">正在跳转到安全设置，建议您设置两步验证...</p>
+        <h1>{{ $t('auth.verifyEmail.successTitle') }}</h1>
+        <p>{{ $t('auth.verifyEmail.successDesc') }}</p>
+        <p class="redirect-hint">{{ $t('auth.verifyEmail.successHint') }}</p>
       </div>
 
       <!-- Expired -->
       <div v-else-if="status === 'expired'" class="status-section error">
         <div class="icon">⏱</div>
-        <h1>验证链接已过期</h1>
-        <p>此验证链接已超过有效期（1小时）</p>
-        <button @click="resendVerification" class="action-btn">重新发送验证邮件</button>
+        <h1>{{ $t('auth.verifyEmail.expiredTitle') }}</h1>
+        <p>{{ $t('auth.verifyEmail.expiredDesc') }}</p>
+        <button @click="resendVerification" class="action-btn">
+          {{ $t('auth.verifyEmail.resendEmail') }}
+        </button>
       </div>
 
       <!-- Error -->
       <div v-else class="status-section error">
         <div class="icon">✗</div>
-        <h1>验证失败</h1>
+        <h1>{{ $t('auth.verifyEmail.failedTitle') }}</h1>
         <p>{{ errorMessage }}</p>
         <div class="actions">
-          <button @click="router.push('/register')" class="action-btn">返回注册</button>
-          <button @click="router.push('/login')" class="action-btn secondary">前往登录</button>
+          <button @click="router.push('/register')" class="action-btn">
+            {{ $t('auth.verifyEmail.backToRegister') }}
+          </button>
+          <button @click="router.push('/login')" class="action-btn secondary">
+            {{ $t('auth.verifyEmail.backToLogin') }}
+          </button>
         </div>
       </div>
     </div>

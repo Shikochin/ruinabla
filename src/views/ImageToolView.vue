@@ -2,6 +2,15 @@
 import { ref, watch, computed, nextTick, onUnmounted } from 'vue'
 import { parseGIF, decompressFrames } from 'gifuct-js'
 import GIF from 'gif.js'
+import { useI18n } from 'vue-i18n'
+
+import { useHead } from '@unhead/vue'
+
+const { t } = useI18n()
+
+useHead({
+  title: computed(() => `${t('experiment.imageProcessor')} - Rui∇abla`),
+})
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const canvas = ref<HTMLCanvasElement | null>(null)
@@ -664,10 +673,12 @@ function onHeightChange() {
 <template>
   <div class="paper-panel image-tool">
     <div class="tool-header">
-      <p class="eyebrow">Wide-Putin Generator</p>
+      <p class="eyebrow">{{ $t('experiment.imageProcessor') }}</p>
       <div class="title-row">
-        <h1>宽体普京生成器</h1>
-        <div v-if="originalImage" class="status-badge">SYSTEM OPERATIONAL</div>
+        <h1>{{ $t('experiment.widePutin') }}</h1>
+        <div v-if="originalImage" class="status-badge">
+          {{ $t('experiment.tool.statusOperational') }}
+        </div>
       </div>
     </div>
 
@@ -692,12 +703,12 @@ function onHeightChange() {
           />
           <div class="upload-content">
             <span class="icon" v-if="!originalImage">⊕</span>
-            <span class="text" v-if="!originalImage">拖放图像至此处或点击上传</span>
+            <span class="text" v-if="!originalImage">{{ $t('experiment.tool.upload') }}</span>
 
             <div v-else class="file-meta">
               <span class="filename">{{ fileName }}</span>
               <span class="filesize">{{ formatBytes(fileSize) }}</span>
-              <button class="btn-text">更换文件</button>
+              <button class="btn-text">{{ $t('experiment.tool.changeFile') }}</button>
             </div>
           </div>
           <div class="corner-decor top-left"></div>
@@ -705,10 +716,10 @@ function onHeightChange() {
         </div>
 
         <div v-if="originalImage" class="settings-group">
-          <div class="group-header">尺寸设置</div>
+          <div class="group-header">{{ $t('experiment.tool.dimensionSettings') }}</div>
           <div class="dimension-control">
             <div class="input-header">
-              <label>宽度</label>
+              <label>{{ $t('experiment.tool.width') }}</label>
               <input
                 type="number"
                 v-model.number="width"
@@ -730,7 +741,7 @@ function onHeightChange() {
 
           <div class="dimension-control">
             <div class="input-header">
-              <label>高度</label>
+              <label>{{ $t('experiment.tool.height') }}</label>
               <input
                 type="number"
                 v-model.number="height"
@@ -753,7 +764,7 @@ function onHeightChange() {
           <label class="checkbox-field">
             <input type="checkbox" v-model="keepAspectRatio" :disabled="isWobbleMode" />
             <span class="checkmark"></span>
-            <span class="label-text">锁定宽高比</span>
+            <span class="label-text">{{ $t('experiment.tool.lockAspectRatio') }}</span>
           </label>
 
           <div class="special-action" style="margin-top: 24px">
@@ -762,14 +773,16 @@ function onHeightChange() {
               :class="{ active: isWobbleMode }"
               @click="isWobbleMode = !isWobbleMode"
             >
-              <span class="btn-content">{{ isWobbleMode ? '停止跃动' : '开启跃动模式' }}</span>
+              <span class="btn-content">{{
+                isWobbleMode ? $t('experiment.tool.stopWobble') : $t('experiment.tool.startWobble')
+              }}</span>
               <span class="btn-decor"></span>
             </button>
           </div>
 
           <div v-if="isWobbleMode" class="dimension-control" style="margin-top: 16px">
             <div class="input-header">
-              <label>跃动速度</label>
+              <label>{{ $t('experiment.tool.wobbleSpeed') }}</label>
               <input
                 type="number"
                 min="0.1"
@@ -791,7 +804,7 @@ function onHeightChange() {
 
           <div v-if="isAnimatedGif" class="dimension-control" style="margin-top: 24px">
             <div class="input-header">
-              <label>播放速度</label>
+              <label>{{ $t('experiment.tool.playSpeed') }}</label>
               <input
                 type="number"
                 min="0.1"
@@ -813,7 +826,7 @@ function onHeightChange() {
         </div>
 
         <div v-if="originalImage" class="settings-group">
-          <div class="group-header">输出格式</div>
+          <div class="group-header">{{ $t('experiment.tool.outputFormat') }}</div>
           <select v-model="format" class="ruin-select">
             <option v-for="fmt in formats" :key="fmt.value" :value="fmt.value">
               {{ fmt.label }}
@@ -822,7 +835,7 @@ function onHeightChange() {
 
           <div class="range-field" v-if="format !== 'image/png'">
             <div class="input-header">
-              <label>质量</label>
+              <label>{{ $t('experiment.tool.quality') }}</label>
               <input
                 type="number"
                 min="0.1"
@@ -845,7 +858,7 @@ function onHeightChange() {
 
         <div v-if="originalImage" class="action-footer">
           <div class="output-stats">
-            <span class="label">预估大小</span>
+            <span class="label">{{ $t('experiment.tool.estimatedSize') }}</span>
             <span class="value" :class="outputSize < fileSize ? 'optimized' : 'warning'">
               {{ formatBytes(outputSize) }}
               <small>({{ Math.round((outputSize / fileSize) * 100) }}%)</small>
@@ -853,11 +866,13 @@ function onHeightChange() {
           </div>
           <div class="action-buttons">
             <button class="btn primary" @click="downloadImage">
-              <span class="btn-content">下载</span>
+              <span class="btn-content">{{ $t('common.download') }}</span>
               <span class="btn-decor"></span>
             </button>
             <button v-if="canCopy" class="btn secondary" @click="copyImage" :disabled="isCopying">
-              <span class="btn-content">{{ isCopying ? '已复制' : '复制' }}</span>
+              <span class="btn-content">{{
+                isCopying ? $t('common.copied') : $t('common.copy')
+              }}</span>
               <span class="btn-decor"></span>
             </button>
           </div>
@@ -874,11 +889,11 @@ function onHeightChange() {
             <!-- Empty state -->
             <div v-else class="empty-state">
               <span class="crosshair">✜</span>
-              <span>无信号</span>
+              <span>{{ $t('experiment.tool.noSignal') }}</span>
             </div>
           </div>
           <!-- HUD Elements -->
-          <div class="hud-corner top-left">视口_01</div>
+          <div class="hud-corner top-left">{{ $t('experiment.tool.viewport') }}</div>
           <div class="hud-corner bottom-right" v-if="originalImage">
             {{ width }} × {{ height }} PX
           </div>
