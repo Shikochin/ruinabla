@@ -29,7 +29,6 @@ withDefaults(
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  border-bottom: 1px solid var(--ruins-border);
   padding-bottom: 16px;
   margin-bottom: 24px;
 }

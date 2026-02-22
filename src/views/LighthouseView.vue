@@ -284,6 +284,12 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.lighthouse-view {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
 .join {
   padding: 40px;
   margin-bottom: 24px;

@@ -60,6 +60,7 @@
     }
   },
   "experiment": {
+    "experiment": "Experiment",
     "title": "Copy the Obelisk",
     "logLabel": "Device Runtime Log",
     "status": "Status: {status}",

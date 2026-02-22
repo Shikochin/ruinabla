@@ -38,8 +38,6 @@ const giscusTheme = computed(() => {
 <style scoped>
 #comments {
   padding: 40px;
-  margin-top: 40px;
-  border-top: 2px solid var(--ruins-border);
 }
 
 .giscus-container :deep(.giscus) {

@@ -63,6 +63,7 @@
     }
   },
   "experiment": {
+    "experiment": "実験",
     "title": "オベリスクの模写",
     "logLabel": "デバイス実行ログ",
     "status": "ステータス: {status}",

@@ -60,6 +60,7 @@
     }
   },
   "experiment": {
+    "experiment": "实验",
     "title": "临摹尖碑",
     "logLabel": "设备运行日志",
     "status": "状态: {status}",
