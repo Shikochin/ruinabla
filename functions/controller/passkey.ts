@@ -1,7 +1,12 @@
 import { Hono } from 'hono'
-import { requireAuth, createSession } from '../middleware/auth'
+import { createSession, getAuthenticatedUser, requireAuth } from '../middleware/auth'
 import { generateId } from '../utils/crypto'
 import { D1Database } from '@cloudflare/workers-types'
+import {
+  cleanupOpaqueArtifacts,
+  consumePendingAuthChallenge,
+  getPendingAuthChallenge,
+} from '../utils/opaque'
 
 type Bindings = {
   RUINABLA_DB: D1Database
@@ -10,8 +15,8 @@ type Bindings = {
 const passkey = new Hono<{ Bindings: Bindings }>()
 
 // Helper function to encode to base64url
-function base64UrlEncode(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer)
+function base64UrlEncode(buffer: ArrayBuffer | Uint8Array): string {
+  const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer)
   let binary = ''
   for (let i = 0; i < bytes.length; i++) {
     binary += String.fromCharCode(bytes[i]!)
@@ -21,7 +26,7 @@ function base64UrlEncode(buffer: ArrayBuffer): string {
 
 // Get registration options
 passkey.post('/register-options', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
 
   // Generate challenge
   const challenge = crypto.getRandomValues(new Uint8Array(32))
@@ -59,7 +64,7 @@ passkey.post('/register-options', requireAuth, async (c) => {
 
 // Complete passkey registration
 passkey.post('/register', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
   const { credential, name } = await c.req.json()
 
   if (!credential || !credential.id || !credential.response) {
@@ -161,18 +166,37 @@ passkey.post('/login', async (c) => {
 
 // Verify passkey for 2FA (after password login)
 passkey.post('/verify-2fa', async (c) => {
-  const { userId, credential } = await c.req.json()
+  const { pendingAuthId, userId, credential } = await c.req.json()
 
-  if (!userId || !credential || !credential.id) {
+  if ((!pendingAuthId && !userId) || !credential || !credential.id) {
     return c.json({ error: 'Invalid request data' }, 400)
   }
 
   try {
+    await cleanupOpaqueArtifacts(c.env.RUINABLA_DB)
+
+    let resolvedUserId = typeof userId === 'string' ? userId : null
+    let sessionDurationDays: number | null = null
+
+    if (typeof pendingAuthId === 'string' && pendingAuthId) {
+      const pendingAuth = await consumePendingAuthChallenge(c.env.RUINABLA_DB, pendingAuthId)
+      if (!pendingAuth) {
+        return c.json({ error: 'Authentication challenge expired' }, 401)
+      }
+
+      resolvedUserId = pendingAuth.userId
+      sessionDurationDays = pendingAuth.sessionDurationDays
+    }
+
+    if (!resolvedUserId) {
+      return c.json({ error: 'User ID or pending auth ID is required' }, 400)
+    }
+
     // Verify the passkey belongs to this user
     const passkeyRecord = await c.env.RUINABLA_DB.prepare(
       'SELECT p.*, u.id as user_id, u.email, u.role FROM passkeys p JOIN users u ON p.user_id = u.id WHERE p.credential_id = ? AND p.user_id = ?',
     )
-      .bind(credential.id, userId)
+      .bind(credential.id, resolvedUserId)
       .first()
 
     if (!passkeyRecord) {
@@ -190,7 +214,11 @@ passkey.post('/verify-2fa', async (c) => {
       .run()
 
     // Create session
-    const sessionId = await createSession(c.env.RUINABLA_DB, userId)
+    const sessionId = await createSession(
+      c.env.RUINABLA_DB,
+      resolvedUserId,
+      sessionDurationDays ?? 14,
+    )
 
     return c.json({
       success: true,
@@ -209,18 +237,31 @@ passkey.post('/verify-2fa', async (c) => {
 
 // Get 2FA options for a user (check what they have set up)
 passkey.post('/2fa-options', async (c) => {
-  const { userId } = await c.req.json()
-
-  if (!userId) {
-    return c.json({ error: 'User ID is required' }, 400)
-  }
+  const { pendingAuthId, userId } = await c.req.json()
 
   try {
+    await cleanupOpaqueArtifacts(c.env.RUINABLA_DB)
+
+    let resolvedUserId = typeof userId === 'string' ? userId : null
+
+    if (typeof pendingAuthId === 'string' && pendingAuthId) {
+      const pendingAuth = await getPendingAuthChallenge(c.env.RUINABLA_DB, pendingAuthId)
+      if (!pendingAuth) {
+        return c.json({ error: 'Authentication challenge expired' }, 401)
+      }
+
+      resolvedUserId = pendingAuth.userId
+    }
+
+    if (!resolvedUserId) {
+      return c.json({ error: 'User ID or pending auth ID is required' }, 400)
+    }
+
     // Check for passkeys
     const passkeys = await c.env.RUINABLA_DB.prepare(
       'SELECT credential_id, transports FROM passkeys WHERE user_id = ?',
     )
-      .bind(userId)
+      .bind(resolvedUserId)
       .all()
 
     const challenge = crypto.getRandomValues(new Uint8Array(32))
@@ -254,7 +295,7 @@ passkey.post('/2fa-options', async (c) => {
 
 // List user's passkeys
 passkey.get('/', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
 
   const passkeys = await c.env.RUINABLA_DB.prepare(
     'SELECT id, name, created_at FROM passkeys WHERE user_id = ?',
@@ -267,7 +308,7 @@ passkey.get('/', requireAuth, async (c) => {
 
 // Delete passkey
 passkey.delete('/:id', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
   const passkeyId = c.req.param('id')
 
   // Verify ownership

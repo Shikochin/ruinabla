@@ -142,15 +142,17 @@ export function generateTOTPSecret(): string {
 
 // HOTP/TOTP implementation
 async function hmacSha1(key: Uint8Array, message: Uint8Array): Promise<Uint8Array> {
+  const rawKey = new Uint8Array(key)
+  const rawMessage = new Uint8Array(message)
   const cryptoKey = await crypto.subtle.importKey(
     'raw',
-    key,
+    rawKey,
     { name: 'HMAC', hash: 'SHA-1' },
     false,
     ['sign'],
   )
 
-  const signature = await crypto.subtle.sign('HMAC', cryptoKey, message)
+  const signature = await crypto.subtle.sign('HMAC', cryptoKey, rawMessage)
   return new Uint8Array(signature)
 }
 

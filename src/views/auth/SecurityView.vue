@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useRouter } from 'vue-router'
@@ -28,6 +28,25 @@ const passkeyName = ref('')
 
 // Password confirmation
 const showPasswordModal = ref(false)
+const pendingSensitiveAction = ref<'disable-totp' | 'regenerate-backup-codes' | null>(null)
+
+const reauthModalTitle = computed(() =>
+  pendingSensitiveAction.value === 'regenerate-backup-codes'
+    ? t('auth.security.reauth.regenerateTitle')
+    : t('auth.security.reauth.disableTitle'),
+)
+
+const reauthModalDescription = computed(() =>
+  pendingSensitiveAction.value === 'regenerate-backup-codes'
+    ? t('auth.security.reauth.regenerateDescription')
+    : t('auth.security.reauth.disableDescription'),
+)
+
+const reauthModalActionText = computed(() =>
+  pendingSensitiveAction.value === 'regenerate-backup-codes'
+    ? t('auth.security.reauth.regenerateAction')
+    : t('auth.security.reauth.disableAction'),
+)
 
 onMounted(async () => {
   if (!auth.isAuthenticated) {
@@ -56,8 +75,6 @@ async function enableTOTP() {
     totpSecret.value = data.secret
     totpUri.value = data.uri
     backupCodes.value = data.backupCodes
-
-    totpQRCode.value = await QRCode.toDataURL(totpUri.value)
 
     totpQRCode.value = await QRCode.toDataURL(totpUri.value)
 
@@ -96,33 +113,79 @@ async function verifyAndEnableTOTP() {
 }
 
 async function disableTOTP() {
+  pendingSensitiveAction.value = 'disable-totp'
   showPasswordModal.value = true
 }
 
-async function handleDisableTOTPConfirm(password: string) {
+async function regenerateBackupCodes() {
+  pendingSensitiveAction.value = 'regenerate-backup-codes'
+  showPasswordModal.value = true
+}
+
+async function performDisableTOTP() {
+  const res = await fetch('/api/totp/disable', {
+    method: 'POST',
+    headers: {
+      Authorization: auth.getAuthHeader(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
+  })
+  const data = await res.json()
+
+  if (!res.ok) {
+    throw new Error(data.error || t('auth.security.totp.messages.failedDisable'))
+  }
+
+  isTOTPEnabled.value = false
+  showBackupCodes.value = false
+  backupCodes.value = []
+  toast.success(t('auth.security.totp.messages.disableSuccess'))
+}
+
+async function performRegenerateBackupCodes() {
+  const res = await fetch('/api/totp/regenerate-backup-codes', {
+    method: 'POST',
+    headers: {
+      Authorization: auth.getAuthHeader(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
+  })
+  const data = await res.json()
+
+  if (!res.ok) {
+    throw new Error(data.error || t('auth.security.totp.messages.regenerateFailed'))
+  }
+
+  backupCodes.value = data.backupCodes || []
+  showBackupCodes.value = true
+  toast.success(t('auth.security.totp.messages.regenerateSuccess'))
+}
+
+async function handlePasswordConfirm(password: string) {
   try {
-    const res = await fetch('/api/totp/disable', {
-      method: 'POST',
-      headers: {
-        Authorization: auth.getAuthHeader(),
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ password }),
-    })
-
-    const data = await res.json()
-
-    if (!res.ok) {
-      throw new Error(data.error || t('auth.security.totp.messages.failedDisable'))
+    const result = await auth.reauthWithPassword(password)
+    if (!result.success) {
+      throw new Error(result.error || t('auth.security.reauth.messages.finishFailed'))
     }
 
-    isTOTPEnabled.value = false
-    toast.success(t('auth.security.totp.messages.disableSuccess'))
-    showPasswordModal.value = false
+    if (pendingSensitiveAction.value === 'regenerate-backup-codes') {
+      await performRegenerateBackupCodes()
+    } else {
+      await performDisableTOTP()
+    }
   } catch (e) {
     toast.error((e as Error).message)
+  } finally {
     showPasswordModal.value = false
+    pendingSensitiveAction.value = null
   }
+}
+
+function closePasswordModal() {
+  showPasswordModal.value = false
+  pendingSensitiveAction.value = null
 }
 
 async function loadPasskeys() {
@@ -334,9 +397,14 @@ async function deletePasskey(id: string) {
           </ul>
         </div>
         <p class="success-text">{{ $t('auth.security.totp.success') }}</p>
-        <button @click="disableTOTP" class="danger">
-          {{ $t('auth.security.totp.buttonDisable') }}
-        </button>
+        <div class="totp-actions">
+          <button @click="regenerateBackupCodes">
+            {{ $t('auth.security.totp.buttonRegenerateBackupCodes') }}
+          </button>
+          <button @click="disableTOTP" class="danger">
+            {{ $t('auth.security.totp.buttonDisable') }}
+          </button>
+        </div>
       </div>
     </section>
 
@@ -385,11 +453,15 @@ async function deletePasskey(id: string) {
     <!-- Password Confirmation Modal -->
     <PasswordConfirmModal
       :show="showPasswordModal"
-      :title="$t('auth.security.totp.messages.confirmDisableTitle')"
-      :description="$t('auth.security.totp.messages.confirmDisableDesc')"
-      :action-text="$t('auth.security.totp.messages.confirmDisableAction')"
-      @confirm="handleDisableTOTPConfirm"
-      @cancel="showPasswordModal = false"
+      :title="reauthModalTitle"
+      :description="reauthModalDescription"
+      :action-text="reauthModalActionText"
+      :cancel-text="$t('common.cancel')"
+      :field-label="$t('auth.login.password')"
+      :placeholder="$t('auth.login.passwordPlaceholder')"
+      :loading-text="$t('common.loading')"
+      @confirm="handlePasswordConfirm"
+      @cancel="closePasswordModal"
     />
   </div>
 </template>
@@ -469,6 +541,12 @@ async function deletePasskey(id: string) {
 .success-text {
   color: #b8bb26;
   margin: 0;
+}
+
+.totp-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .totp-setup ol {

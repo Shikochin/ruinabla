@@ -18,12 +18,16 @@ Rui∇abla means Ruin + Nabla( ∇).
 ```sh
 bun install
 
+export OPAQUE_SERVER_SETUP="$(npx @serenity-kit/opaque@latest create-server-setup)"
+
 bun dev
 
 bun new
 
 bun run build
 ```
+
+Set `OPAQUE_SERVER_SETUP` in your local env and deployment env before running auth flows. Keep the same value permanently. Rotating it invalidates existing OPAQUE password records.
 
 ## License
 

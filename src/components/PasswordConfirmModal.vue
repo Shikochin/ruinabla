@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps<{
@@ -7,6 +7,10 @@ const props = defineProps<{
   title: string
   description?: string
   actionText?: string
+  cancelText?: string
+  fieldLabel?: string
+  placeholder?: string
+  loadingText?: string
 }>()
 
 const emit = defineEmits<{
@@ -28,6 +32,16 @@ function handleCancel() {
   loading.value = false
   emit('cancel')
 }
+
+watch(
+  () => props.show,
+  (showing) => {
+    if (!showing) {
+      password.value = ''
+      loading.value = false
+    }
+  },
+)
 
 // Reset when modal closes
 function handleBackdropClick(e: MouseEvent) {
@@ -51,13 +65,13 @@ function handleBackdropClick(e: MouseEvent) {
             <p v-if="description" class="description">{{ description }}</p>
 
             <div class="field">
-              <label for="confirm-password">密码</label>
+              <label for="confirm-password">{{ props.fieldLabel || 'Password' }}</label>
               <input
                 id="confirm-password"
                 v-model="password"
                 type="password"
                 autocomplete="current-password"
-                placeholder="输入您的密码"
+                :placeholder="props.placeholder || ''"
                 @keyup.enter="handleConfirm"
                 :disabled="loading"
                 autofocus
@@ -66,9 +80,11 @@ function handleBackdropClick(e: MouseEvent) {
           </div>
 
           <div class="modal-footer">
-            <button @click="handleCancel" :disabled="loading">取消</button>
+            <button @click="handleCancel" :disabled="loading">
+              {{ props.cancelText || 'Cancel' }}
+            </button>
             <button class="primary" @click="handleConfirm" :disabled="!password || loading">
-              {{ loading ? '处理中...' : actionText || '确认' }}
+              {{ loading ? props.loadingText || 'Loading...' : props.actionText || 'Confirm' }}
             </button>
           </div>
         </div>

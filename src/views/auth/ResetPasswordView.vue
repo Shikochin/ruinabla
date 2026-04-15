@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
+import { finishOpaqueRegistration, startOpaqueRegistration } from '@/utils/opaque'
 
 const route = useRoute()
 const router = useRouter()
@@ -51,20 +52,41 @@ async function handleSubmit() {
   loading.value = true
 
   try {
-    const res = await fetch('/api/auth/reset-password', {
+    const { clientRegistrationState, registrationRequest } = await startOpaqueRegistration(
+      newPassword.value,
+    )
+    const startRes = await fetch('/api/auth/opaque/reset/start', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         token,
-        newPassword: newPassword.value,
+        registrationRequest,
       }),
     })
+    const startData = await startRes.json()
 
-    const data = await res.json()
+    if (!startRes.ok) {
+      errorMessage.value = startData.error || t('auth.resetPassword.error')
+      return
+    }
 
-    if (res.ok) {
+    const { registrationRecord } = await finishOpaqueRegistration({
+      password: newPassword.value,
+      registrationResponse: startData.registrationResponse,
+      clientRegistrationState,
+    })
+    const finishRes = await fetch('/api/auth/opaque/reset/finish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        attemptId: startData.attemptId,
+        registrationRecord,
+      }),
+    })
+    const data = await finishRes.json()
+
+    if (finishRes.ok) {
       success.value = true
-      // Redirect to login after 2 seconds
       setTimeout(() => {
         router.push('/login')
       }, 2000)

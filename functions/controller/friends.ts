@@ -1,7 +1,7 @@
 // controller/friends.ts
 import { Hono } from 'hono'
 import { D1Database } from '@cloudflare/workers-types'
-import { requireAuth } from '../middleware/auth'
+import { getAuthenticatedUser, requireAuth } from '../middleware/auth'
 import { generateId } from '../utils/crypto'
 
 type Bindings = {
@@ -23,7 +23,7 @@ friends.get('/', async (c) => {
 })
 
 friends.post('/', requireAuth, async (c) => {
-  const user = c.get('user')
+  const user = getAuthenticatedUser(c)
   if (user.role !== 'admin') return c.json({ error: 'Unauthorized' }, 403)
 
   const { name, url, avatar, desc } = await c.req.json()
@@ -39,7 +39,7 @@ friends.post('/', requireAuth, async (c) => {
 })
 
 friends.put('/:id', requireAuth, async (c) => {
-  const user = c.get('user')
+  const user = getAuthenticatedUser(c)
   if (user.role !== 'admin') return c.json({ error: 'Unauthorized' }, 403)
 
   const id = c.req.param('id')
@@ -55,7 +55,7 @@ friends.put('/:id', requireAuth, async (c) => {
 })
 
 friends.delete('/:id', requireAuth, async (c) => {
-  const user = c.get('user')
+  const user = getAuthenticatedUser(c)
   if (user.role !== 'admin') return c.json({ error: 'Unauthorized' }, 403)
 
   const id = c.req.param('id')

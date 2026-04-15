@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { requireAuth } from '../middleware/auth'
+import { getAuthenticatedSession, getAuthenticatedUser, requireAuth } from '../middleware/auth'
 import {
   generateTOTPSecret,
   generateTOTPUri,
@@ -7,6 +7,7 @@ import {
   generateBackupCodes,
 } from '../utils/crypto'
 import { D1Database } from '@cloudflare/workers-types'
+import { isRecentReauthenticationValid } from '../utils/opaque'
 
 type Bindings = {
   RUINABLA_DB: D1Database
@@ -33,7 +34,7 @@ totp.post('/check', async (c) => {
 
 // Enable TOTP - Generate secret and return URI for QR code
 totp.post('/enable', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
 
   // Check if TOTP is already enabled
   const existing = await c.env.RUINABLA_DB.prepare(
@@ -78,7 +79,7 @@ totp.post('/enable', requireAuth, async (c) => {
 
 // Verify and enable TOTP
 totp.post('/verify-enable', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
   const { code } = await c.req.json()
 
   if (!code) {
@@ -117,27 +118,35 @@ totp.post('/verify-enable', requireAuth, async (c) => {
 
 // Disable TOTP
 totp.post('/disable', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
+  const session = getAuthenticatedSession(c)
   const { password } = await c.req.json()
 
-  if (!password) {
-    return c.json({ error: 'Password is required to disable TOTP' }, 400)
+  if (!password && !isRecentReauthenticationValid(session.reauthenticatedAt)) {
+    return c.json({ error: 'Recent reauthentication is required to disable TOTP' }, 401)
   }
 
-  // Verify password
-  const userRecord = await c.env.RUINABLA_DB.prepare('SELECT password_hash FROM users WHERE id = ?')
-    .bind(user.id)
-    .first()
+  if (password) {
+    const userRecord = await c.env.RUINABLA_DB.prepare(
+      'SELECT password_hash FROM users WHERE id = ?',
+    )
+      .bind(user.id)
+      .first()
 
-  if (!userRecord) {
-    return c.json({ error: 'User not found' }, 404)
-  }
+    if (!userRecord) {
+      return c.json({ error: 'User not found' }, 404)
+    }
 
-  const { verifyPassword } = await import('../utils/crypto')
-  const isValid = await verifyPassword(password, userRecord.password_hash as string)
+    if (!userRecord.password_hash) {
+      return c.json({ error: 'Password confirmation is unavailable for this account' }, 400)
+    }
 
-  if (!isValid) {
-    return c.json({ error: 'Invalid password' }, 401)
+    const { verifyPassword } = await import('../utils/crypto')
+    const isValid = await verifyPassword(password, userRecord.password_hash as string)
+
+    if (!isValid) {
+      return c.json({ error: 'Invalid password' }, 401)
+    }
   }
 
   // Delete TOTP secret
@@ -148,7 +157,7 @@ totp.post('/disable', requireAuth, async (c) => {
 
 // Get backup codes
 totp.get('/backup-codes', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
 
   const totpRecord = await c.env.RUINABLA_DB.prepare(
     'SELECT backup_codes, enabled FROM totp_secrets WHERE user_id = ?',
@@ -167,27 +176,35 @@ totp.get('/backup-codes', requireAuth, async (c) => {
 
 // Regenerate backup codes
 totp.post('/regenerate-backup-codes', requireAuth, async (c) => {
-  const user = c.get('user') as { id: string; email: string; role: string }
+  const user = getAuthenticatedUser(c)
+  const session = getAuthenticatedSession(c)
   const { password } = await c.req.json()
 
-  if (!password) {
-    return c.json({ error: 'Password is required' }, 400)
+  if (!password && !isRecentReauthenticationValid(session.reauthenticatedAt)) {
+    return c.json({ error: 'Recent reauthentication is required' }, 401)
   }
 
-  // Verify password
-  const userRecord = await c.env.RUINABLA_DB.prepare('SELECT password_hash FROM users WHERE id = ?')
-    .bind(user.id)
-    .first()
+  if (password) {
+    const userRecord = await c.env.RUINABLA_DB.prepare(
+      'SELECT password_hash FROM users WHERE id = ?',
+    )
+      .bind(user.id)
+      .first()
 
-  if (!userRecord) {
-    return c.json({ error: 'User not found' }, 404)
-  }
+    if (!userRecord) {
+      return c.json({ error: 'User not found' }, 404)
+    }
 
-  const { verifyPassword } = await import('../utils/crypto')
-  const isValid = await verifyPassword(password, userRecord.password_hash as string)
+    if (!userRecord.password_hash) {
+      return c.json({ error: 'Password confirmation is unavailable for this account' }, 400)
+    }
 
-  if (!isValid) {
-    return c.json({ error: 'Invalid password' }, 401)
+    const { verifyPassword } = await import('../utils/crypto')
+    const isValid = await verifyPassword(password, userRecord.password_hash as string)
+
+    if (!isValid) {
+      return c.json({ error: 'Invalid password' }, 401)
+    }
   }
 
   // Check if TOTP is enabled

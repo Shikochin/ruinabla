@@ -255,6 +255,7 @@
         "disabled": "Disabled",
         "buttonEnable": "Enable TOTP",
         "buttonDisable": "Disable Two-Factor Authentication",
+        "buttonRegenerateBackupCodes": "Regenerate Backup Codes",
         "setupTitle": "Setup Instructions",
         "step1": "Open your authenticator app (Google Authenticator, Authy, etc.)",
         "step2": "Scan this QR code or manually enter the key",
@@ -270,12 +271,28 @@
           "scanQR": "Scan the QR code with your authenticator app",
           "enableSuccess": "TOTP enabled! Please save your backup codes.",
           "disableSuccess": "TOTP disabled",
+          "regenerateSuccess": "Backup codes regenerated",
+          "regenerateFailed": "Failed to regenerate backup codes",
           "confirmDisableTitle": "Confirm Disabling Two-Factor Auth",
           "confirmDisableDesc": "Please enter your password to confirm disabling two-factor authentication. This will reduce your account's security.",
           "confirmDisableAction": "Disable TOTP",
           "failedEnable": "Failed to enable TOTP",
           "failedDisable": "Failed to disable TOTP",
-          "invalidCode": "Invalid code"
+          "invalidCode": "Invalid code",
+          "verifyFailed": "TOTP verification failed"
+        }
+      },
+      "reauth": {
+        "disableTitle": "Confirm TOTP Disable",
+        "disableDescription": "Enter your password to confirm this action through a secure reauthentication step.",
+        "disableAction": "Disable TOTP",
+        "regenerateTitle": "Regenerate Backup Codes",
+        "regenerateDescription": "Enter your password to rotate your backup codes through a secure reauthentication step.",
+        "regenerateAction": "Regenerate Codes",
+        "messages": {
+          "startFailed": "Failed to start reauthentication",
+          "finishFailed": "Failed to complete reauthentication",
+          "invalidPassword": "Password verification failed"
         }
       },
       "passkeys": {

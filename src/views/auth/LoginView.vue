@@ -14,7 +14,7 @@ const password = ref('')
 const rememberMe = ref(false)
 const totpCode = ref('')
 const show2FAOptions = ref(false)
-const pendingUserId = ref('')
+const pendingAuthId = ref('')
 const hasPasskeys = ref(false)
 const passkeyOptions = ref<any>(null)
 const isTOTPEnabled = ref(false)
@@ -34,34 +34,34 @@ useHead({
 async function handlePasswordLogin() {
   const result = await auth.login(email.value, password.value, rememberMe.value)
   if (result.success && result.requires2FA) {
-    pendingUserId.value = result.userId!
+    pendingAuthId.value = result.pendingAuthId
     show2FAOptions.value = true
+    isTOTPEnabled.value = result.methods.totp
+    hasPasskeys.value = result.methods.passkey
 
-    // Fetch TOTP status and Passkey availability
-    const [totpStatus, passkeyOpts] = await Promise.all([
-      fetch('/api/totp/check', {
+    if (hasPasskeys.value) {
+      const passkeyOptionsRes = await fetch('/api/passkey/2fa-options', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: result.userId }),
-      }).then((r) => r.json()),
-      fetch('/api/passkey/2fa-options', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: result.userId }),
-      }).then((r) => r.json()),
-    ])
+        body: JSON.stringify({ pendingAuthId: result.pendingAuthId }),
+      })
+      const passkeyOpts = await passkeyOptionsRes.json()
 
-    isTOTPEnabled.value = totpStatus.enabled
-    hasPasskeys.value = passkeyOpts.hasPasskeys
-    passkeyOptions.value = passkeyOpts.passkeyOptions
+      if (passkeyOptionsRes.ok) {
+        passkeyOptions.value = passkeyOpts.passkeyOptions
+      } else {
+        auth.error = passkeyOpts.error || t('auth.login.messages.passkeyOptionsFailed')
+      }
+    } else {
+      passkeyOptions.value = null
+    }
   } else if (result.success && !result.requires2FA) {
-    // No 2FA required, redirect to home
     router.push('/')
   }
 }
 
 async function verifyWithTOTP() {
-  const result = await auth.verifyTOTP(pendingUserId.value, totpCode.value, rememberMe.value)
+  const result = await auth.verifyTOTP(pendingAuthId.value, totpCode.value)
   if (result.success) {
     router.push('/')
   }
@@ -133,17 +133,14 @@ async function verifyWithPasskey() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        userId: pendingUserId.value,
+        pendingAuthId: pendingAuthId.value,
         credential: credentialData,
       }),
     })
 
     const data = await res.json()
     if (res.ok && data.success) {
-      auth.user = data.user
-      auth.sessionId = data.sessionId
-      localStorage.setItem('sessionId', data.sessionId)
-      localStorage.setItem('user', JSON.stringify(data.user))
+      auth.setSessionData(data.sessionId, data.user)
       router.push('/')
     } else {
       auth.error = data.error || t('auth.login.passkeyFailed')
@@ -225,10 +222,7 @@ async function loginWithPasskey() {
 
     const data = await res.json()
     if (res.ok && data.success) {
-      auth.user = data.user
-      auth.sessionId = data.sessionId
-      localStorage.setItem('sessionId', data.sessionId)
-      localStorage.setItem('user', JSON.stringify(data.user))
+      auth.setSessionData(data.sessionId, data.user)
       router.push('/')
     } else {
       auth.error = data.error || t('auth.login.passkeyFailed')

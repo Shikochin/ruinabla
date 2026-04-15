@@ -258,6 +258,7 @@
         "disabled": "無効",
         "buttonEnable": "TOTP を有効にする",
         "buttonDisable": "二段階認証をオフにする",
+        "buttonRegenerateBackupCodes": "バックアップコードを再生成",
         "setupTitle": "設定手順",
         "step1": "認証アプリ（Google Authenticator, Authy など）を開きます",
         "step2": "QR コードをスキャンするか、キーを手動で入力します",
@@ -273,12 +274,28 @@
           "scanQR": "認証アプリで QR コードをスキャンしてください",
           "enableSuccess": "TOTP が有効になりました！バックアップコードを保存してください。",
           "disableSuccess": "TOTP が無効になりました",
+          "regenerateSuccess": "バックアップコードを再生成しました",
+          "regenerateFailed": "バックアップコードを再生成できませんでした",
           "confirmDisableTitle": "二段階認証解除の確認",
           "confirmDisableDesc": "二段階認証を解除するにはパスワードを入力してください。これによりアカウントのセキュリティが低下します。",
           "confirmDisableAction": "TOTP を無効化",
           "failedEnable": "TOTP を有効にできませんでした",
           "failedDisable": "TOTP を無効にできませんでした",
-          "invalidCode": "認証コードが無効です"
+          "invalidCode": "認証コードが無効です",
+          "verifyFailed": "TOTP の検証に失敗しました"
+        }
+      },
+      "reauth": {
+        "disableTitle": "TOTP 無効化の確認",
+        "disableDescription": "安全な再認証を行うため、パスワードを入力してください。",
+        "disableAction": "TOTP を無効化",
+        "regenerateTitle": "バックアップコードを再生成",
+        "regenerateDescription": "安全な再認証を行うため、パスワードを入力してください。",
+        "regenerateAction": "コードを再生成",
+        "messages": {
+          "startFailed": "再認証を開始できませんでした",
+          "finishFailed": "再認証を完了できませんでした",
+          "invalidPassword": "パスワードの検証に失敗しました"
         }
       },
       "passkeys": {

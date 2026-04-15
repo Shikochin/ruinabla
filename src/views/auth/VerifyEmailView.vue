@@ -37,12 +37,8 @@ onMounted(async () => {
 
     if (res.ok) {
       status.value = 'success'
-      // Set auth session
       if (data.sessionId && data.user) {
-        auth.sessionId = data.sessionId
-        auth.user = data.user
-
-        localStorage.setItem('sessionId', data.sessionId)
+        auth.setSessionData(data.sessionId, data.user)
       }
       // Redirect to security settings after 2 seconds to encourage 2FA setup
       setTimeout(() => {

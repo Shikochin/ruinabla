@@ -42,7 +42,7 @@ export async function http(url: string, options: FetchOptions = {}) {
   const response = await fetch(requestUrl, config)
 
   // Handle 401 Unauthorized
-  if (response.status === 401 && !options.skipInterceptor) {
+  if (response.status === 401 && auth.sessionId && !options.skipInterceptor) {
     const toast = useToastStore()
     toast.error('Session expired. Please login again.')
     await auth.logout()
