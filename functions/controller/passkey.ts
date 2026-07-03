@@ -51,8 +51,7 @@ passkey.post('/register-options', requireAuth, async (c) => {
       { type: 'public-key', alg: -257 }, // RS256
     ],
     authenticatorSelection: {
-      authenticatorAttachment: 'platform',
-      requireResidentKey: false,
+      residentKey: 'preferred',
       userVerification: 'preferred',
     },
     timeout: 60000,
