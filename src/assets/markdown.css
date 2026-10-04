@@ -1,0 +1,193 @@
+/* v-html content has no Vue scope attributes: keep every rule inside the article. */
+.entry__content {
+  min-width: 0;
+  padding: 10px 0;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.entry__content :is(h1, h2, h3, h4, h5, h6) {
+  position: relative;
+  margin: 2rem 0 0.75rem;
+  line-height: 1.4;
+}
+
+.entry__content h1 {
+  font-size: 2rem;
+}
+.entry__content h2 {
+  font-size: 1.6rem;
+}
+.entry__content h3 {
+  font-size: 1.35rem;
+}
+.entry__content h4 {
+  font-size: 1.15rem;
+}
+.entry__content :is(h5, h6) {
+  font-size: 1rem;
+}
+
+.entry__content :is(p, ul, ol, dl) {
+  margin: 0 0 1rem;
+}
+
+.entry__content a {
+  color: var(--ruins-accent);
+  border-bottom: 0;
+  text-decoration: underline;
+  text-decoration-color: var(--ruins-muted);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.entry__content a:hover {
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
+  text-shadow: none;
+}
+
+.entry__content a:focus-visible {
+  outline: 2px solid var(--ruins-accent);
+  outline-offset: 3px;
+}
+
+.entry__content a[data-fancybox] {
+  text-decoration: none;
+}
+
+.entry__content blockquote {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem;
+  border-inline-start: 3px solid var(--ruins-muted);
+  background: var(--ruins-light-color);
+}
+
+.entry__content blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.entry__content :is(ul, ol) {
+  padding-inline-start: 1.75rem;
+}
+
+.entry__content li + li {
+  margin-top: 0.35rem;
+}
+
+.entry__content li > :is(ul, ol) {
+  margin: 0.35rem 0 0;
+}
+
+.entry__content li > p {
+  margin: 0.5rem 0;
+}
+
+.entry__content .task-list-item {
+  list-style: none;
+}
+
+.entry__content .task-list-item > input[type='checkbox'] {
+  margin-inline: -1.4rem 0.5rem;
+  accent-color: var(--ruins-accent);
+}
+
+.entry__content :not(pre) > code {
+  padding: 0.15em 0.4em;
+  border: 1px solid var(--ruins-border);
+  border-radius: 3px;
+  background: var(--ruins-light-color);
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 0.88em;
+}
+
+.entry__content pre {
+  max-width: 100%;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  overflow-x: auto;
+  border: 1px solid var(--ruins-border);
+  border-radius: 4px;
+  background: var(--ruins-panel);
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.entry__content pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 0.88em;
+  overflow-wrap: normal;
+}
+
+/* Prism's Gruvbox palette needs its dark background in either site theme. */
+.entry__content pre[class*='language-'] {
+  background: #1d2021;
+}
+
+.entry__content table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.entry__content :is(th, td) {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--ruins-border);
+}
+
+.entry__content th {
+  background: var(--ruins-light-color);
+  font-weight: 600;
+}
+
+.entry__content :is(th, td):not([align]) {
+  text-align: start;
+}
+
+.entry__content hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--ruins-border);
+}
+
+.entry__content del {
+  color: var(--ruins-muted);
+}
+
+.entry__content .footnotes {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ruins-border);
+  font-size: 0.9em;
+}
+
+.entry__content .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.entry__content .anchor-link {
+  position: absolute;
+  left: -1.2em;
+  width: 1em;
+  opacity: 0;
+  text-align: right;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  user-select: none;
+}
+
+.entry__content :is(h1, h2, h3, h4, h5, h6):hover .anchor-link {
+  opacity: 1;
+}

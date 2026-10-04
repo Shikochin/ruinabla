@@ -3,6 +3,7 @@ import { computed, watch, nextTick, ref } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFancybox } from '@/composables/useFancybox'
 import { renderMarkdown } from '@/utils/markdown'
+import '@/assets/markdown.css'
 
 import { usePostStore } from '@/stores/postStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -215,9 +216,6 @@ useHead({
 </template>
 
 <style scoped>
-/* Styles section remains unchanged */
-/* ... (original style scoped content) */
-
 .extra-info {
   display: flex;
   flex-direction: row;
@@ -294,59 +292,6 @@ useHead({
 
 .entry__tags span {
   padding: 6px 12px;
-}
-
-.entry__content {
-  padding: 10px 0;
-  line-height: 1.9;
-}
-
-.entry__content :global(h2),
-.entry__content :global(h3) {
-  margin-top: 32px;
-  margin-bottom: 12px;
-  font-size: 1.4rem;
-}
-
-.entry__content :global(p) {
-  margin: 0 0 16px;
-}
-
-.entry__content :global(code) {
-  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0 6px;
-  border-radius: 4px;
-}
-
-.entry__content :global(h1),
-.entry__content :global(h2),
-.entry__content :global(h3),
-.entry__content :global(h4),
-.entry__content :global(h5),
-.entry__content :global(h6) {
-  position: relative;
-}
-
-.entry__content :global(.anchor-link) {
-  position: absolute;
-  left: -1.2em;
-  opacity: 0;
-  text-decoration: none;
-  color: var(--ruins-accent);
-  transition: opacity 0.2s ease;
-  user-select: none;
-  width: 1em;
-  text-align: right;
-}
-
-.entry__content :global(h1:hover .anchor-link),
-.entry__content :global(h2:hover .anchor-link),
-.entry__content :global(h3:hover .anchor-link),
-.entry__content :global(h4:hover .anchor-link),
-.entry__content :global(h5:hover .anchor-link),
-.entry__content :global(h6:hover .anchor-link) {
-  opacity: 1;
 }
 
 @media (max-width: 640px) {
