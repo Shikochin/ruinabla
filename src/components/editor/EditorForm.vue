@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import MDEditor from '@/components/MDEditor.vue'
-import { useI18n } from 'vue-i18n'
-
-const { locale } = useI18n()
 
 const form = defineModel<{
   slug: string
@@ -124,12 +121,8 @@ const handleBackspace = () => {
     </div>
 
     <div class="content-editor">
-      <label>Content (Markdown)</label>
-      <MDEditor
-        v-model="form.content"
-        @save="emit('save')"
-        :language="locale as 'zh-CN' | 'en-US'"
-      />
+      <label>{{ $t('editor.form.content') }}</label>
+      <MDEditor v-model="form.content" @save="emit('save')" />
     </div>
   </div>
 </template>

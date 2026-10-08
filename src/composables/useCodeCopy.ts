@@ -1,6 +1,9 @@
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, watch } from 'vue'
+
+import { useI18n } from 'vue-i18n'
 
 export function useCodeCopy(selector: string) {
+  const { t, locale } = useI18n()
   let cleanupFns: (() => void)[] = []
 
   function init() {
@@ -24,25 +27,27 @@ export function useCodeCopy(selector: string) {
 
       const btn = document.createElement('button')
       btn.className = 'copy-btn'
-      btn.textContent = 'Copy'
+      btn.textContent = t('common.copy')
       btn.type = 'button'
-      btn.ariaLabel = 'Copy code'
+      btn.ariaLabel = t('common.copyCode')
 
+      let resetTimer: ReturnType<typeof setTimeout> | undefined
       const copyHandler = async () => {
         try {
           const code = pre.querySelector('code')?.innerText || pre.innerText
           await navigator.clipboard.writeText(code)
 
-          btn.textContent = 'Copied!'
+          btn.textContent = t('common.copied')
           btn.classList.add('copied')
 
-          setTimeout(() => {
-            btn.textContent = 'Copy'
+          clearTimeout(resetTimer)
+          resetTimer = setTimeout(() => {
+            btn.textContent = t('common.copy')
             btn.classList.remove('copied')
           }, 2000)
         } catch (err) {
           console.error('Failed to copy:', err)
-          btn.textContent = 'Error'
+          btn.textContent = t('common.copyFailed')
         }
       }
 
@@ -50,6 +55,7 @@ export function useCodeCopy(selector: string) {
       pre.appendChild(btn)
 
       cleanupFns.push(() => {
+        clearTimeout(resetTimer)
         btn.removeEventListener('click', copyHandler)
         btn.remove()
       })
@@ -60,6 +66,8 @@ export function useCodeCopy(selector: string) {
     cleanupFns.forEach((fn) => fn())
     cleanupFns = []
   }
+
+  watch(locale, init)
 
   onMounted(() => {
     // Initial init if content is already there

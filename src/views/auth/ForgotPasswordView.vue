@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { localizeApiError } from '@/i18n/errors'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
@@ -12,7 +13,7 @@ const success = ref(false)
 const errorMessage = ref('')
 
 useHead({
-  title: t('auth.forgotPassword.title'),
+  title: () => t('auth.forgotPassword.title'),
 })
 
 async function handleSubmit() {
@@ -31,7 +32,7 @@ async function handleSubmit() {
     if (res.ok) {
       success.value = true
     } else {
-      errorMessage.value = data.error || t('auth.forgotPassword.error')
+      errorMessage.value = localizeApiError(data.error, 'auth.forgotPassword.error')
     }
   } catch (error) {
     errorMessage.value = t('auth.forgotPassword.networkError')

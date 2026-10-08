@@ -21,8 +21,8 @@ interface Friend {
 const { t } = useI18n()
 
 useHead({
-  title: t('lighthouse.title'),
-  meta: [{ name: 'description', content: t('lighthouse.description') }],
+  title: () => t('lighthouse.title'),
+  meta: [{ name: 'description', content: () => t('lighthouse.description') }],
 })
 
 const code = `{
@@ -237,12 +237,16 @@ onMounted(() => {
       <h3>{{ $t('lighthouse.joinNetwork') }}</h3>
       <p>{{ $t('lighthouse.joinDesc') }}</p>
       <pre class="code-block"><code>{{ code }}</code></pre>
-      <p>
-        {{ $t('about.contact') }} <a href="mailto:i@shikoch.in">Email</a>,
-        {{ $t('common.about') }} or
-        <a href="https://github.com/Shikochin/ruinabla/issues" target="_blank">GitHub Issues</a>
-        {{ $t('lighthouse.emitSignal') }}.
-      </p>
+      <i18n-t keypath="lighthouse.contactOptions" tag="p">
+        <template #email
+          ><a href="mailto:i@shikoch.in">{{ $t('auth.login.email') }}</a></template
+        >
+        <template #issues
+          ><a href="https://github.com/Shikochin/ruinabla/issues" target="_blank"
+            >GitHub Issues</a
+          ></template
+        >
+      </i18n-t>
     </section>
 
     <GiscusComment />

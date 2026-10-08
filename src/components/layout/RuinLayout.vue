@@ -48,15 +48,15 @@ function backToTop() {
       <main class="ruins-main">
         <Suspense>
           <slot />
-          <template #fallback> Loading... </template>
+          <template #fallback>{{ $t('common.loading') }}</template>
         </Suspense>
       </main>
 
-      <button id="delta" @click="backToTop"><a>Δ</a></button>
+      <button id="delta" :aria-label="$t('common.backToTop')" @click="backToTop"><a>Δ</a></button>
 
       <Suspense>
         <RuinFooter />
-        <template #fallback> Loading... </template>
+        <template #fallback>{{ $t('common.loading') }}</template>
       </Suspense>
     </div>
   </div>

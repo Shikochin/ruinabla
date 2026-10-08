@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { locale } = useI18n()
+const giscusLanguage = computed(
+  () => ({ 'zh-CN': 'zh-CN', 'en-US': 'en', 'ja-JP': 'ja' })[locale.value] || 'en',
+)
 import Giscus from '@giscus/vue'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import { useThemeStore } from '@/stores/themeStore'
@@ -17,7 +23,7 @@ const giscusTheme = computed(() => {
 
 <template>
   <section id="comments" class="paper-panel">
-    <SectionHeader eyebrow="评论" />
+    <SectionHeader :eyebrow="$t('comments.title')" />
     <Giscus
       repo="Shikochin/ruin"
       repo-id="R_kgDOL7BWOw"
@@ -28,7 +34,7 @@ const giscusTheme = computed(() => {
       reactions-enabled="1"
       emit-metadata="0"
       input-position="top"
-      lang="zh-CN"
+      :lang="giscusLanguage"
       loading="lazy"
       :theme="giscusTheme"
     />

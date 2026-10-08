@@ -1,3 +1,4 @@
+import { localizeApiError } from '@/i18n/errors'
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import i18n from '@/i18n'
@@ -10,7 +11,7 @@ import {
 } from '@/utils/opaque'
 import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/storage'
 
-const { t } = i18n.global as any
+const { t } = i18n.global
 
 interface User {
   id: string
@@ -84,7 +85,7 @@ export const useAuthStore = defineStore('auth', () => {
       const startData = await startRes.json()
 
       if (!startRes.ok) {
-        throw new Error(startData.error || t('auth.register.messages.failed'))
+        throw new Error(localizeApiError(startData.error, 'auth.register.messages.failed'))
       }
 
       const { registrationRecord } = await finishOpaqueRegistration({
@@ -102,7 +103,7 @@ export const useAuthStore = defineStore('auth', () => {
       const finishData = await finishRes.json()
 
       if (!finishRes.ok) {
-        throw new Error(finishData.error || t('auth.register.messages.failed'))
+        throw new Error(localizeApiError(finishData.error, 'auth.register.messages.failed'))
       }
 
       return { success: true }
@@ -127,7 +128,7 @@ export const useAuthStore = defineStore('auth', () => {
     const startData = await startRes.json()
 
     if (!startRes.ok) {
-      throw new Error(startData.error || t('auth.login.messages.failed'))
+      throw new Error(localizeApiError(startData.error, 'auth.login.messages.failed'))
     }
 
     const loginResult = await finishOpaqueLogin({
@@ -154,7 +155,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     if (!finishRes.ok) {
-      throw new Error(finishData.error || t('auth.login.messages.failed'))
+      throw new Error(localizeApiError(finishData.error, 'auth.login.messages.failed'))
     }
 
     if (finishData.requires2FA) {
@@ -187,7 +188,7 @@ export const useAuthStore = defineStore('auth', () => {
     const data = await res.json()
 
     if (!res.ok) {
-      error.value = data.error || t('auth.login.messages.failed')
+      error.value = localizeApiError(data.error, 'auth.login.messages.failed')
       return { success: false, error: error.value }
     }
 
@@ -248,7 +249,7 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await res.json()
 
       if (!res.ok) {
-        throw new Error(data.error || t('auth.security.totp.messages.verifyFailed'))
+        throw new Error(localizeApiError(data.error, 'auth.security.totp.messages.verifyFailed'))
       }
 
       setSessionData(data.sessionId, data.user)
@@ -275,7 +276,9 @@ export const useAuthStore = defineStore('auth', () => {
       const startData = await startRes.json()
 
       if (!startRes.ok) {
-        throw new Error(startData.error || t('auth.security.reauth.messages.startFailed'))
+        throw new Error(
+          localizeApiError(startData.error, 'auth.security.reauth.messages.startFailed'),
+        )
       }
 
       const finishResult = await finishOpaqueLogin({
@@ -299,7 +302,9 @@ export const useAuthStore = defineStore('auth', () => {
       const finishData = await finishRes.json()
 
       if (!finishRes.ok) {
-        throw new Error(finishData.error || t('auth.security.reauth.messages.finishFailed'))
+        throw new Error(
+          localizeApiError(finishData.error, 'auth.security.reauth.messages.finishFailed'),
+        )
       }
 
       return { success: true, reauthExpiresAt: finishData.reauthExpiresAt as number }

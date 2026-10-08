@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { getRelativeTime } from '@/utils/temporal'
+
+const { t, locale } = useI18n()
 import { Temporal } from 'temporal-polyfill'
 import { Octokit } from '@octokit/core'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
@@ -44,24 +48,12 @@ const comments = ref<Comment[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
 
-const formatDate = (dateString: string) => {
-  const instant = Temporal.Instant.from(dateString)
-  const now = Temporal.Now.instant()
-  const duration = now.since(instant)
-
-  const minutes = Math.floor(duration.total({ unit: 'minute' }))
-  const hours = Math.floor(duration.total({ unit: 'hour' }))
-  const days = Math.floor(duration.total({ unit: 'day' }))
-
-  if (minutes < 1) return '刚刚'
-  if (minutes < 60) return `${minutes}分钟前`
-  if (hours < 24) return `${hours}小时前`
-  return `${days}天前`
-}
+const formatDate = (dateString: string) =>
+  getRelativeTime(Temporal.Instant.from(dateString).epochMilliseconds / 1000, locale.value)
 
 const fetchComments = async () => {
   if (!TOKEN) {
-    error.value = 'GitHub Token not configured'
+    error.value = 'comments.unavailable'
     loading.value = false
     return
   }
@@ -140,7 +132,7 @@ const fetchComments = async () => {
     comments.value = fetchedComments
   } catch (e: unknown) {
     console.error('Failed to fetch comments:', e)
-    error.value = '无法获取评论'
+    error.value = 'comments.loadFailed'
   } finally {
     loading.value = false
   }
@@ -153,14 +145,14 @@ onMounted(() => {
 
 <template>
   <div class="comments-list paper-panel">
-    <SectionHeader eyebrow="动态" title="最近的讨论">
+    <SectionHeader :eyebrow="t('comments.eyebrow')" :title="t('comments.recent')">
       <template #actions>
         <a
           href="https://github.com/Shikochin/ruin/discussions"
           target="_blank"
           rel="noopener noreferrer"
         >
-          查看全部 &rarr;
+          {{ t('comments.viewAll') }} &rarr;
         </a>
       </template>
     </SectionHeader>
@@ -198,7 +190,7 @@ onMounted(() => {
     </div>
 
     <div v-else-if="error" class="error">
-      {{ error }}
+      {{ t(error) }}
     </div>
 
     <ul v-else>
@@ -218,7 +210,7 @@ onMounted(() => {
             rel="noopener noreferrer"
             class="discussion-title"
           >
-            在 "{{ comment.discussion.title }}" 中
+            {{ t('comments.inDiscussion', { title: comment.discussion.title }) }}
           </a>
         </div>
       </li>

@@ -168,11 +168,13 @@ defineExpose({ openSearch })
             <input
               ref="searchInput"
               v-model="searchQuery"
-              placeholder="Search posts, tags, categories..."
+              :placeholder="$t('search.placeholder')"
               type="text"
               class="search-input"
             />
-            <button class="close-btn" @click="closeSearch">ESC</button>
+            <button :aria-label="$t('common.close')" class="close-btn" @click="closeSearch">
+              ESC
+            </button>
           </div>
 
           <div class="search-results" v-if="results.length > 0">
@@ -206,13 +208,13 @@ defineExpose({ openSearch })
           </div>
 
           <div class="no-results" v-if="searchQuery && results.length === 0">
-            <p>No results found for "{{ searchQuery }}"</p>
+            <p>{{ $t('search.noResults', { query: searchQuery }) }}</p>
           </div>
 
           <div class="search-footer">
-            <span class="key-hint"><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
-            <span class="key-hint"><kbd>↵</kbd> to select</span>
-            <span class="key-hint"><kbd>esc</kbd> to close</span>
+            <span class="key-hint"><kbd>↑</kbd> <kbd>↓</kbd> {{ $t('search.navigate') }}</span>
+            <span class="key-hint"><kbd>↵</kbd> {{ $t('search.select') }}</span>
+            <span class="key-hint"><kbd>esc</kbd> {{ $t('search.close') }}</span>
           </div>
         </div>
       </div>

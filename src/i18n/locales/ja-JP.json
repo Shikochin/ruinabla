@@ -12,7 +12,7 @@
     "delete": "削除",
     "save": "保存",
     "close": "閉じる",
-    "new": "新規",
+    "new": "新規作成",
     "add": "追加",
     "loading": "読み込み中...",
     "readMore": "続きを読む",
@@ -21,7 +21,18 @@
     "search": "検索...",
     "download": "ダウンロード",
     "copy": "コピー",
-    "copied": "コピーしました"
+    "copied": "コピーしました",
+    "account": "アカウント",
+    "toggleMenu": "メニューを切り替え",
+    "copyCode": "コードをコピー",
+    "copyFailed": "コピーに失敗しました",
+    "theme": {
+      "auto": "システム設定に従う",
+      "light": "ライトモード",
+      "dark": "ダークモード"
+    },
+    "sessionExpired": "セッションの有効期限が切れました。再度ログインしてください。",
+    "backToTop": "ページの先頭へ"
   },
   "nav": {
     "beacon": "ビーコン",
@@ -53,13 +64,17 @@
         "tags": "Enterキーでタグを作成",
         "summary": "記事の概要（空欄の場合は自動生成）",
         "selectPost": "編集する記事を選択するか、新規作成してください"
-      }
+      },
+      "content": "本文（Markdown）"
     },
     "messages": {
       "saving": "保存中...",
       "saved": "保存に成功しました",
       "deleting": "記事 {slug} を削除しますか？",
-      "deleted": "削除しました"
+      "deleted": "削除しました",
+      "saveFailed": "記事を保存できませんでした。もう一度お試しください。",
+      "deleteFailed": "記事を削除できませんでした。もう一度お試しください。",
+      "uploadFailed": "画像のアップロードに失敗しました。もう一度お試しください。"
     }
   },
   "experiment": {
@@ -92,7 +107,8 @@
       "estimatedSize": "推定サイズ",
       "noSignal": "信号なし",
       "viewport": "ビューポート_01"
-    }
+    },
+    "motionPermission": "重力モードを有効にするには、動きと向きへのアクセスを許可してください。"
   },
   "home": {
     "recentBeacon": "最近のビーコン",
@@ -100,7 +116,8 @@
     "frequentWordsDesc": "廃墟の中の頻出ワード",
     "recombinedBeacons": "再構成されたビーコン",
     "readingTime": "読了まで {n} 分",
-    "description": "光と塵の記録。Shikochin の個人ブログ。"
+    "description": "光と塵の記録。Shikochin の個人ブログ。",
+    "volume": "第 {n} 号"
   },
   "about": {
     "title": "私について",
@@ -140,7 +157,8 @@
       "connectionLost": "接続が切れました。操作を撤回します",
       "extinguished": "灯台が消灯しました",
       "deleteFailed": "削除に失敗しました。信号を復旧します"
-    }
+    },
+    "contactOptions": "リンク交換のご連絡は {email} または {issues} からどうぞ。"
   },
   "chronicle": {
     "title": "年輪",
@@ -283,7 +301,8 @@
           "failedDisable": "TOTP を無効にできませんでした",
           "invalidCode": "認証コードが無効です",
           "verifyFailed": "TOTP の検証に失敗しました"
-        }
+        },
+        "qrCode": "二要素認証用のQRコード"
       },
       "reauth": {
         "disableTitle": "TOTP 無効化の確認",
@@ -361,5 +380,77 @@
   "tag": {
     "title": "タグ: {name}",
     "empty": "このタグが付いた記事は見つかりませんでした"
+  },
+  "search": {
+    "placeholder": "記事、タグ、カテゴリを検索…",
+    "noResults": "「{query}」の検索結果はありません",
+    "navigate": "で移動",
+    "select": "で選択",
+    "close": "で閉じる"
+  },
+  "comments": {
+    "title": "コメント",
+    "eyebrow": "新着情報",
+    "recent": "最近のディスカッション",
+    "viewAll": "すべて表示",
+    "inDiscussion": "「{title}」へのコメント",
+    "unavailable": "コメントは現在利用できません",
+    "loadFailed": "コメントを取得できません"
+  },
+  "footer": {
+    "credit": "2021年から {author} が記録 · 光と塵の記録",
+    "builtWith": "{framework} と継続する力で構築",
+    "commit": "コミット：",
+    "unknown": "不明"
+  },
+  "errors": {
+    "generic": "処理に失敗しました。もう一度お試しください。",
+    "invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
+    "emailRegistered": "このメールアドレスは登録済みです",
+    "emailUnverified": "先にメールアドレスを確認してください",
+    "emailVerified": "このメールアドレスは確認済みです",
+    "userNotFound": "アカウントが見つかりません",
+    "invalidRequest": "リクエストが無効です。入力内容を確認してください。",
+    "expired": "認証リクエストの有効期限が切れました。最初からやり直してください。",
+    "forbidden": "この操作を実行する権限がありません",
+    "reauthRequired": "続行するには再認証してください",
+    "passwordUnavailable": "このアカウントではパスワード認証を利用できません。再度ログインしてください。",
+    "totpEnabled": "二要素認証はすでに有効です",
+    "totpDisabled": "二要素認証が有効になっていません",
+    "totpSetup": "先に二要素認証の設定を開始してください",
+    "passkeyNotFound": "このアカウントのパスキーが見つかりません",
+    "noImage": "アップロードする画像を選択してください",
+    "imageRequired": "画像ファイルを選択してください"
+  },
+  "gallery": {
+    "CLOSE": "閉じる",
+    "NEXT": "次へ",
+    "PREV": "前へ",
+    "MODAL": "ESC キーでプレビューを閉じます",
+    "ELEMENT_NOT_FOUND": "コンテンツが見つかりません",
+    "IFRAME_ERROR": "ページを読み込めません",
+    "ERROR": "読み込みに失敗しました。もう一度お試しください。",
+    "IMAGE_ERROR": "画像を読み込めません。もう一度お試しください。",
+    "GOTO": "%d ページへ移動",
+    "DOWNLOAD": "ダウンロード",
+    "TOGGLE_FULLSCREEN": "全画面表示を切り替え",
+    "TOGGLE_FS": "全画面表示を切り替え",
+    "TOGGLE_EXPAND": "原寸表示を切り替え",
+    "TOGGLE_THUMBS": "サムネイルを切り替え",
+    "TOGGLE_AUTOPLAY": "スライドショーを切り替え",
+    "MOVE_UP": "上へ移動",
+    "MOVE_DOWN": "下へ移動",
+    "MOVE_LEFT": "左へ移動",
+    "MOVE_RIGHT": "右へ移動",
+    "ZOOM_IN": "拡大",
+    "ZOOM_OUT": "縮小",
+    "TOGGLE_FULL": "ズームを切り替え",
+    "TOGGLE_1TO1": "ズームを切り替え",
+    "ITERATE_ZOOM": "ズームを切り替え",
+    "ROTATE_CCW": "反時計回りに回転",
+    "ROTATE_CW": "時計回りに回転",
+    "FLIP_X": "左右反転",
+    "FLIP_Y": "上下反転",
+    "RESET": "リセット"
   }
 }

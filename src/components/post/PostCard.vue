@@ -29,8 +29,8 @@ const entry = toRef(props, 'entry')
     </div>
 
     <div class="post-card__footer">
-      <span>Vol. {{ props.vol }}</span>
-      <span>{{ entry.readingMinutes }} MIN{{ entry.readingMinutes > 1 ? 'S' : '' }} READ</span>
+      <span>{{ $t('home.volume', { n: props.vol }) }}</span>
+      <span>{{ $t('home.readingTime', { n: entry.readingMinutes }) }}</span>
     </div>
   </article>
 </template>

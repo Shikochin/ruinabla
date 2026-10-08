@@ -50,6 +50,7 @@ const currentLabelMap: Record<string, string> = {
       :class="{ active: isOpen }"
       :aria-expanded="isOpen"
       aria-haspopup="listbox"
+      :aria-label="$t('common.language')"
     >
       <span class="icon">🌐</span>
       <span class="label">{{ currentLabelMap[localeStore.currentLocale] }}</span>

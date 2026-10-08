@@ -33,6 +33,7 @@ const entry = computed(() => {
 })
 
 const renderedContent = ref('')
+const renderFailed = ref(false)
 
 // Watch for slug changes and fetch content
 watch(
@@ -61,6 +62,7 @@ watch(
 watch(
   () => entry.value?.content,
   async (content) => {
+    renderFailed.value = false
     if (!content) {
       renderedContent.value = ''
       return
@@ -69,7 +71,8 @@ watch(
       renderedContent.value = await renderMarkdown(content)
     } catch (error) {
       console.error('Failed to render markdown:', error)
-      renderedContent.value = `<p>Error rendering content</p>`
+      renderedContent.value = ''
+      renderFailed.value = true
     }
   },
   { immediate: true },
@@ -188,7 +191,8 @@ useHead({
         <div class="entry__ai-label"><span>∇</span> {{ $t('entry.aiSummary') }}</div>
         <div class="entry__excerpt">{{ entry.summary }}</div>
       </div>
-      <div class="entry__content" v-html="renderedContent"></div>
+      <p v-if="renderFailed">{{ t('entry.errors.render') }}</p>
+      <div v-else class="entry__content" v-html="renderedContent"></div>
 
       <hr class="entry__divider" />
       <div class="extra-info">

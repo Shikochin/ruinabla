@@ -1,3 +1,4 @@
+import i18n from '@/i18n'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 
@@ -44,10 +45,10 @@ export async function http(url: string, options: FetchOptions = {}) {
   // Handle 401 Unauthorized
   if (response.status === 401 && auth.sessionId && !options.skipInterceptor) {
     const toast = useToastStore()
-    toast.error('Session expired. Please login again.')
+    toast.error(i18n.global.t('common.sessionExpired'))
     await auth.logout()
     window.location.href = '/login'
-    return Promise.reject(new Error('Session expired'))
+    return Promise.reject(new Error(i18n.global.t('common.sessionExpired')))
   }
 
   return response

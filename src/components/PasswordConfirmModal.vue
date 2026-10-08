@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps<{
   show: boolean
   title: string
@@ -58,14 +57,23 @@ function handleBackdropClick(e: MouseEvent) {
         <div class="modal-content paper-panel">
           <div class="modal-header">
             <h3>{{ title }}</h3>
-            <button class="close-btn" @click="handleCancel" :disabled="loading">×</button>
+            <button
+              :aria-label="$t('common.close')"
+              class="close-btn"
+              @click="handleCancel"
+              :disabled="loading"
+            >
+              ×
+            </button>
           </div>
 
           <div class="modal-body">
             <p v-if="description" class="description">{{ description }}</p>
 
             <div class="field">
-              <label for="confirm-password">{{ props.fieldLabel || 'Password' }}</label>
+              <label for="confirm-password">{{
+                props.fieldLabel || $t('auth.login.password')
+              }}</label>
               <input
                 id="confirm-password"
                 v-model="password"
@@ -81,10 +89,14 @@ function handleBackdropClick(e: MouseEvent) {
 
           <div class="modal-footer">
             <button @click="handleCancel" :disabled="loading">
-              {{ props.cancelText || 'Cancel' }}
+              {{ props.cancelText || $t('common.cancel') }}
             </button>
             <button class="primary" @click="handleConfirm" :disabled="!password || loading">
-              {{ loading ? props.loadingText || 'Loading...' : props.actionText || 'Confirm' }}
+              {{
+                loading
+                  ? props.loadingText || $t('common.loading')
+                  : props.actionText || $t('common.confirm')
+              }}
             </button>
           </div>
         </div>

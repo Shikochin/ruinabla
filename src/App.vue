@@ -23,10 +23,13 @@ watch(
 
 import { useHead } from '@unhead/vue'
 import { useLocaleStore } from '@/stores/locale'
+import { useI18n } from 'vue-i18n'
 
 const localeStore = useLocaleStore()
+const { t } = useI18n()
 
 useHead({
+  title: () => (typeof route.meta.titleKey === 'string' ? t(route.meta.titleKey) : ''),
   titleTemplate: (title) => (title ? `${title} - Rui∇abla` : 'Rui∇abla'),
   htmlAttrs: {
     lang: () => localeStore.currentLocale,
@@ -34,7 +37,7 @@ useHead({
   meta: [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    { name: 'description', content: 'Records of Light and Dust. A personal blog by Shikochin.' },
+    { name: 'description', content: () => t('home.description') },
   ],
   link: [
     {

@@ -19,13 +19,13 @@ const category = computed(() => route.params.category as string)
 const posts = computed(() => store.getEntriesByCategory(category.value))
 
 useHead({
-  title: computed(() => `${t('category.title', { name: category.value })} - Rui∇abla`),
+  title: computed(() => t('category.title', { name: category.value })),
 })
 </script>
 
 <template>
   <div class="category-view">
-    <PageHeader :eyebrow="$t('common.settings')">
+    <PageHeader :eyebrow="$t('editor.form.category')">
       <template #title>
         {{ $t('category.title', { name: category }) }}
       </template>

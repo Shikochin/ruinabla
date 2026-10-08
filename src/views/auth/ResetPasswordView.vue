@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { localizeApiError } from '@/i18n/errors'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
@@ -19,7 +20,7 @@ const success = ref(false)
 const errorMessage = ref('')
 
 useHead({
-  title: t('auth.resetPassword.title'),
+  title: () => t('auth.resetPassword.title'),
 })
 
 onMounted(async () => {
@@ -66,7 +67,7 @@ async function handleSubmit() {
     const startData = await startRes.json()
 
     if (!startRes.ok) {
-      errorMessage.value = startData.error || t('auth.resetPassword.error')
+      errorMessage.value = localizeApiError(startData.error, 'auth.resetPassword.error')
       return
     }
 
@@ -91,7 +92,7 @@ async function handleSubmit() {
         router.push('/login')
       }, 2000)
     } else {
-      errorMessage.value = data.error || t('auth.resetPassword.error')
+      errorMessage.value = localizeApiError(data.error, 'auth.resetPassword.error')
     }
   } catch (error) {
     errorMessage.value = t('auth.resetPassword.networkError')

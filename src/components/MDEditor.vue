@@ -2,7 +2,7 @@
   <MdEditor
     v-model="content"
     :theme="themeStore.isDark ? 'dark' : 'light'"
-    :language="language"
+    :language="props.language || locale"
     :toolbars="toolbars as any"
     :preview="showPreview"
     @onUploadImg="handleUploadImg"
@@ -13,21 +13,26 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { MdEditor } from 'md-editor-v3'
+import { MdEditor, config } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
+import { useI18n } from 'vue-i18n'
+import { japaneseEditor } from '@/i18n/editor'
+import type { SupportedLocale } from '@/i18n/locale'
 import { useThemeStore } from '@/stores/themeStore'
 import { useAuthStore } from '@/stores/authStore'
+
+const { t, locale } = useI18n()
+config({ editorConfig: { languageUserDefined: { 'ja-JP': japaneseEditor } } })
 
 // Props
 interface Props {
   modelValue: string
   showPreview?: boolean
-  language?: 'en-US' | 'zh-CN'
+  language?: SupportedLocale
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showPreview: true,
-  language: 'zh-CN',
 })
 
 // Emits
@@ -108,15 +113,14 @@ const handleUploadImg = async (files: File[], callback: (urls: string[]) => void
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Upload failed')
+        throw new Error(t('editor.messages.uploadFailed'))
       }
 
       const data = await response.json()
       if (data.success && data.url) {
         return data.url
       } else {
-        throw new Error(data.error || 'Upload failed')
+        throw new Error(t('editor.messages.uploadFailed'))
       }
     })
 
@@ -124,7 +128,7 @@ const handleUploadImg = async (files: File[], callback: (urls: string[]) => void
     callback(urls.filter((url) => url !== null) as string[])
   } catch (error) {
     console.error('Image upload error:', error)
-    alert(`图片上传失败: ${(error as Error).message}`)
+    alert(t('editor.messages.uploadFailed'))
     callback([])
   }
 }

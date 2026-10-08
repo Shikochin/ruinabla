@@ -32,16 +32,17 @@ if (devStore.isDev) {
 
 <template>
   <footer class="ruins-footer paper-panel">
-    <p>
-      2021-present by <a href="https://github.com/Shikochin">Shikochin</a> · Records of Light and
-      Dust
-    </p>
-    <p>Constructed with <a href="https://vuejs.org">Vue 3</a> & Persistence</p>
+    <i18n-t keypath="footer.credit" tag="p">
+      <template #author><a href="https://github.com/Shikochin">Shikochin</a></template>
+    </i18n-t>
+    <i18n-t keypath="footer.builtWith" tag="p">
+      <template #framework><a href="https://vuejs.org">Vue 3</a></template>
+    </i18n-t>
     <div v-if="devStore.isDev">
       <p v-if="commitHash">
-        Commit:
+        {{ $t('footer.commit') }}
         <a :href="`https://github.com/Shikochin/ruinabla/commit/${commitHash}`" target="_blank">{{
-          commitHash
+          commitHash === 'unknown' ? $t('footer.unknown') : commitHash
         }}</a>
       </p>
     </div>

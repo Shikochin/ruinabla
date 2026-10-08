@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { localizeApiError } from '@/i18n/errors'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
@@ -16,7 +17,7 @@ const status = ref<'verifying' | 'success' | 'error' | 'expired'>('verifying')
 const errorMessage = ref('')
 
 useHead({
-  title: t('auth.verifyEmail.title'),
+  title: () => t('auth.verifyEmail.title'),
 })
 
 onMounted(async () => {
@@ -49,7 +50,7 @@ onMounted(async () => {
         status.value = 'expired'
       } else {
         status.value = 'error'
-        errorMessage.value = data.error || t('auth.verifyEmail.genericError')
+        errorMessage.value = localizeApiError(data.error, 'auth.verifyEmail.genericError')
       }
     }
   } catch (error) {

@@ -18,32 +18,32 @@ const router = createRouter({
       path: '/chronicle',
       name: 'chronicle',
       component: () => import('@/views/ChronicleView.vue'),
-      meta: { title: '年轮 - Rui∇abla', index: 1 },
+      meta: { titleKey: 'chronicle.title', index: 1 },
     },
 
     {
       path: '/lighthouse',
       name: 'lighthouse',
       component: () => import('@/views/LighthouseView.vue'),
-      meta: { title: '灯塔 - Rui∇abla', index: 2 },
+      meta: { titleKey: 'lighthouse.title', index: 2 },
     },
     {
       path: '/about',
       name: 'about',
       component: () => import('@/views/AboutView.vue'),
-      meta: { title: '余烬 - Rui∇abla', index: 3 },
+      meta: { titleKey: 'nav.embers', index: 3 },
     },
     {
       path: '/experiment',
       name: 'experiment',
       component: () => import('@/views/ExperimentView.vue'),
-      meta: { title: '实验 - Rui∇abla', index: 4 },
+      meta: { titleKey: 'nav.experiment', index: 4 },
     },
     {
       path: '/tools/image',
       name: 'image-tool',
       component: () => import('@/views/ImageToolView.vue'),
-      meta: { title: '图像处理 - Rui∇abla', index: 5 },
+      meta: { titleKey: 'experiment.imageProcessor', index: 5 },
     },
     {
       path: '/posts/:slug(.*)',
@@ -67,7 +67,7 @@ const router = createRouter({
       path: '/editor',
       name: 'editor',
       component: () => import('@/views/EditorView.vue'),
-      meta: { title: '编辑器 - Rui∇abla', index: 100, requiresAuth: true, requiresAdmin: true },
+      meta: { titleKey: 'editor.title', index: 100, requiresAuth: true, requiresAdmin: true },
     },
     {
       path: '/login',
@@ -103,13 +103,13 @@ const router = createRouter({
       path: '/settings',
       name: 'settings',
       component: () => import('@/components/layout/SettingsLayout.vue'),
-      meta: { title: '设置 - Rui∇abla', index: 106, requiresAuth: true },
+      meta: { titleKey: 'common.settings', index: 106, requiresAuth: true },
       children: [
         {
           path: 'security',
           name: 'settings-security',
           component: () => import('@/views/auth/SecurityView.vue'),
-          meta: { title: '安全设置 - Rui∇abla' },
+          meta: { titleKey: 'auth.security.title' },
         },
       ],
     },

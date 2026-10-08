@@ -9,7 +9,7 @@ import { useHead } from '@unhead/vue'
 const { t } = useI18n()
 
 useHead({
-  title: computed(() => `${t('experiment.imageProcessor')} - Rui∇abla`),
+  title: computed(() => t('experiment.imageProcessor')),
 })
 
 const fileInput = ref<HTMLInputElement | null>(null)

@@ -33,11 +33,11 @@ const lastDate = computed(() => postEntries.value[0]?.date ?? '')
 const distinctTags = computed(() => new Set(postEntries.value.flatMap((entry) => entry.tags)).size)
 
 useHead({
-  title: t('chronicle.title'),
+  title: () => t('chronicle.title'),
   meta: [
     {
       name: 'description',
-      content: t('chronicle.description'),
+      content: () => t('chronicle.description'),
     },
   ],
 })

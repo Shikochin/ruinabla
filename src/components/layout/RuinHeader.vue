@@ -71,7 +71,7 @@ onMounted(() => {
       </RouterLink>
     </div>
     <div class="header-actions-mobile">
-      <button class="hamburger-btn" @click="toggleMobileMenu" aria-label="Toggle menu">
+      <button class="hamburger-btn" @click="toggleMobileMenu" :aria-label="$t('common.toggleMenu')">
         <span class="hamburger-box">
           <span class="hamburger-inner" :class="{ 'is-active': isMobileMenuOpen }"></span>
         </span>
@@ -95,19 +95,13 @@ onMounted(() => {
         <button
           class="theme-toggle"
           @click="themeStore.toggleTheme"
-          :title="
-            themeStore.themeMode === 'auto'
-              ? 'Auto'
-              : themeStore.themeMode === 'light'
-                ? 'Light'
-                : 'Dark'
-          "
+          :title="$t(`common.theme.${themeStore.themeMode}`)"
         >
           <span v-if="themeStore.themeMode === 'auto'">⛅</span>
           <span v-else-if="themeStore.themeMode === 'light'">🌞</span>
           <span v-else>🌛</span>
         </button>
-        <button class="theme-toggle" @click="openSearch" :title="$t('common.loading')">
+        <button class="theme-toggle" @click="openSearch" :title="$t('common.search')">
           <span>🔍</span>
         </button>
 

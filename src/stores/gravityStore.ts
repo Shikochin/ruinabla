@@ -1,3 +1,4 @@
+import i18n from '@/i18n'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -291,7 +292,7 @@ export const useGravityStore = defineStore('gravity', () => {
       if (hasRequest) {
         const res = await w.DeviceMotionEvent.requestPermission()
         if (res !== 'granted') {
-          permissionError.value = '需要允许“运动与方向”权限才能开启重力模式。'
+          permissionError.value = i18n.global.t('experiment.motionPermission')
           return
         }
       }

@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { localizeApiError } from '@/i18n/errors'
 import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useRouter } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 import PasswordConfirmModal from '@/components/PasswordConfirmModal.vue'
 import QRCode from 'qrcode'
@@ -11,7 +13,8 @@ import { formatTimestamp } from '@/utils/temporal'
 const router = useRouter()
 const auth = useAuthStore()
 const toast = useToastStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
+useHead({ title: () => t('auth.security.title') })
 
 // TOTP
 const totpSecret = ref('')
@@ -69,7 +72,7 @@ async function enableTOTP() {
     const data = await res.json()
 
     if (!res.ok) {
-      throw new Error(data.error || t('auth.security.totp.messages.failedEnable'))
+      throw new Error(localizeApiError(data.error, 'auth.security.totp.messages.failedEnable'))
     }
 
     totpSecret.value = data.secret
@@ -98,7 +101,7 @@ async function verifyAndEnableTOTP() {
     const data = await res.json()
 
     if (!res.ok) {
-      throw new Error(data.error || t('auth.security.totp.messages.invalidCode'))
+      throw new Error(localizeApiError(data.error, 'auth.security.totp.messages.invalidCode'))
     }
 
     isTOTPEnabled.value = true
@@ -134,7 +137,7 @@ async function performDisableTOTP() {
   const data = await res.json()
 
   if (!res.ok) {
-    throw new Error(data.error || t('auth.security.totp.messages.failedDisable'))
+    throw new Error(localizeApiError(data.error, 'auth.security.totp.messages.failedDisable'))
   }
 
   isTOTPEnabled.value = false
@@ -155,7 +158,7 @@ async function performRegenerateBackupCodes() {
   const data = await res.json()
 
   if (!res.ok) {
-    throw new Error(data.error || t('auth.security.totp.messages.regenerateFailed'))
+    throw new Error(localizeApiError(data.error, 'auth.security.totp.messages.regenerateFailed'))
   }
 
   backupCodes.value = data.backupCodes || []
@@ -220,7 +223,9 @@ async function registerPasskey() {
     const options = await optionsRes.json()
 
     if (!optionsRes.ok) {
-      throw new Error(options.error || t('auth.security.passkeys.messages.registerOptionsFailed'))
+      throw new Error(
+        localizeApiError(options.error, 'auth.security.passkeys.messages.registerOptionsFailed'),
+      )
     }
 
     if (!window.PublicKeyCredential) {
@@ -286,7 +291,9 @@ async function registerPasskey() {
     const result = await registerRes.json()
 
     if (!registerRes.ok) {
-      throw new Error(result.error || t('auth.security.passkeys.messages.registerFailed'))
+      throw new Error(
+        localizeApiError(result.error, 'auth.security.passkeys.messages.registerFailed'),
+      )
     }
 
     toast.success(t('auth.security.passkeys.messages.addSuccess'))
@@ -367,7 +374,7 @@ async function deletePasskey(id: string) {
               ><small>{{ totpUri }}</small></a
             >
           </p>
-          <img :src="totpQRCode" alt="QR Code" />
+          <img :src="totpQRCode" :alt="t('auth.security.totp.qrCode')" />
         </div>
 
         <div class="field">
@@ -427,7 +434,7 @@ async function deletePasskey(id: string) {
               <strong>{{ passkey.name }}</strong>
               <small
                 >{{ $t('auth.security.passkeys.createdAt') }}:
-                {{ formatTimestamp(passkey.created_at) }}</small
+                {{ formatTimestamp(passkey.created_at, locale) }}</small
               >
             </div>
             <button @click="deletePasskey(passkey.id)" class="danger-link">

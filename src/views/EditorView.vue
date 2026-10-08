@@ -6,6 +6,7 @@ import { useThemeStore } from '@/stores/themeStore'
 import { useToastStore } from '@/stores/toastStore'
 import { getCurrentDate } from '@/utils/temporal'
 import { http } from '@/utils/http'
+import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import EditorSidebar from '@/components/editor/EditorSidebar.vue'
 import EditorForm from '@/components/editor/EditorForm.vue'
 
@@ -129,8 +130,7 @@ const savePost = async () => {
     })
 
     if (!res.ok) {
-      const err = await res.json()
-      throw new Error(err.error || 'Failed to save')
+      throw new Error(t('editor.messages.saveFailed'))
     }
 
     toast.success(t('editor.messages.saved'))
@@ -142,7 +142,8 @@ const savePost = async () => {
       // But keeping it simple for now
     }
   } catch (e) {
-    toast.error(`Error: ${(e as Error).message}`)
+    console.error('Failed to save post:', e)
+    toast.error(t('editor.messages.saveFailed'))
   }
 }
 
@@ -155,11 +156,13 @@ const deletePost = async () => {
     const res = await http(`/api/posts/${slug}`, {
       method: 'DELETE',
     })
-    if (!res.ok) throw new Error('Failed to delete')
+    if (!res.ok) throw new Error(t('editor.messages.deleteFailed'))
     await store.fetchPosts()
+    toast.success(t('editor.messages.deleted'))
     cancelEdit()
   } catch (e) {
-    toast.error((e as Error).message)
+    console.error('Failed to delete post:', e)
+    toast.error(t('editor.messages.deleteFailed'))
   }
 }
 </script>
@@ -183,7 +186,12 @@ const deletePost = async () => {
         <RouterLink to="/about" class="nav-link">{{ $t('about.title') }}</RouterLink>
       </div>
       <div class="nav-right">
-        <button @click="themeStore.toggleTheme" class="theme-toggle" :title="$t('common.settings')">
+        <LocaleSwitcher />
+        <button
+          @click="themeStore.toggleTheme"
+          class="theme-toggle"
+          :title="$t(`common.theme.${themeStore.themeMode}`)"
+        >
           <span v-if="themeStore.themeMode === 'auto'">⛅</span>
           <span v-else-if="themeStore.themeMode === 'light'">🌞</span>
           <span v-else>🌛</span>

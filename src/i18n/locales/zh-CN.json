@@ -18,7 +18,21 @@
     "search": "搜索...",
     "download": "下载",
     "copy": "复制",
-    "copied": "已复制"
+    "copied": "已复制",
+    "close": "关闭",
+    "new": "新建",
+    "account": "账户",
+    "toggleMenu": "切换菜单",
+    "copyCode": "复制代码",
+    "copyFailed": "复制失败",
+    "theme": {
+      "auto": "跟随系统",
+      "light": "浅色模式",
+      "dark": "深色模式"
+    },
+    "sessionExpired": "登录已过期，请重新登录。",
+    "add": "添加",
+    "backToTop": "返回顶部"
   },
   "nav": {
     "beacon": "信标",
@@ -50,13 +64,17 @@
         "tags": "按 Enter 创建标签",
         "summary": "文章摘要 (留空则自动生成)",
         "selectPost": "选择文章进行编辑或创建新文章"
-      }
+      },
+      "content": "正文（Markdown）"
     },
     "messages": {
       "saving": "保存中...",
       "saved": "保存成功",
-      "deleting": "删除 post {slug}?",
-      "deleted": "已删除"
+      "deleting": "删除文章 {slug}？",
+      "deleted": "已删除",
+      "saveFailed": "保存文章失败，请重试",
+      "deleteFailed": "删除文章失败，请重试",
+      "uploadFailed": "图片上传失败，请重试"
     }
   },
   "experiment": {
@@ -89,7 +107,8 @@
       "estimatedSize": "预估大小",
       "noSignal": "无信号",
       "viewport": "视口_01"
-    }
+    },
+    "motionPermission": "需要允许“运动与方向”权限才能开启重力模式。"
   },
   "home": {
     "recentBeacon": "近日信标",
@@ -97,7 +116,8 @@
     "frequentWordsDesc": "废墟里的高频词",
     "recombinedBeacons": "重组信标",
     "readingTime": "{n} 分钟阅读",
-    "description": "光与尘的记录。Shikochin 的个人博客。"
+    "description": "光与尘的记录。Shikochin 的个人博客。",
+    "volume": "第 {n} 篇"
   },
   "about": {
     "title": "关于我",
@@ -137,7 +157,8 @@
       "connectionLost": "连接断开，撤回操作",
       "extinguished": "灯塔已熄灭",
       "deleteFailed": "删除失败，信号已恢复"
-    }
+    },
+    "contactOptions": "通过 {email} 或 {issues} 联系我，交换友链。"
   },
   "chronicle": {
     "title": "年轮",
@@ -280,7 +301,8 @@
           "failedDisable": "无法禁用 TOTP",
           "invalidCode": "验证码无效",
           "verifyFailed": "TOTP 验证失败"
-        }
+        },
+        "qrCode": "双因素验证二维码"
       },
       "reauth": {
         "disableTitle": "确认关闭两步验证",
@@ -358,5 +380,77 @@
   "tag": {
     "title": "标签: {name}",
     "empty": "没有找到带有此标签的文章"
+  },
+  "search": {
+    "placeholder": "搜索文章、标签、分类…",
+    "noResults": "没有找到与“{query}”相关的结果",
+    "navigate": "切换结果",
+    "select": "选择",
+    "close": "关闭"
+  },
+  "comments": {
+    "title": "评论",
+    "eyebrow": "动态",
+    "recent": "最近的讨论",
+    "viewAll": "查看全部",
+    "inDiscussion": "在“{title}”中",
+    "unavailable": "评论暂不可用",
+    "loadFailed": "无法获取评论"
+  },
+  "footer": {
+    "credit": "2021 至今，由 {author} 记录 · 光与尘的记录",
+    "builtWith": "以 {framework} 与坚持构筑",
+    "commit": "提交：",
+    "unknown": "未知"
+  },
+  "errors": {
+    "generic": "操作失败，请稍后重试",
+    "invalidCredentials": "邮箱或密码不正确",
+    "emailRegistered": "该邮箱已注册",
+    "emailUnverified": "请先验证您的邮箱",
+    "emailVerified": "该邮箱已验证",
+    "userNotFound": "未找到该账户",
+    "invalidRequest": "请求无效，请检查输入后重试",
+    "expired": "验证请求已过期，请重新开始",
+    "forbidden": "您没有执行此操作的权限",
+    "reauthRequired": "请重新验证身份后继续",
+    "passwordUnavailable": "此账户无法使用密码验证，请重新登录",
+    "totpEnabled": "双因素验证已启用",
+    "totpDisabled": "双因素验证尚未启用",
+    "totpSetup": "请先开始设置双因素验证",
+    "passkeyNotFound": "未找到此账户的 Passkey",
+    "noImage": "请选择要上传的图片",
+    "imageRequired": "文件必须是图片"
+  },
+  "gallery": {
+    "CLOSE": "关闭",
+    "NEXT": "下一张",
+    "PREV": "上一张",
+    "MODAL": "按 ESC 键关闭预览",
+    "ELEMENT_NOT_FOUND": "找不到内容",
+    "IFRAME_ERROR": "页面加载失败",
+    "ERROR": "加载失败，请稍后重试",
+    "IMAGE_ERROR": "图片加载失败，请稍后重试",
+    "GOTO": "前往第 %d 页",
+    "DOWNLOAD": "下载",
+    "TOGGLE_FULLSCREEN": "切换全屏",
+    "TOGGLE_FS": "切换全屏",
+    "TOGGLE_EXPAND": "切换原始大小",
+    "TOGGLE_THUMBS": "切换缩略图",
+    "TOGGLE_AUTOPLAY": "切换幻灯片播放",
+    "MOVE_UP": "向上移动",
+    "MOVE_DOWN": "向下移动",
+    "MOVE_LEFT": "向左移动",
+    "MOVE_RIGHT": "向右移动",
+    "ZOOM_IN": "放大",
+    "ZOOM_OUT": "缩小",
+    "TOGGLE_FULL": "切换缩放",
+    "TOGGLE_1TO1": "切换缩放",
+    "ITERATE_ZOOM": "切换缩放",
+    "ROTATE_CCW": "逆时针旋转",
+    "ROTATE_CW": "顺时针旋转",
+    "FLIP_X": "水平翻转",
+    "FLIP_Y": "垂直翻转",
+    "RESET": "重置"
   }
 }

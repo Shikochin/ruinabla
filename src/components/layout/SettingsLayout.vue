@@ -2,12 +2,15 @@
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const auth = useAuthStore()
 const router = useRouter()
 
 useHead({
-  title: '设置 - Rui∇abla',
+  title: () => t('common.settings'),
 })
 
 // Redirect to security if on base settings page
@@ -25,16 +28,16 @@ function logout() {
   <div class="settings-layout">
     <aside class="settings-sidebar">
       <div class="sidebar-header">
-        <h2>设置</h2>
+        <h2>{{ t('common.settings') }}</h2>
         <p class="user-email">{{ auth.user?.email }}</p>
       </div>
 
       <nav class="sidebar-nav">
         <div class="nav-section">
-          <h3>账户</h3>
+          <h3>{{ t('common.account') }}</h3>
           <RouterLink to="/settings/security" class="nav-item">
             <span class="icon">🔒</span>
-            <span>安全设置</span>
+            <span>{{ t('auth.security.title') }}</span>
           </RouterLink>
         </div>
       </nav>
@@ -42,7 +45,7 @@ function logout() {
       <div class="sidebar-footer">
         <button @click="logout()" class="logout-btn">
           <span class="icon">🚪</span>
-          <span>退出登录</span>
+          <span>{{ t('common.logout') }}</span>
         </button>
       </div>
     </aside>

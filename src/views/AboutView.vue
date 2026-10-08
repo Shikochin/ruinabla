@@ -8,11 +8,11 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 useHead({
-  title: t('about.title'),
+  title: () => t('about.title'),
   meta: [
     {
       name: 'description',
-      content: t('about.description'),
+      content: () => t('about.description'),
     },
   ],
 })
@@ -88,7 +88,7 @@ const age = Temporal.Now.plainDateISO().year - 2008
             ></path>
             <polyline points="22,6 12,13 2,6"></polyline>
           </svg>
-          Email
+          {{ $t('auth.login.email') }}
         </a>
       </div>
     </PageHeader>

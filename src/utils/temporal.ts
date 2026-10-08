@@ -54,18 +54,10 @@ export function getRelativeTime(timestamp: number, locale: string = 'zh-CN'): st
   const duration = now.since(instant)
   const seconds = duration.total('seconds')
 
-  if (seconds < 60) {
-    return locale === 'zh-CN' ? '刚刚' : 'just now'
-  } else if (seconds < 3600) {
-    const minutes = Math.floor(seconds / 60)
-    return locale === 'zh-CN' ? `${minutes} 分钟前` : `${minutes} minutes ago`
-  } else if (seconds < 86400) {
-    const hours = Math.floor(seconds / 3600)
-    return locale === 'zh-CN' ? `${hours} 小时前` : `${hours} hours ago`
-  } else if (seconds < 604800) {
-    const days = Math.floor(seconds / 86400)
-    return locale === 'zh-CN' ? `${days} 天前` : `${days} days ago`
-  } else {
-    return formatTimestamp(timestamp, locale)
-  }
+  const relative = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
+  if (seconds < 60) return relative.format(0, 'second')
+  if (seconds < 3600) return relative.format(-Math.floor(seconds / 60), 'minute')
+  if (seconds < 86400) return relative.format(-Math.floor(seconds / 3600), 'hour')
+  if (seconds < 604800) return relative.format(-Math.floor(seconds / 86400), 'day')
+  return formatTimestamp(timestamp, locale)
 }

@@ -18,7 +18,21 @@
     "search": "Search...",
     "download": "Download",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "close": "Close",
+    "new": "New",
+    "account": "Account",
+    "toggleMenu": "Toggle menu",
+    "copyCode": "Copy code",
+    "copyFailed": "Copy failed",
+    "theme": {
+      "auto": "System theme",
+      "light": "Light theme",
+      "dark": "Dark theme"
+    },
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "add": "Add",
+    "backToTop": "Back to top"
   },
   "nav": {
     "beacon": "Beacon",
@@ -50,13 +64,17 @@
         "tags": "Press Enter to create tag",
         "summary": "Post summary (leave empty to auto-generate)",
         "selectPost": "Select a post to edit or create a new one."
-      }
+      },
+      "content": "Content (Markdown)"
     },
     "messages": {
       "saving": "Saving...",
       "saved": "Saved successfully!",
       "deleting": "Delete post {slug}?",
-      "deleted": "Deleted"
+      "deleted": "Deleted",
+      "saveFailed": "Failed to save the post. Please try again.",
+      "deleteFailed": "Failed to delete the post. Please try again.",
+      "uploadFailed": "Image upload failed. Please try again."
     }
   },
   "experiment": {
@@ -89,15 +107,17 @@
       "estimatedSize": "Estimated Size",
       "noSignal": "NO SIGNAL",
       "viewport": "VIEWPORT_01"
-    }
+    },
+    "motionPermission": "Allow motion and orientation access to enable gravity mode."
   },
   "home": {
     "recentBeacon": "Recent Beacon",
     "frequentWords": "Frequent Words",
     "frequentWordsDesc": "High-frequency words in ruins",
     "recombinedBeacons": "Recombined Beacons",
-    "readingTime": "{n} MINS READ",
-    "description": "Records of Light and Dust. A personal blog by Shikochin."
+    "readingTime": "{n} MIN READ | {n} MINS READ",
+    "description": "Records of Light and Dust. A personal blog by Shikochin.",
+    "volume": "Vol. {n}"
   },
   "about": {
     "title": "About Me",
@@ -137,7 +157,8 @@
       "connectionLost": "Connection lost, rolling back operation",
       "extinguished": "Lighthouse extinguished",
       "deleteFailed": "Delete failed, signal restored"
-    }
+    },
+    "contactOptions": "Contact me via {email} or {issues} to exchange links."
   },
   "chronicle": {
     "title": "Chronicle",
@@ -164,7 +185,7 @@
       "loggingIn": "Logging in...",
       "noAccount": "Don't have an account?",
       "registerNow": "Register",
-      "emailPlaceholder": "your@email.com",
+      "emailPlaceholder": "your{'@'}email.com",
       "passwordPlaceholder": "••••••••",
       "totpPlaceholder": "000000",
       "title2fa": "Two-Step Verification",
@@ -213,7 +234,7 @@
       "title": "Forgot Password",
       "subtitle": "Enter your email address and we'll send you a password reset link",
       "email": "Email",
-      "emailPlaceholder": "your@email.com",
+      "emailPlaceholder": "your{'@'}email.com",
       "sending": "Sending...",
       "sendLink": "Send Reset Link",
       "backToLogin": "Back to Login",
@@ -280,7 +301,8 @@
           "failedDisable": "Failed to disable TOTP",
           "invalidCode": "Invalid code",
           "verifyFailed": "TOTP verification failed"
-        }
+        },
+        "qrCode": "Two-factor authentication QR code"
       },
       "reauth": {
         "disableTitle": "Confirm TOTP Disable",
@@ -298,7 +320,7 @@
       "passkeys": {
         "title": "Passkeys",
         "description": "Secure login with biological authentication",
-        "count": "{n} Passkeys",
+        "count": "{n} key | {n} keys",
         "nameLabel": "Passkey Name",
         "namePlaceholder": "My Passkey",
         "addButton": "Add Passkey",
@@ -344,7 +366,7 @@
     "aiSummary": "AI Generated Summary",
     "license": "Licensed by",
     "licenseBy": "Licensed by {license}",
-    "minutesRead": "{n} min{s} read",
+    "minutesRead": "{n} minute read | {n} minutes read",
     "errors": {
       "render": "Error rendering content"
     },
@@ -358,5 +380,77 @@
   "tag": {
     "title": "Tag: {name}",
     "empty": "No posts found with this tag"
+  },
+  "search": {
+    "placeholder": "Search posts, tags, categories…",
+    "noResults": "No results found for “{query}”",
+    "navigate": "to navigate",
+    "select": "to select",
+    "close": "to close"
+  },
+  "comments": {
+    "title": "Comments",
+    "eyebrow": "Activity",
+    "recent": "Recent discussions",
+    "viewAll": "View all",
+    "inDiscussion": "In “{title}”",
+    "unavailable": "Comments are currently unavailable",
+    "loadFailed": "Unable to load comments"
+  },
+  "footer": {
+    "credit": "2021–present by {author} · Records of Light and Dust",
+    "builtWith": "Constructed with {framework} & Persistence",
+    "commit": "Commit:",
+    "unknown": "Unknown"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "invalidCredentials": "Incorrect email or password",
+    "emailRegistered": "This email is already registered",
+    "emailUnverified": "Please verify your email first",
+    "emailVerified": "This email is already verified",
+    "userNotFound": "Account not found",
+    "invalidRequest": "Invalid request. Check your input and try again.",
+    "expired": "This verification request has expired. Please start again.",
+    "forbidden": "You do not have permission to perform this action",
+    "reauthRequired": "Please verify your identity again to continue",
+    "passwordUnavailable": "Password verification is unavailable for this account. Please log in again.",
+    "totpEnabled": "Two-factor authentication is already enabled",
+    "totpDisabled": "Two-factor authentication is not enabled",
+    "totpSetup": "Start setting up two-factor authentication first",
+    "passkeyNotFound": "No passkey found for this account",
+    "noImage": "Select an image to upload",
+    "imageRequired": "The file must be an image"
+  },
+  "gallery": {
+    "CLOSE": "Close",
+    "NEXT": "Next",
+    "PREV": "Previous",
+    "MODAL": "Press ESC to close this preview",
+    "ELEMENT_NOT_FOUND": "Content not found",
+    "IFRAME_ERROR": "Unable to load page",
+    "ERROR": "Unable to load. Please try again.",
+    "IMAGE_ERROR": "Unable to load image. Please try again.",
+    "GOTO": "Go to page #%d",
+    "DOWNLOAD": "Download",
+    "TOGGLE_FULLSCREEN": "Toggle fullscreen",
+    "TOGGLE_FS": "Toggle fullscreen",
+    "TOGGLE_EXPAND": "Toggle full size",
+    "TOGGLE_THUMBS": "Toggle thumbnails",
+    "TOGGLE_AUTOPLAY": "Toggle slideshow",
+    "MOVE_UP": "Move up",
+    "MOVE_DOWN": "Move down",
+    "MOVE_LEFT": "Move left",
+    "MOVE_RIGHT": "Move right",
+    "ZOOM_IN": "Zoom in",
+    "ZOOM_OUT": "Zoom out",
+    "TOGGLE_FULL": "Toggle zoom",
+    "TOGGLE_1TO1": "Toggle zoom",
+    "ITERATE_ZOOM": "Toggle zoom",
+    "ROTATE_CCW": "Rotate counterclockwise",
+    "ROTATE_CW": "Rotate clockwise",
+    "FLIP_X": "Flip horizontally",
+    "FLIP_Y": "Flip vertically",
+    "RESET": "Reset"
   }
 }

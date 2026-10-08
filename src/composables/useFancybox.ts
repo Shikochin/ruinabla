@@ -1,4 +1,5 @@
-import { onMounted, onUnmounted, nextTick } from 'vue'
+import { onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Fancybox } from '@fancyapps/ui'
 import '@fancyapps/ui/dist/fancybox/fancybox.css'
 
@@ -7,6 +8,8 @@ export function useFancybox(
   selector: string = '[data-fancybox="markdown-gallery"]',
   options: Record<string, unknown> = {},
 ) {
+  const { locale, tm } = useI18n()
+
   const initializeFancybox = (): void => {
     // Fancybox 5+ recommends using bind/unbind or destroy
     Fancybox.destroy()
@@ -17,12 +20,16 @@ export function useFancybox(
         Fancybox.bind(selector, {
           // Prevent Fancybox from modifying URL hash, which causes page jumps
           Hash: false,
+          l10n: tm('gallery'),
+          Carousel: { l10n: tm('gallery') },
           ...options,
         })
         console.log('Fancybox bound to selector:', selector)
       }
     })
   }
+
+  watch(locale, initializeFancybox)
 
   // 1. Execute initialization after component mount
   onMounted(() => {

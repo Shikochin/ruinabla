@@ -31,7 +31,7 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: t('home.description'),
+      content: () => t('home.description'),
     },
   ],
 })

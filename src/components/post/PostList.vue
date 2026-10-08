@@ -66,7 +66,9 @@ const onHoverEnd = (slug: string) => {
           <div class="timeline__meta">
             <span class="timeline__date">{{ entry.date }}</span>
             <br />
-            <strong v-if="entry.pinned" class="timeline__date">Pinned</strong>
+            <strong v-if="entry.pinned" class="timeline__date">{{
+              $t('editor.form.pinned')
+            }}</strong>
           </div>
           <div class="timeline__divider">
             <span class="timeline__dot"></span>

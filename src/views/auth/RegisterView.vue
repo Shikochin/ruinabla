@@ -18,7 +18,7 @@ const registrationComplete = ref(false)
 const registeredEmail = ref('')
 
 useHead({
-  title: t('auth.register.register'),
+  title: () => t('auth.register.register'),
 })
 
 onMounted(() => {

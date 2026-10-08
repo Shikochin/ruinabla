@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { localizeApiError } from '@/i18n/errors'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
@@ -28,7 +29,7 @@ onMounted(async () => {
 })
 
 useHead({
-  title: t('auth.login.title'),
+  title: () => t('auth.login.title'),
 })
 
 async function handlePasswordLogin() {
@@ -50,7 +51,7 @@ async function handlePasswordLogin() {
       if (passkeyOptionsRes.ok) {
         passkeyOptions.value = passkeyOpts.passkeyOptions
       } else {
-        auth.error = passkeyOpts.error || t('auth.login.messages.passkeyOptionsFailed')
+        auth.error = localizeApiError(passkeyOpts.error, 'auth.login.messages.passkeyOptionsFailed')
       }
     } else {
       passkeyOptions.value = null
@@ -143,7 +144,7 @@ async function verifyWithPasskey() {
       auth.setSessionData(data.sessionId, data.user)
       router.push('/')
     } else {
-      auth.error = data.error || t('auth.login.passkeyFailed')
+      auth.error = localizeApiError(data.error, 'auth.login.passkeyFailed')
     }
   } catch (e) {
     auth.error = (e as Error).message
@@ -162,7 +163,7 @@ async function loginWithPasskey() {
     const options = await optionsRes.json()
 
     if (!optionsRes.ok) {
-      throw new Error(options.error || t('auth.login.messages.passkeyOptionsFailed'))
+      throw new Error(localizeApiError(options.error, 'auth.login.messages.passkeyOptionsFailed'))
     }
 
     // Decode challenge
@@ -225,7 +226,7 @@ async function loginWithPasskey() {
       auth.setSessionData(data.sessionId, data.user)
       router.push('/')
     } else {
-      auth.error = data.error || t('auth.login.passkeyFailed')
+      auth.error = localizeApiError(data.error, 'auth.login.passkeyFailed')
     }
   } catch (e) {
     auth.error = (e as Error).message
@@ -297,7 +298,7 @@ async function loginWithPasskey() {
         </div>
 
         <button type="submit" class="primary" :disabled="auth.loading">
-          {{ auth.loading ? $t('auth.login.loggingIn') : $t('auth.login.verify') }}
+          {{ auth.loading ? $t('auth.login.loggingIn') : $t('common.login') }}
         </button>
       </form>
 
