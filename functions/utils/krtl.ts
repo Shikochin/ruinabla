@@ -1,11 +1,11 @@
 import type { D1Database } from '@cloudflare/workers-types'
 import { generateId } from './crypto'
 
-export const KRTL_ISSUER = 'https://a.krtl.net'
+export const KRTL_ISSUER = 'https://krtl.net'
 export const KRTL_AUTHORIZATION_ENDPOINT = 'https://krtl.net/oauth/authorize'
-export const KRTL_TOKEN_ENDPOINT = 'https://a.krtl.net/oauth/token'
-export const KRTL_USERINFO_ENDPOINT = 'https://a.krtl.net/oauth/userinfo'
-export const KRTL_JWKS_ENDPOINT = 'https://a.krtl.net/oauth/jwks'
+export const KRTL_TOKEN_ENDPOINT = 'https://krtl.net/v0/oauth/token'
+export const KRTL_USERINFO_ENDPOINT = 'https://krtl.net/v0/oauth/userinfo'
+export const KRTL_JWKS_ENDPOINT = 'https://krtl.net/.well-known/jwks.json'
 export const KRTL_REDIRECT_URI = 'https://shikoch.in/oidc/callback'
 export const KRTL_SCOPES = 'openid profile email'
 
